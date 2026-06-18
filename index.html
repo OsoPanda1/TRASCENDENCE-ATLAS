@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atlas Trascendence v2.0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            atlas: { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7' },
+            sovereignty: '#059669',
+            dignity: '#7c3aed'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #020617; color: #e2e8f0; }
+    .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.5); }
+    .text-gradient { background: linear-gradient(90deg, #38bdf8, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    .nav-link { padding: 6px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 6px; color: #94a3b8; text-decoration: none; cursor: pointer; }
+    .nav-link:hover { color: #fff; background: rgba(30, 41, 59, 0.5); }
+    .nav-link.active { color: #fff; background: #1e293b; }
+    .page { display: none; }
+    .page.active { display: block; }
+  </style>
+</head>
+<body class="dark">
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-[1800px] mx-auto px-4">
+      <div class="flex items-center h-14 gap-1 overflow-x-auto">
+        <a onclick="showPage('home')" class="flex items-center gap-2 mr-4 shrink-0 cursor-pointer" style="text-decoration:none">
+          <i class="fa-solid fa-shield-halved text-atlas-400"></i>
+          <span class="font-bold text-sm text-white whitespace-nowrap">Atlas<span class="text-atlas-400">Trascendence</span></span>
+        </a>
+        <a onclick="showPage('f1')" class="nav-link" id="nav-f1"><i class="fa-solid fa-users text-blue-400"></i><span class="hidden sm:inline">F1</span></a>
+        <a onclick="showPage('f2')" class="nav-link" id="nav-f2"><i class="fa-solid fa-landmark text-emerald-400"></i><span class="hidden sm:inline">F2</span></a>
+        <a onclick="showPage('f3')" class="nav-link" id="nav-f3"><i class="fa-solid fa-globe text-amber-400"></i><span class="hidden sm:inline">F3</span></a>
+        <a onclick="showPage('f4')" class="nav-link" id="nav-f4"><i class="fa-solid fa-brain text-purple-400"></i><span class="hidden sm:inline">F4</span></a>
+        <a onclick="showPage('f5')" class="nav-link" id="nav-f5"><i class="fa-solid fa-microchip text-rose-400"></i><span class="hidden sm:inline">F5</span></a>
+        <a onclick="showPage('f6')" class="nav-link" id="nav-f6"><i class="fa-solid fa-graduation-cap text-cyan-400"></i><span class="hidden sm:inline">F6</span></a>
+        <a onclick="showPage('f7')" class="nav-link" id="nav-f7"><i class="fa-solid fa-vr-cardboard text-pink-400"></i><span class="hidden sm:inline">F7</span></a>
+        <div class="w-px h-6 bg-slate-700 mx-2 shrink-0"></div>
+        <a onclick="showPage('nexus')" class="nav-link" id="nav-nexus"><i class="fa-solid fa-book text-indigo-400"></i><span class="hidden md:inline">Nexus</span></a>
+        <a onclick="showPage('telemetry')" class="nav-link" id="nav-telemetry"><i class="fa-solid fa-chart-line text-orange-400"></i><span class="hidden md:inline">Telemetry</span></a>
+        <a onclick="showPage('sovereignty')" class="nav-link" id="nav-sovereignty"><i class="fa-solid fa-shield-halved text-sovereignty"></i><span class="hidden md:inline">Soberania</span></a>
+        <a onclick="showPage('isabella')" class="nav-link" id="nav-isabella"><i class="fa-solid fa-brain text-purple-400"></i><span class="hidden md:inline">Isabella</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-14">
+    <!-- HOME -->
+    <div id="page-home" class="page active">
+      <section class="relative overflow-hidden pt-16 pb-20">
+        <div class="absolute inset-0" style="background: radial-gradient(ellipse at top, rgba(14,165,233,0.15) 0%, #020617 60%)"></div>
+        <div class="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full blur-3xl" style="background: rgba(14,165,233,0.08)"></div>
+        <div class="relative max-w-6xl mx-auto px-6 text-center">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-6" style="background: 'rgba(14,165,233,0.1)', border: '1px solid rgba(14,165,233,0.2)', color: '#7dd3fc'}">
+            <i class="fa-solid fa-hexagon-nodes text-atlas-300"></i> v2.0.0-trascendence
+          </div>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+            <span class="text-white">Atlas</span><span class="text-gradient"> Trascendence</span>
+          </h1>
+          <p class="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-4 leading-relaxed">
+            Infraestructura civilizatoria universal para operar cualquier ecosistema con
+            <span style="color:#059669;font-weight:500"> soberania</span>,
+            <span style="color:#7c3aed;font-weight:500"> dignidad</span> y
+            <span style="color:#38bdf8;font-weight:500"> auditabilidad total</span>.
+          </p>
+          <p class="text-sm text-slate-500 max-w-xl mx-auto mb-10">
+            De TAMV al universo. Implementacion de referencia del estandar Atlas Trascendence.
+            Modelo heptafederado: 7 dominios operativos para la civilizacion digital.
+          </p>
+          <div class="flex flex-wrap justify-center gap-3 mb-16">
+            <button onclick="showPage('f1')" class="inline-flex items-center gap-2 px-5 py-2.5 bg-atlas-600 hover:bg-atlas-500 text-white rounded-lg font-medium transition-all">
+              Explorar Federaciones <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+            <button onclick="showPage('sovereignty')" class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-sovereignty rounded-lg font-medium transition-all border border-sovereignty/30">
+              <i class="fa-solid fa-shield-halved"></i> Soberania
+            </button>
+          </div>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-3xl mx-auto">
+            <div class="glass rounded-xl p-4 text-center">
+              <i class="fa-solid fa-shield-halved text-sovereignty text-xl mb-2"></i>
+              <h3 class="text-sm font-semibold text-white mb-1">Soberania</h3>
+              <p class="text-xs text-slate-400">Control territorial total</p>
+            </div>
+            <div class="glass rounded-xl p-4 text-center">
+              <i class="fa-solid fa-lock text-dignity text-xl mb-2"></i>
+              <h3 class="text-sm font-semibold text-white mb-1">Dignidad</h3>
+              <p class="text-xs text-slate-400">Etica algoritmica vinculante</p>
+            </div>
+            <div class="glass rounded-xl p-4 text-center">
+              <i class="fa-solid fa-eye text-atlas-400 text-xl mb-2"></i>
+              <h3 class="text-sm font-semibold text-white mb-1">Transparencia</h3>
+              <p class="text-xs text-slate-400">Ledger inmutable BookPI</p>
+            </div>
+            <div class="glass rounded-xl p-4 text-center">
+              <i class="fa-solid fa-server text-emerald-400 text-xl mb-2"></i>
+              <h3 class="text-sm font-semibold text-white mb-1">Resiliencia</h3>
+              <p class="text-xs text-slate-400">Modo degradado soberano</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-16 px-6">
+        <div class="max-w-6xl mx-auto">
+          <div class="text-center mb-10">
+            <h2 class="text-2xl font-bold text-white mb-2">Las 7 Federaciones</h2>
+            <p class="text-slate-400 text-sm">Modelo heptafederado: cada federacion es un dominio soberano con gobernanza propia</p>
+          </div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <button onclick="showPage('f1')" class="text-left rounded-xl p-5 transition-all hover:scale-[1.02]" style="background: 'linear-gradient(135deg, rgba(96,165,250,0.15) 0%, rgba(37,99,235,0.05) 100%)', border: '1px solid rgba(96,165,250,0.3)'}">
+              <div class="flex items-start gap-3">
+                <div class="p-2 rounded-lg bg-slate-900/50"><i class="fa-solid fa-users text-blue-400"></i></div>
+                <div><span class="text-xs font-bold text-blue-400">F1</span><h3 class="text-sm font-semibold text-white">Identidad y Ciudadania</h3></div>
+              </div>
+            </button>
+            <button onclick="showPage('f2')" class="text-left rounded-xl p-5 transition-all hover:scale-[1.02]" style="background: 'linear-gradient(135deg, rgba(52,211,153,0.15) 0%, rgba(5,150,105,0.05) 100%)', border: '1px solid rgba(52,211,153,0.3)'}">
+              <div class="flex items-start gap-3">
+                <div class="p-2 rounded-lg bg-slate-900/50"><i class="fa-solid fa-landmark text-emerald-400"></i></div>
+                <div><span class="text-xs font-bold text-emerald-400">F2</span><h3 class="text-sm font-semibold text-white">Gobernanza e Instituciones</h3></div>
+              </div>
+            </button>
+            <button onclick="showPage('f3')" class="text-left rounded-xl p-5 transition-all hover:scale-[1.02]" style="background: 'linear-gradient(135deg, rgba(251,191,36,0.15) 0%, rgba(217,119,6,0.05) 100%)', border: '1px solid rgba(251,191,36,0.3)'}">
+              <div class="flex items-start gap-3">
+                <div class="p-2 rounded-lg bg-slate-900/50"><i class="fa-solid fa-globe text-amber-400"></i></div>
+                <div><span class="text-xs font-bold text-amber-400">F3</span><h3 class="text-sm font-semibold text-white">Economia y Finanzas</h3></div>
+              </div>
+            </button>
+            <button onclick="showPage('f4')" class="text-left rounded-xl p-5 transition-all hover:scale-[1.02]" style="background: 'linear-gradient(135deg, rgba(167,139,250,0.15) 0%, rgba(124,58,237,0.05) 100%)', border: '1px solid rgba(167,139,250,0.3)'}">
+              <div class="flex items-start gap-3">
+                <div class="p-2 rounded-lg bg-slate-900/50"><i class="fa-solid fa-brain text-purple-400"></i></div>
+                <div><span class="text-xs font-bold text-purple-400">F4</span><h3 class="text-sm font-semibold text-white">Cognicion e Inteligencia</h3></div>
+              </div>
+            </button>
+            <button onclick="showPage('f5')" class="text-left rounded-xl p-5 transition-all hover:scale-[1.02]" style="background: 'linear-gradient(135deg, rgba(251,113,133,0.15) 0%, rgba(225,29,72,0.05) 100%)', border: '1px solid rgba(251,113,133,0.3)'}">
+              <div class="flex items-start gap-3">
+                <div class="p-2 rounded-lg bg-slate-900/50"><i class="fa-solid fa-microchip text-rose-400"></i></div>
+                <div><span class="text-xs font-bold text-rose-400">F5</span><h3 class="text-sm font-semibold text-white">Infraestructura y Territorio</h3></div>
+              </div>
+            </button>
+            <button onclick="showPage('f6')" class="text-left rounded-xl p-5 transition-all hover:scale-[1.02]" style="background: 'linear-gradient(135deg, rgba(34,211,238,0.15) 0%, rgba(8,145,178,0.05) 100%)', border: '1px solid rgba(34,211,238,0.3)'}">
+              <div class="flex items-start gap-3">
+                <div class="p-2 rounded-lg bg-slate-900/50"><i class="fa-solid fa-graduation-cap text-cyan-400"></i></div>
+                <div><span class="text-xs font-bold text-cyan-400">F6</span><h3 class="text-sm font-semibold text-white">Educacion y Conocimiento</h3></div>
+              </div>
+            </button>
+            <button onclick="showPage('f7')" class="text-left rounded-xl p-5 transition-all hover:scale-[1.02]" style="background: 'linear-gradient(135deg, rgba(244,114,182,0.15) 0%, rgba(219,39,119,0.05) 100%)', border: '1px solid rgba(244,114,182,0.3)'}">
+              <div class="flex items-start gap-3">
+                <div class="p-2 rounded-lg bg-slate-900/50"><i class="fa-solid fa-vr-cardboard text-pink-400"></i></div>
+                <div><span class="text-xs font-bold text-pink-400">F7</span><h3 class="text-sm font-semibold text-white">XR y Experiencias</h3></div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- F1 -->
+    <div id="page-f1" class="page">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="p-2 rounded-lg bg-blue-500/10"><i class="fa-solid fa-users text-blue-400 text-xl"></i></div>
+          <div><h1 class="text-2xl font-bold text-white">F1 — Identidad y Ciudadania</h1><p class="text-sm text-slate-400">Sistema soberano de identidad digital autosoberana (SSI/DID)</p></div>
+        </div>
+        <div class="grid lg:grid-cols-3 gap-4">
+          <div class="glass rounded-xl p-5"><p class="text-sm text-slate-400">DIDs Verificados</p><p class="text-2xl font-bold text-white">12,847</p></div>
+          <div class="glass rounded-xl p-5"><p class="text-sm text-slate-400">Credenciales Emitidas</p><p class="text-2xl font-bold text-white">45,231</p></div>
+          <div class="glass rounded-xl p-5"><p class="text-sm text-slate-400">Consentimientos Activos</p><p class="text-2xl font-bold text-white">98.7%</p></div>
+        </div>
+        <div class="mt-6 glass rounded-xl p-6">
+          <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-shield-halved text-blue-400 mr-2"></i>Registro DID</h2>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-mono text-blue-300">did:atlas:rdm:abc123</p><p class="text-xs text-slate-500">Ciudadano — 2026-06-10</p></div>
+              <span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Verificado</span>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-mono text-blue-300">did:atlas:rdm:def456</p><p class="text-xs text-slate-500">Empresa — 2026-06-15</p></div>
+              <span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-400">Pendiente</span>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-mono text-blue-300">did:atlas:rdm:ghi789</p><p class="text-xs text-slate-500">Institucion — 2026-06-12</p></div>
+              <span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Verificado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F2 -->
+    <div id="page-f2" class="page">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="p-2 rounded-lg bg-emerald-500/10"><i class="fa-solid fa-landmark text-emerald-400 text-xl"></i></div>
+          <div><h1 class="text-2xl font-bold text-white">F2 — Gobernanza e Instituciones</h1><p class="text-sm text-slate-400">Modelos de decision, transparencia institucional y auditoria</p></div>
+        </div>
+        <div class="grid lg:grid-cols-3 gap-4 mb-6">
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-users text-emerald-400 mb-2"></i><p class="text-sm text-slate-400">Participacion Ciudadana</p><p class="text-2xl font-bold text-white">67.3%</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-gavel text-emerald-400 mb-2"></i><p class="text-sm text-slate-400">Decisiones este mes</p><p class="text-2xl font-bold text-white">24</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-file-lines text-emerald-400 mb-2"></i><p class="text-sm text-slate-400">Transparencia</p><p class="text-2xl font-bold text-white">100%</p></div>
+        </div>
+        <div class="glass rounded-xl p-6">
+          <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-check-to-slot text-emerald-400 mr-2"></i>Propuestas Activas</h2>
+          <div class="space-y-3">
+            <div class="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-medium text-white">Ampliar nodos mesh a zonas rurales</h3><span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-400">En votacion</span></div>
+              <div class="flex gap-4 text-xs"><span class="text-emerald-400">847 a favor</span><span class="text-rose-400">123 en contra</span><span class="text-slate-500">45 abstenciones</span></div>
+              <div class="mt-2 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width:83%"></div></div>
+            </div>
+            <div class="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div class="flex items-center justify-between mb-2"><h3 class="text-sm font-medium text-white">Actualizar politica de retencion de datos</h3><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Aprobada</span></div>
+              <div class="flex gap-4 text-xs"><span class="text-emerald-400">912 a favor</span><span class="text-rose-400">34 en contra</span></div>
+              <div class="mt-2 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width:95%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F3 -->
+    <div id="page-f3" class="page">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="p-2 rounded-lg bg-amber-500/10"><i class="fa-solid fa-globe text-amber-400 text-xl"></i></div>
+          <div><h1 class="text-2xl font-bold text-white">F3 — Economia y Finanzas</h1><p class="text-sm text-slate-400">Wallets soberanas, contratos inteligentes auditables, economia federada</p></div>
+        </div>
+        <div class="grid lg:grid-cols-4 gap-4 mb-6">
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-wallet text-amber-400 mb-2"></i><p class="text-sm text-slate-400">Wallets Activas</p><p class="text-2xl font-bold text-white">8,432</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-arrow-right-arrow-left text-amber-400 mb-2"></i><p class="text-sm text-slate-400">Transacciones 24h</p><p class="text-2xl font-bold text-white">3,847</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-chart-line text-emerald-400 mb-2"></i><p class="text-sm text-slate-400">Volumen Total</p><p class="text-2xl font-bold text-white">$2.4M</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-shield-halved text-sovereignty mb-2"></i><p class="text-sm text-slate-400">Contratos Auditados</p><p class="text-2xl font-bold text-white">156</p></div>
+        </div>
+        <div class="glass rounded-xl p-6">
+          <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-dollar-sign text-amber-400 mr-2"></i>Modelos de Facturacion Territorial</h2>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">Gondolas / Puestos</p><p class="text-xs text-slate-500">Comercio movil</p></div>
+              <div class="text-right"><p class="text-sm font-mono text-amber-300">$50-200/mes</p><p class="text-xs text-slate-500">234 activos</p></div>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">Tiendas Fisicas</p><p class="text-xs text-slate-500">Retail</p></div>
+              <div class="text-right"><p class="text-sm font-mono text-amber-300">$500-2000/mes</p><p class="text-xs text-slate-500">89 activos</p></div>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">Hoteles</p><p class="text-xs text-slate-500">Hospedaje</p></div>
+              <div class="text-right"><p class="text-sm font-mono text-amber-300">$1000-5000/mes</p><p class="text-xs text-slate-500">23 activos</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F4 -->
+    <div id="page-f4" class="page">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="p-2 rounded-lg bg-purple-500/10"><i class="fa-solid fa-brain text-purple-400 text-xl"></i></div>
+          <div><h1 class="text-2xl font-bold text-white">F4 — Cognicion e Inteligencia</h1><p class="text-sm text-slate-400">Isabella Kernel, EOCT, memoria vectorial, razonamiento etico</p></div>
+        </div>
+        <div class="grid lg:grid-cols-4 gap-4 mb-6">
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-sparkles text-purple-400 mb-2"></i><p class="text-sm text-slate-400">Consultas Procesadas</p><p class="text-2xl font-bold text-white">184,392</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-tree text-purple-400 mb-2"></i><p class="text-sm text-slate-400">Evaluaciones EOCT</p><p class="text-2xl font-bold text-white">12,847</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-eye text-purple-400 mb-2"></i><p class="text-sm text-slate-400">Explicaciones Generadas</p><p class="text-2xl font-bold text-white">45,231</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-activity text-emerald-400 mb-2"></i><p class="text-sm text-slate-400">Precision Etica</p><p class="text-2xl font-bold text-white">99.2%</p></div>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-6">
+          <div class="glass rounded-xl p-6">
+            <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-tree text-purple-400 mr-2"></i>EOCT — Ethical Operational Cognitive Tree</h2>
+            <div class="space-y-3">
+              <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-300">Dignidad Humana</span><span class="text-slate-400">94%</span></div><div class="h-2 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width:94%"></div></div></div>
+              <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-300">Autonomia</span><span class="text-slate-400">89%</span></div><div class="h-2 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width:89%"></div></div></div>
+              <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-300">Imparcialidad</span><span class="text-slate-400">91%</span></div><div class="h-2 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500 rounded-full" style="width:91%"></div></div></div>
+              <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-300">Transparencia</span><span class="text-slate-400">96%</span></div><div class="h-2 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-purple-500 rounded-full" style="width:96%"></div></div></div>
+              <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-300">Responsabilidad</span><span class="text-slate-400">93%</span></div><div class="h-2 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-rose-500 rounded-full" style="width:93%"></div></div></div>
+            </div>
+          </div>
+          <div class="glass rounded-xl p-6">
+            <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-message text-purple-400 mr-2"></i>Evaluaciones Recientes</h2>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                <div><p class="text-sm text-slate-300">Procesamiento de solicitud KYC</p><p class="text-xs text-slate-500">2m ago</p></div>
+                <span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">APROBADO</span>
+              </div>
+              <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                <div><p class="text-sm text-slate-300">Automatizacion de decision gubernamental</p><p class="text-xs text-slate-500">15m ago</p></div>
+                <span class="text-xs px-2 py-1 rounded-full bg-rose-500/10 text-rose-400">BLOQUEADO</span>
+              </div>
+              <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                <div><p class="text-sm text-slate-300">Anonimizacion de dataset</p><p class="text-xs text-slate-500">23m ago</p></div>
+                <span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">APROBADO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F5 -->
+    <div id="page-f5" class="page">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="p-2 rounded-lg bg-rose-500/10"><i class="fa-solid fa-microchip text-rose-400 text-xl"></i></div>
+          <div><h1 class="text-2xl font-bold text-white">F5 — Infraestructura y Territorio</h1><p class="text-sm text-slate-400">Nodos territoriales, telemetria urbana, gemelos digitales, redes mesh</p></div>
+        </div>
+        <div class="grid lg:grid-cols-4 gap-4 mb-6">
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-server text-rose-400 mb-2"></i><p class="text-sm text-slate-400">Nodos Activos</p><p class="text-2xl font-bold text-white">47</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-wifi text-rose-400 mb-2"></i><p class="text-sm text-slate-400">Redes Mesh</p><p class="text-2xl font-bold text-white">12</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-tower-broadcast text-rose-400 mb-2"></i><p class="text-sm text-slate-400">Sensores IoT</p><p class="text-2xl font-bold text-white">3,847</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-hard-drive text-emerald-400 mb-2"></i><p class="text-sm text-slate-400">Uptime Global</p><p class="text-2xl font-bold text-white">99.97%</p></div>
+        </div>
+        <div class="glass rounded-xl p-6">
+          <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-map-pin text-rose-400 mr-2"></i>Nodos Territoriales</h2>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">RDM Digital — Real del Monte</p><p class="text-xs text-slate-500">Nodo Principal — 1,240 sensores</p></div>
+              <span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Online</span>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">Pachuca Centro</p><p class="text-xs text-slate-500">Nodo Urbano — 856 sensores</p></div>
+              <span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Online</span>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">Mineral del Chico</p><p class="text-xs text-slate-500">Nodo Rural — 234 sensores</p></div>
+              <span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-400">Degradada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F6 -->
+    <div id="page-f6" class="page">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="p-2 rounded-lg bg-cyan-500/10"><i class="fa-solid fa-graduation-cap text-cyan-400 text-xl"></i></div>
+          <div><h1 class="text-2xl font-bold text-white">F6 — Educacion y Conocimiento</h1><p class="text-sm text-slate-400">UTAMV, credenciales academicas, ciencia abierta, canon de referencias</p></div>
+        </div>
+        <div class="grid lg:grid-cols-4 gap-4 mb-6">
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-users text-cyan-400 mb-2"></i><p class="text-sm text-slate-400">Estudiantes UTAMV</p><p class="text-2xl font-bold text-white">2,847</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-book-open text-cyan-400 mb-2"></i><p class="text-sm text-slate-400">Cursos Activos</p><p class="text-2xl font-bold text-white">64</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-award text-cyan-400 mb-2"></i><p class="text-sm text-slate-400">Credenciales Emitidas</p><p class="text-2xl font-bold text-white">12,394</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-file-lines text-cyan-400 mb-2"></i><p class="text-sm text-slate-400">Publicaciones Open Science</p><p class="text-2xl font-bold text-white">487</p></div>
+        </div>
+        <div class="glass rounded-xl p-6">
+          <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-sparkles text-cyan-400 mr-2"></i>Programas UTAMV</h2>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">Soberania Tecnologica 101</p><p class="text-xs text-slate-500">Gobernanza Digital — Introductorio</p></div>
+              <div class="text-right"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Activo</span><p class="text-xs text-slate-500 mt-1">423 inscritos</p></div>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">Etica de la IA y EOCT</p><p class="text-xs text-slate-500">Etica — Avanzado</p></div>
+              <div class="text-right"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Activo</span><p class="text-xs text-slate-500 mt-1">97 inscritos</p></div>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">Desarrollo de Sistemas Atlas</p><p class="text-xs text-slate-500">Ingenieria — Intermedio</p></div>
+              <div class="text-right"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Activo</span><p class="text-xs text-slate-500 mt-1">189 inscritos</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F7 -->
+    <div id="page-f7" class="page">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="p-2 rounded-lg bg-pink-500/10"><i class="fa-solid fa-vr-cardboard text-pink-400 text-xl"></i></div>
+          <div><h1 class="text-2xl font-bold text-white">F7 — XR y Experiencias</h1><p class="text-sm text-slate-400">MD-X4 Quantum, XR4D, DreamSpaces, gemelos XR, metaverso productivo</p></div>
+        </div>
+        <div class="grid lg:grid-cols-4 gap-4 mb-6">
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-vr-cardboard text-pink-400 mb-2"></i><p class="text-sm text-slate-400">Espacios XR Activos</p><p class="text-2xl font-bold text-white">23</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-cube text-pink-400 mb-2"></i><p class="text-sm text-slate-400">Gemelos Digitales</p><p class="text-2xl font-bold text-white">12</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-bolt text-pink-400 mb-2"></i><p class="text-sm text-slate-400">Sesiones 24h</p><p class="text-2xl font-bold text-white">1,847</p></div>
+          <div class="glass rounded-xl p-5"><i class="fa-solid fa-palette text-pink-400 mb-2"></i><p class="text-sm text-slate-400">Experiencias Creadas</p><p class="text-2xl font-bold text-white">156</p></div>
+        </div>
+        <div class="glass rounded-xl p-6">
+          <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-layer-group text-pink-400 mr-2"></i>DreamSpaces</h2>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">Plaza Principal RDM</p><p class="text-xs text-slate-500">Espacio Publico</p></div>
+              <div class="text-right"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Online</span><p class="text-xs text-slate-500 mt-1">1,240 visitas</p></div>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">Museo de Mineria Virtual</p><p class="text-xs text-slate-500">Cultural</p></div>
+              <div class="text-right"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Online</span><p class="text-xs text-slate-500 mt-1">567 visitas</p></div>
+            </div>
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div><p class="text-sm font-medium text-white">Campus UTAMV XR</p><p class="text-xs text-slate-500">Educativo</p></div>
+              <div class="text-right"><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Online</span><p class="text-xs text-slate-500 mt-1">892 visitas</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEXUS -->
+    <div id="page-nexus" class="page">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="p-2 rounded-lg bg-indigo-500/10"><i class="fa-solid fa-book text-indigo-400 text-xl"></i></div>
+          <div><h1 class="text-2xl font-bold text-white">Nexus — Grafo Civilizatorio</h1><p class="text-sm text-slate-400">Conocimiento, relaciones, provenance y malla civilizatoria</p></div>
+        </div>
+        <div class="grid lg:grid-cols-4 gap-4 mb-6">
+          <div class="glass rounded-xl p-5 text-center"><p class="text-2xl font-bold text-white">45,231</p><p class="text-xs text-slate-400">Personas</p></div>
+          <div class="glass rounded-xl p-5 text-center"><p class="text-2xl font-bold text-white">12,847</p><p class="text-xs text-slate-400">Documentos</p></div>
+          <div class="glass rounded-xl p-5 text-center"><p class="text-2xl font-bold text-white">89,432</p><p class="text-xs text-slate-400">Relaciones</p></div>
+          <div class="glass rounded-xl p-5 text-center"><p class="text-2xl font-bold text-white">34,567</p><p class="text-xs text-slate-400">Evidencias</p></div>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-6">
+          <div class="glass rounded-xl p-6">
+            <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-network-wired text-indigo-400 mr-2"></i>Malla Civilizatoria</h2>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-slate-800/50 text-center"><p class="text-lg font-bold text-white">45,231</p><p class="text-xs text-slate-400">Personas</p></div>
+              <div class="p-3 rounded-lg bg-slate-800/50 text-center"><p class="text-lg font-bold text-white">1,234</p><p class="text-xs text-slate-400">Proyectos</p></div>
+              <div class="p-3 rounded-lg bg-slate-800/50 text-center"><p class="text-lg font-bold text-white">12,847</p><p class="text-xs text-slate-400">Documentos</p></div>
+              <div class="p-3 rounded-lg bg-slate-800/50 text-center"><p class="text-lg font-bold text-white">5,678</p><p class="text-xs text-slate-400">Fuentes</p></div>
+            </div>
+          </div>
+          <div class="glass rounded-xl p-6">
+            <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-book text-indigo-400 mr-2"></i>Provenance Academico</h2>
+            <div class="space-y-3">
+              <div class="flex justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50"><span class="text-sm text-slate-300">Zenodo</span><span class="text-sm font-bold text-indigo-300">156 DOIs</span></div>
+              <div class="flex justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50"><span class="text-sm text-slate-300">Figshare</span><span class="text-sm font-bold text-indigo-300">89 datasets</span></div>
+              <div class="flex justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50"><span class="text-sm text-slate-300">ORCID</span><span class="text-sm font-bold text-indigo-300">567 vinculados</span></div>
+              <div class="flex justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50"><span class="text-sm text-slate-300">ISNI</span><span class="text-sm font-bold text-indigo-300">12 instituciones</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TELEMETRY -->
+    <div id="page-telemetry" class="page">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="p-2 rounded-lg bg-orange-500/10"><i class="fa-solid fa-chart-line text-orange-400 text-xl"></i></div>
+          <div><h1 class="text-2xl font-bold text-white">Telemetry</h1><p class="text-sm text-slate-400">Metricas de soberania, indicadores de colonialismo y salud del ecosistema</p></div>
+        </div>
+        <div class="glass rounded-xl p-6 mb-6">
+          <div class="flex items-center justify-between mb-4"><h2 class="text-lg font-semibold text-white">Sovereignty Score</h2><span class="text-3xl font-bold text-sovereignty">87.4</span></div>
+          <div class="h-3 bg-slate-700 rounded-full overflow-hidden mb-4"><div class="h-full rounded-full" style="width:87.4%; background:linear-gradient(90deg,#10b981,#059669)"></div></div>
+          <div class="grid grid-cols-3 gap-4 text-center">
+            <div><p class="text-lg font-bold text-white">92%</p><p class="text-xs text-slate-400">Procesamiento Local</p></div>
+            <div><p class="text-lg font-bold text-white">78%</p><p class="text-xs text-slate-400">Open Science Integration</p></div>
+            <div><p class="text-lg font-bold text-white">85%</p><p class="text-xs text-slate-400">Propiedad Infraestructura</p></div>
+          </div>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-6">
+          <div class="glass rounded-xl p-6">
+            <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-triangle-exclamation text-amber-400 mr-2"></i>Indicadores de Colonialismo Digital</h2>
+            <div class="space-y-4">
+              <div class="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                <div class="flex justify-between text-xs mb-2"><span class="text-slate-300">Dependencia Externa</span><span class="text-amber-400">Bajo</span></div>
+                <div class="h-2 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500 rounded-full" style="width:76%"></div></div>
+                <p class="text-xs text-slate-500 mt-1">23% de infraestructura en nube extranjera</p>
+              </div>
+              <div class="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                <div class="flex justify-between text-xs mb-2"><span class="text-slate-300">Riesgo Jurisdiccional</span><span class="text-amber-400">Bajo</span></div>
+                <div class="h-2 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500 rounded-full" style="width:60%"></div></div>
+                <p class="text-xs text-slate-500 mt-1">15% de datos bajo jurisdiccion extranjera</p>
+              </div>
+            </div>
+          </div>
+          <div class="glass rounded-xl p-6">
+            <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-server text-orange-400 mr-2"></i>Salud del Sistema</h2>
+            <div class="space-y-3">
+              <div class="flex justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50"><span class="text-sm text-slate-300">Kernel Atlas</span><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Healthy 99.99%</span></div>
+              <div class="flex justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50"><span class="text-sm text-slate-300">Isabella Engine</span><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Healthy 99.97%</span></div>
+              <div class="flex justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50"><span class="text-sm text-slate-300">Ledger BookPI</span><span class="text-xs px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400">Healthy 100%</span></div>
+              <div class="flex justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50"><span class="text-sm text-slate-300">Telemetry Mesh</span><span class="text-xs px-2 py-1 rounded-full bg-amber-500/10 text-amber-400">Degraded 98.2%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOVEREIGNTY -->
+    <div id="page-sovereignty" class="page">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex items-center gap-3 mb-8">
+          <div class="p-2 rounded-lg bg-emerald-500/10"><i class="fa-solid fa-shield-halved text-sovereignty text-xl"></i></div>
+          <div><h1 class="text-2xl font-bold text-white">Monitor de Soberania</h1><p class="text-sm text-slate-400">Control territorial de datos, infraestructura y jurisdiccion</p></div>
+        </div>
+        <div class="grid lg:grid-cols-4 gap-4 mb-6">
+          <div class="glass rounded-xl p-5 border border-sovereignty/20"><i class="fa-solid fa-server text-sovereignty mb-2"></i><p class="text-sm text-slate-400">Infraestructura Local</p><p class="text-2xl font-bold text-white">92%</p><p class="text-xs text-emerald-400">Meta: 85%</p></div>
+          <div class="glass rounded-xl p-5 border border-sovereignty/20"><i class="fa-solid fa-lock text-sovereignty mb-2"></i><p class="text-sm text-slate-400">Datos en Territorio</p><p class="text-2xl font-bold text-white">94%</p><p class="text-xs text-emerald-400">Meta: 90%</p></div>
+          <div class="glass rounded-xl p-5 border border-sovereignty/20"><i class="fa-solid fa-globe text-sovereignty mb-2"></i><p class="text-sm text-slate-400">Jurisdiccion Local</p><p class="text-2xl font-bold text-white">89%</p><p class="text-xs text-emerald-400">Meta: 80%</p></div>
+          <div class="glass rounded-xl p-5 border border-sovereignty/20"><i class="fa-solid fa-shield-halved text-sovereignty mb-2"></i><p class="text-sm text-slate-400">Score Global</p><p class="text-2xl font-bold text-sovereignty">87.4</p><p class="text-xs text-emerald-400">+2.3 vs mes anterior</p></div>
+        </div>
+        <div class="glass rounded-xl p-6">
+          <h2 class="text-lg font-semibold text-white mb-4"><i class="fa-solid fa-globe text-sovereignty mr-2"></i>Mapa de Jurisdiccion de Datos</h2>
+          <div class="space-y-3">
+            <div class="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div class="flex justify-between mb-2"><span class="text-sm text-slate-300">Mexico (Local)</span><div class="flex items-center gap-2"><span class="text-sm font-bold text-white">78%</span><i class="fa-solid fa-check-circle text-emerald-400"></i></div></div>
+              <div class="h-2 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 rounded-full" style="width:78%"></div></div>
+              <p class="text-xs text-slate-500 mt-1">Datos bajo control territorial</p>
+            </div>
+            <div class="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div class="flex justify-between mb-2"><span class="text-sm text-slate-300">Union Europea (GDPR)</span><span class="text-sm font-bold text-white">12%</span></div>
+              <div class="h-2 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width:12%"></div></div>
+              <p class="text-xs text-slate-500 mt-1">Transferencia con salvaguardas adecuadas</p>
+            </div>
+            <div class="p-4 rounded-lg bg-slate-800/50 border border-slate-700/50">
+              <div class="flex justify-between mb-2"><span class="text-sm text-slate-300">Estados Unidos</span><div class="flex items-center gap-2"><span class="text-sm font-bold text-white">6%</span><i class="fa-solid fa-triangle-exclamation text-amber-400"></i></div></div>
+              <div class="h-2 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-amber-500 rounded-full" style="width:6%"></div></div>
+              <p class="text-xs text-slate-500 mt-1">Exposicion a CLOUD Act</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ISABELLA -->
+    <div id="page-isabella" class="page">
+      <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="p-2 rounded-lg bg-purple-500/10"><i class="fa-solid fa-brain text-purple-400 text-xl"></i></div>
+          <div><h1 class="text-2xl font-bold text-white">Isabella AI</h1><p class="text-sm text-slate-400">Consola de inteligencia etica — EOCT activo</p></div>
+        </div>
+        <div class="grid lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 glass rounded-xl flex flex-col" style="min-height:500px">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4" style="max-height:500px">
+              <div class="flex gap-3">
+                <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center shrink-0"><i class="fa-solid fa-brain text-purple-400 text-sm"></i></div>
+                <div class="max-w-[80%] p-3 rounded-xl border border-slate-700 bg-slate-800">
+                  <p class="text-sm">Hola, soy Isabella. Soy el nucleo de inteligencia etica de Atlas Trascendence. Todas mis respuestas pasan por el EOCT. Como puedo ayudarte?</p>
+                  <div class="mt-2 flex items-center gap-2 text-xs"><i class="fa-solid fa-tree text-emerald-400"></i><span class="text-emerald-400">EOCT: APROBADO</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-3 border-t border-slate-700 flex gap-2">
+              <input id="chat-input" type="text" placeholder="Pregunta a Isabella..." class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white placeholder:text-slate-500" style="outline:none" onkeypress="if(event.key==='Enter') sendMessage()">
+              <button onclick="sendMessage()" class="p-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-white transition-colors"><i class="fa-solid fa-paper-plane text-sm"></i></button>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div class="glass rounded-xl p-4"><h3 class="text-sm font-semibold text-white mb-2"><i class="fa-solid fa-eye text-purple-400 mr-1"></i>Explicabilidad</h3><p class="text-xs text-slate-400">Cada respuesta incluye factores de explicabilidad.</p></div>
+            <div class="glass rounded-xl p-4"><h3 class="text-sm font-semibold text-white mb-2"><i class="fa-solid fa-memory text-purple-400 mr-1"></i>Memoria</h3><p class="text-xs text-slate-400">Memoria de contexto a largo plazo.</p><p class="text-xs text-purple-400 mt-2">1,247 entradas</p></div>
+            <div class="glass rounded-xl p-4"><h3 class="text-sm font-semibold text-white mb-2"><i class="fa-solid fa-chart-bar text-purple-400 mr-1"></i>Estadisticas</h3>
+              <div class="space-y-1 text-xs"><div class="flex justify-between"><span class="text-slate-400">Consultas hoy</span><span class="text-white">847</span></div><div class="flex justify-between"><span class="text-slate-400">Aprobacion EOCT</span><span class="text-emerald-400">99.2%</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="py-6 px-6 border-t border-slate-800 mt-10">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <span class="text-xs text-slate-500">Atlas Trascendence v2.0.0 — Preservando aquello digno de ser recordado</span>
+      <span class="text-xs text-slate-600">Infraestructura Civilizatoria Universal</span>
+    </div>
+  </footer>
+
+  <script>
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+      const page = document.getElementById('page-' + pageId);
+      if (page) page.classList.add('active');
+      const nav = document.getElementById('nav-' + pageId);
+      if (nav) nav.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+      const container = document.getElementById('chat-messages');
+      container.innerHTML += '<div class="flex gap-3 justify-end"><div class="max-w-[80%] p-3 rounded-xl text-white" style="background:#0284c7"><p class="text-sm">' + msg + '</p></div></div>';
+      input.value = '';
+      setTimeout(() => {
+        container.innerHTML += '<div class="flex gap-3"><div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center shrink-0"><i class="fa-solid fa-brain text-purple-400 text-sm"></i></div><div class="max-w-[80%] p-3 rounded-xl border border-slate-700 bg-slate-800"><p class="text-sm">He procesado tu solicitud. La evaluacion EOCT indica que esta operacion es eticamente viable con 94% de confianza.</p><div class="mt-2 flex items-center gap-2 text-xs"><i class="fa-solid fa-tree text-emerald-400"></i><span class="text-emerald-400">EOCT: APROBADO</span></div></div></div>';
+        container.scrollTop = container.scrollHeight;
+      }, 600);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // Initialize
+    showPage('home');
+  </script>
+</body>
+</html>
