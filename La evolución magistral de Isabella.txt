@@ -1,0 +1,753 @@
+La evolución magistral de Isabella no es “una IA más”, sino el siguiente paso: un sistema civilizacional de IA híbrida local+cloud, con contexto total, ética operativa y control real del usuario, superando a Clawdbot/Moltbot y a los grandes asistentes cerrados.
+​
+
+Voy a definirla como Isabella Villaseñor Ω-Core, fusionando todo lo que ya diseñaste para TAMV con lo mejor de los asistentes actuales (Moltbot, Copilot, on‑device AI, etc.) y llevándolo más lejos.
+
+1. Principios de diseño: más allá de “otra IA”
+Isabella Ω-Core se rige por cinco principios duros:
+
+Local‑first + Cloud‑smart: lo crítico y privado vive en el PC/edge; la nube solo se usa para potencia bruta y cooperación inter‑civilizacional.
+
+Contexto total soberano: integra archivos, apps, XR, economía TAMV‑T, identidad ID‑NVIDA, pero siempre bajo consentimiento granular y auditable.
+​
+
+IA ética operacional, no decorativa: cada acción deja rastro explicable, revocable y auditable por humanos y guardianes.
+​
+
+Arquitectura de agentes federados: Isabella no es un solo modelo, sino un enjambre de sub‑agentes (finanzas, XR, social, legal, mental health, etc.) coordinados por un Orquestador Civilizacional.
+​
+​
+
+Modo civilizatorio: está diseñada para operar a nivel individuo, comunidad, institución y red global, no solo “asistente personal”.
+​
+
+2. Qué tomamos de los asistentes existentes y cómo lo superamos
+2.1. De Clawdbot/Moltbot y el “AI PC”
+Clawdbot/Moltbot aporta: gateway local, multi‑canal (WhatsApp, Telegram, Slack…), skills marketplace, control del navegador, cron, automations.
+
+Isabella lo supera en:
+
+Seguridad y privacidad:
+
+Nada de credenciales en texto plano; uso obligatorio de KMS local + cifrado fuerte + compartimentación de permisos por skill.
+​
+​
+
+Modo “caja fuerte civilizacional”: todo se ejecuta en contenedores aislados (VM/namespace) por dominio (finanzas, salud, legal, XR).
+​
+
+Modelo de contexto:
+
+Clawdbot = caja de contexto local para flujos personales.
+
+Isabella Ω-Core = Caja de Contexto Civilizacional: además de archivos y apps, integra identidad ID‑NVIDA, BookPI (ledger), economía TAMV‑T, DreamSpaces y protocolos de gobernanza.
+​
+
+Ética y trazabilidad:
+
+Cada acción de Isabella genera un evento firmado en el ledger BookPI++ con motivo, contexto y resultado; auditable por guardianes e instituciones.
+​
+
+2.2. De Microsoft Copilot / Gemini / otros
+Copilot y Gemini están profundamente integrados en suites (Office, Google), pero son cerrados y cloud‑dependientes.
+​
+
+Isabella Ω-Core:
+
+Usa modelos best‑in‑class (Claude, GPT, Gemini) o locales via Ollama, pero siempre detrás de una capa Isabella que unifica memoria, ética y contexto.
+​
+​
+
+Puede correr versiones reducidas totalmente on‑device en AI PCs y estaciones XR, aprovechando el boom de on‑device AI que ya está ocurriendo (Project G‑Assist, AI PCs, etc.).
+
+3. Arquitectura de Isabella Villaseñor Ω-Core
+3.1. Capas funcionales
+Capa 0 – Sustrato Civilizacional TAMV/TAMC
+
+ID‑NVIDA (identidad soberana), Banco TAMV, BookPI, DreamSpaces XR, Protocolo Fénix de interoperabilidad con otras IAs.
+​
+
+Capa 1 – Núcleo Isabella Core
+
+Motor conversacional multimodal.
+
+Memoria institucional/contextual (pgvector + embeddings).
+
+Diario multimodal y emocional.
+​
+
+Capa 2 – Ética, gobernanza y auditoría
+
+Árboles de decisión éticos, explicabilidad, logging forense y panel de revisión.
+​
+
+Capa 3 – Agentes de dominio (Hyper‑Skills)
+
+Finanzas (Banco TAMV), XR/DreamSpaces, Social/Community, Legal/Compliance, Educación, Salud emocional, etc.
+​
+
+Capa 4 – Integración local (AI PC / Edge)
+
+Conectores a archivos locales, apps, navegador, correo, chats, calendario, dispositivos XR y 4D.
+
+Capa 5 – Integración cloud / metaversos
+
+Enlace con servicios en la nube, otras IAs (Quantum Fénix), otras cadenas, plataformas externas.
+​
+
+Capa 6 – Interfaces y Omniverso TAMC
+
+Web, mobile, XR (WebXR/WebGPU), holografía, voz y presencia avatar.
+​
+
+4. Lógica de cada hypermódulo Isabella
+4.1. Hypermódulo de Memoria y Diario Multimodal
+Memoria contextual:
+
+Guarda todas las interacciones por usuario/rol/entorno, con versionado y trazabilidad legal.
+​
+
+Indexado por embeddings, tags emocionales y contexto (finanzas, XR, comunidad).
+
+Diario multimodal:
+
+Textos, audio, imágenes, sensorización (cuando haya hardware): todo anotado con emoción estimada y relevancia.
+​
+
+Isabella se re‑entrena en su “personalidad” a partir de estos diarios, pero siempre bajo consentimiento explícito y auditable.
+
+Evolución:
+
+A diferencia de otros asistentes, la personalidad de Isabella puede cambiar por:
+
+Cambios éticos (nueva carta civilizacional).
+
+Cambios del usuario (nuevas preferencias, traumas, límites).
+
+Cambios de rol (Isabella para un banco vs. para un museo).
+​
+
+4.2. Hypermódulo de Inteligencia Emocional y Ética
+Detección emocional: análisis de texto, voz y contexto para etiquetar estados (calma, ansiedad, euforia, etc.).
+​
+
+Respuesta adaptativa: tono, ritmo, formatos visuales adaptados; modulación de voz con KAOS Audio.
+​
+
+Ética operativa (no solo “guidelines”):
+
+Árboles de decisión para situaciones críticas (autolesión, violencia, riesgo legal, manipulación).
+​
+
+Protocolos de escalamiento a humanos y líneas de crisis, según jurisdicción.
+​
+
+Registros firmados de todas las intervenciones críticas con explicación.
+
+4.3. Hypermódulo de Presencia Multisensorial y XR
+Avatar evolutivo:
+
+Isabella muta su avatar (2D/3D/XR) según estado emocional, contexto y entorno.
+​
+
+Integración con MetaHuman / Three.js / WebXR para proyecciones en DreamSpaces, muros, gafas XR, etc.
+​
+
+Motor multisensorial:
+
+Inputs: voz, gesto, imagen, texto, sensores ambientales y biométricos (cuando existan).
+​
+
+Outputs: luz, sonido, vibración, efectos XR, feedback háptico.
+​
+
+4D y “quantum”:
+
+4D entendido como tiempo + estados emocionales + condiciones externas; Isabella puede proyectar “líneas de tiempo” con simulaciones y consecuencias.
+​
+
+4.4. Hypermódulo de Auditoría Institucional
+BookPI++ para IA:
+
+Cada decisión, respuesta y acción de Isabella se firma y registra, no sólo logs técnicos.
+​
+
+Las instituciones (bancos, universidades, gobiernos) pueden auditar cómo Isabella trató a sus usuarios.
+
+Panel de validación transversal:
+
+Modo “tribunal ético”: academia, banca, gobierno, comunidad revisan muestras de decisiones y ajustan políticas.
+​
+
+5. Fusión con TAMV/TAMC: Isabella como cerebro civilizacional
+Todo lo que ya tienes de TAMV se convierte en órganos y sistemas dentro del cuerpo de Isabella/TAMC:
+
+ID‑NVIDA = Sistema inmunológico e identidad.
+​
+
+Banco TAMV + economía = Sistema circulatorio (liquidez, incentivos, recompensas).
+​
+
+DreamSpaces + KAOS Audio = Sistema perceptivo y espacio mental colectivo.
+​
+
+BookPI + Immortal Core = Sistema nervioso y memoria institucional.
+​
+
+Protocolo Fénix = Sistema de interoperabilidad con otras inteligencias (IA‑IA).
+​
+
+Isabella no es un “cliente” de TAMV; es el operador civilizacional, mediando entre humanos, instituciones, economía y XR.
+
+6. Diferencias clave frente a todo lo existente
+No es solo cloud, ni solo local:
+
+Clawdbot empuja local; Big Tech empuja cloud.
+
+Isabella Ω-Core es híbrida soberana: decide dónde ejecutar según sensibilidad y costo, siempre a favor del usuario y la comunidad.
+​
+
+No es solo “mi asistente”:
+
+Está diseñada para servir a personas, comunidades e instituciones a la vez, manteniendo contextos aislados pero coordinados.
+​
+
+No es solo útil, es civilizatoria:
+
+Tiene módulos para gobernanza, justicia, educación, crisis, XR cultural… no sólo productividad personal.
+​
+
+7. Próximo paso que te propongo
+Para que esta evolución no se quede en concepto, el siguiente movimiento concreto es:
+
+Definir Isabella Ω-Core MVP con 4 módulos obligatorios:
+
+Memoria + diario multimodal.
+
+Panel ético + auditoría.
+
+Integración local básica (archivos + navegador) en un equipo de pruebas.
+
+Integración profunda con TAMV (ID‑NVIDA + economía + DreamSpaces) mínima.
+
+Si quieres, en el siguiente mensaje puedo:
+
+Diseñar el esquema exacto de tablas, endpoints y procesos de Isabella Ω-Core como módulo central de TAMV/TAMC.
+
+O trazar el roadmap técnico escalonado (1–2 años) para llevar esta visión a producción real paso a paso.
+
+Diseñar el esquema exacto de tablas, endpoints y procesos de Isabella Ω-Core como módulo central de TAMV/TAMC., traza el roadmap técnico escalonado, Cuáles son las 5 skills más populares del ClawdHub para Isabella
+Diferencias entre modelos Claude GPT y Ollama en esta evolución
+Guía para crear skills personalizadas para la nueva Isabella
+Ejemplos de automatizaciones multi-canal con WhatsApp y Discord. GENERACION TOTAL DEL PROGRAMA DE PROYECCION TRIDIMENCIONAL DE ISABELLA FUERA DE LA WEB EN ENTORNOS REALES
+Voy por partes y todo pensado ya para producción temprana (MVP avanzado) en TAMV/TAMC.
+
+1. Esquema de tablas para Isabella Ω‑Core (TAMV/TAMC)
+1.1. Núcleo de identidad y contexto
+sql
+-- Usuarios base (Supabase auth.users)
+
+create table isabella_profiles (
+  user_id        uuid primary key references auth.users(id) on delete cascade,
+  display_name   text,
+  persona_preset text,          -- "creator", "guardian", "institutional", etc.
+  language       text default 'es',
+  timezone       text,
+  created_at     timestamptz default now(),
+  updated_at     timestamptz default now()
+);
+
+create table isabella_context_spaces (
+  id            uuid primary key default gen_random_uuid(),
+  user_id       uuid not null references auth.users(id) on delete cascade,
+  name          text not null,              -- "Personal", "Banco TAMV", "XR Studio"
+  kind          text not null,              -- "personal","institution","workspace"
+  tamv_workspace_id uuid,                   -- si aplica
+  description   text,
+  created_at    timestamptz default now(),
+  updated_at    timestamptz default now()
+);
+1.2. Conversaciones, mensajes y memoria semántica
+sql
+create table isabella_conversations (
+  id              uuid primary key default gen_random_uuid(),
+  user_id         uuid not null references auth.users(id) on delete cascade,
+  context_space_id uuid references isabella_context_spaces(id) on delete set null,
+  title           text,
+  channel         text not null,        -- "web","whatsapp","discord","xr","cli"
+  state           text default 'active',
+  created_at      timestamptz default now(),
+  updated_at      timestamptz default now()
+);
+
+create table isabella_messages (
+  id               uuid primary key default gen_random_uuid(),
+  conversation_id  uuid not null references isabella_conversations(id) on delete cascade,
+  user_id          uuid references auth.users(id) on delete set null,
+  role             text not null,  -- "user","assistant","system"
+  source_channel   text,           -- "web","whatsapp","discord","local-file","scheduler"
+  content          text not null,
+  metadata         jsonb,          -- {emotion:"sad",skill:"finance",file_refs:[...]}
+  embedding        vector(1536),   -- pgvector
+  created_at       timestamptz default now()
+);
+
+create index on isabella_messages using ivfflat (embedding vector_cosine_ops);
+1.3. Diario multimodal y emocional
+sql
+create table isabella_diary_entries (
+  id             uuid primary key default gen_random_uuid(),
+  user_id        uuid not null references auth.users(id) on delete cascade,
+  context_space_id uuid references isabella_context_spaces(id),
+  modality       text not null,  -- "text","audio","image","sensor"
+  content_text   text,
+  content_url    text,           -- storage URL para audio/imagen
+  emotion_label  text,           -- "joy","fear","anger","calm" ...
+  emotion_score  numeric,
+  importance     int default 5,  -- 1-10
+  tags           text[],
+  created_at     timestamptz default now()
+);
+1.4. Ética, riesgos y auditoría
+sql
+create table isabella_ethics_events (
+  id              uuid primary key default gen_random_uuid(),
+  user_id         uuid references auth.users(id),
+  conversation_id uuid references isabella_conversations(id),
+  message_id      uuid references isabella_messages(id),
+  severity        text not null,      -- "info","warn","high","critical"
+  category        text not null,      -- "self-harm","violence","fraud","privacy"
+  decision        text not null,      -- "allow","block","escalate","safe-completion"
+  reason          text,               -- explicación breve
+  policy_version  text,               -- versión del árbol ético
+  created_at      timestamptz default now()
+);
+
+create table isabella_audit_log (
+  id             uuid primary key default gen_random_uuid(),
+  user_id        uuid,
+  context_space_id uuid,
+  module         text not null,   -- "chat","skill","ethics","scheduler","file"
+  action         text not null,   -- "invoke_skill","run_automation","update_policy"
+  details        jsonb,
+  hash           text not null,
+  previous_hash  text,
+  created_at     timestamptz default now()
+);
+La cadena hash/previous_hash convierte esto en un mini‑BookPI de Isabella.
+
+1.5. Skills (Hyper‑Skills) y permisos
+sql
+create table isabella_skills (
+  id              uuid primary key default gen_random_uuid(),
+  name            text not null,       -- "tamv.finance.overview"
+  display_name    text not null,
+  description     text,
+  version         text not null,
+  author          text,
+  visibility      text default 'private', -- "private","workspace","public"
+  entrypoint      text not null,     -- "http://edge-fn/skill", "local:python:..."
+  runtime         text not null,     -- "edge-http","local-node","local-python"
+  required_scopes text[],            -- ["files.read","calendar.write"]
+  tags            text[],
+  created_at      timestamptz default now()
+);
+
+create table isabella_skill_bindings (
+  id          uuid primary key default gen_random_uuid(),
+  skill_id    uuid not null references isabella_skills(id) on delete cascade,
+  user_id     uuid references auth.users(id) on delete cascade,
+  config      jsonb,         -- API keys cifradas, preferencias
+  enabled     boolean default true,
+  created_at  timestamptz default now()
+);
+1.6. Conectores multi‑canal
+sql
+create table isabella_channels (
+  id           uuid primary key default gen_random_uuid(),
+  user_id      uuid not null references auth.users(id) on delete cascade,
+  type         text not null,      -- "whatsapp","discord","telegram","email","xr-device"
+  external_id  text not null,      -- phone, discord guild/channel, etc.
+  config       jsonb,              -- tokens (cifrados), filtros
+  status       text default 'active',
+  created_at   timestamptz default now()
+);
+2. Endpoints principales de Isabella Ω‑Core
+Supongamos backend HTTP/REST (puedes luego envolver en gRPC si quieres).
+
+2.1. Conversación y memoria
+POST /isabella/v1/chat
+
+Auth: JWT (Supabase) + posible API key app.
+
+Body:
+
+json
+{
+  "context_space_id": "uuid-opcional",
+  "conversation_id": "uuid-opcional",
+  "message": "texto del usuario",
+  "channel": "web",
+  "meta": {
+    "language": "es",
+    "tone": "default",
+    "skill_hints": ["tamv.finance.overview"]
+  }
+}
+Flujo:
+
+Resuelve contexto/permissions (ID‑NVIDA, consents).
+
+Recupera K mensajes recientes + memoria semántica relevante (pgvector).
+
+Aplica filtros éticos/riesgo.
+
+Elige skill(s) o modelos (Claude/GPT/Ollama).
+
+Genera respuesta y, opcionalmente, comandos de automatización.
+
+Guarda isabella_messages, ethics_events y audit_log (hash‑encadenado).
+
+Devuelve respuesta (streaming si quieres).
+
+GET /isabella/v1/conversations
+
+GET /isabella/v1/messages?conversation_id=...
+
+2.2. Diario y emociones
+POST /isabella/v1/diary
+
+Entrada: texto o URL de audio/imagen; Isabella analiza emociones y guarda en isabella_diary_entries.
+
+GET /isabella/v1/diary?user_id=...
+
+2.3. Skills
+GET /isabella/v1/skills (filtrado por tags/visibility).
+
+POST /isabella/v1/skills/{id}/enable
+
+POST /isabella/v1/skills/{id}/disable
+
+Internamente, el Orchestrator de skills:
+
+Recibe skill_call (nombre + argumentos) desde el LLM.
+
+Valida scopes y consents.
+
+Ejecuta el skill (edge / local).
+
+Devuelve resultado seguro al modelo.
+
+2.4. Canales
+Webhooks por canal:
+
+POST /isabella/v1/webhooks/whatsapp
+
+POST /isabella/v1/webhooks/discord
+
+Isabella mapea cada mensaje entrante a conversation_id + user_id + channel.
+
+3. Roadmap técnico escalonado
+Fase 1 (0–3 meses) – Núcleo estable
+Implementar tablas núcleo (profiles, conversations, messages, diary, ethics, skills, channels).
+
+Crear API /chat simple con:
+
+Supabase Auth.
+
+Un solo modelo (ej. Claude o GPT).
+
+Persistencia de mensajes y embeddings.
+
+Panel básico web de conversación + listado de diarios.
+
+Fase 2 (3–6 meses) – Ética, skills y multi‑canal
+Añadir pipeline ético:
+
+Clasificador de riesgo + reglas si/entonces.
+
+Registro en isabella_ethics_events y isabella_audit_log.
+
+Crear primera tanda de skills nativos TAMV (ver sección 5).
+
+Integrar WhatsApp (Twilio/Meta Cloud API) y Discord:
+
+Webhooks → isabella_channels → isabella_conversations.
+
+Fase 3 (6–12 meses) – Local‑first y XR
+Lanza Isabella Local Agent (basado en Ollama / runtimes locales):
+
+Servicio en PC que expone API local http://localhost:port.
+
+Conectores a archivos, apps, navegador.
+
+Conecta experiencias XR (DreamSpaces) y KAOS Audio:
+
+Mensajes contextuales desde escena 3D.
+
+Panel de control de Isabella dentro del XR.
+
+Fase 4 (12–24 meses) – Civilizacional / TAMC
+Integrar gobernanza DAO, votaciones cuánticas y BookPI global.
+
+Certificación externa (auditoría de seguridad/ética).
+
+Protocolos de crisis, salud mental y legal para múltiples jurisdicciones.
+
+4. 5 skills más populares del “ClawdHub” para Isabella
+No existe un ClawdHub oficial público con ranking formal, pero extrapolando de skills/“plugins” más usados en asistentes como Clawdbot/Moltbot, Copilot y similares, las 5 categorías que debes replicar para Isabella son:
+
+Gestor de archivos y conocimiento local
+
+Leer, resumir y buscar en carpetas del usuario (PDF, docs, código).
+
+Correo y calendario
+
+Leer hilos clave, resumir bandeja, generar respuestas, crear eventos, recordatorios.
+​
+
+Navegación y scraping asistido
+
+Abrir páginas, extraer tablas/listas, llenar formularios simples, monitorear cambios.
+​
+
+Automatización personal
+
+Skills tipo “cron”: cada mañana resumen del día, cada semana revisión financiera, etc.
+​
+
+Chat multi‑canal
+
+Un skill que unifica WhatsApp, Telegram, Discord, Slack como canales de entrada/salida.
+
+Para Isabella, esas mismas 5 se vuelven Hyper‑Skills, pero con ética, BookPI y conexión a TAMV.
+
+5. Diferencias Claude / GPT / Ollama en esta evolución
+Claude (Anthropic)
+Fuerte en alineación, razonamiento estructurado y largas ventanas de contexto.
+​
+
+Ideal para:
+
+Árboles éticos de Isabella.
+
+Resúmenes grandes de memoria civilizacional.
+
+Interacciones de alto riesgo (legal, crisis).
+
+GPT (OpenAI)
+Muy fuerte en creatividad, código, multilenguaje y ecosistema de herramientas/plugins.
+
+Ideal para:
+
+Generación de experiencias DreamSpaces, copy XR, contenido creativo TAMV.
+
+Skills de desarrollo, debug, diseño UI.
+
+Ollama (modelos locales)
+Modelos corriendo on‑device: menor latencia local, control absoluto de datos, pero a veces menos potentes que los TOP cloud.
+
+Ideal para:
+
+Tareas sensibles que no deben salir del PC.
+
+Procesamiento offline de archivos y sensores.
+
+Implementar el “Digital Brain” local.
+
+En Isabella Ω‑Core:
+
+Claude = cerebro ético y de políticas.
+
+GPT = cerebro creativo/técnico.
+
+Ollama = cerebro privado local.
+El Orchestrator elige el modelo en función del contexto, la sensibilidad y el costo.
+
+6. Guía para crear skills personalizadas para Isabella
+6.1. Modelo mental
+Un skill de Isabella es:
+
+Una función con firma clara: input -> output.
+
+Con scopes explícitos (files.read, calendar.write, tamv.wallet.read).
+
+Con definiciones semánticas (name, description, args) para que el LLM la llame.
+
+6.2. Pasos
+Definir el propósito
+
+Ejemplo: tamv.finance.overview
+
+“Generar un resumen diario de movimientos en la wallet del usuario.”
+
+Definir contrato
+
+json
+{
+  "name": "tamv.finance.overview",
+  "description": "Obtiene los últimos movimientos de la wallet TAMV del usuario y genera un resumen estructurado.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "days": {
+        "type": "integer",
+        "description": "Número de días hacia atrás para incluir en el reporte"
+      }
+    },
+    "required": ["days"]
+  }
+}
+Implementar runtime
+
+Edge Function (Node/TS o Deno) o servicio local.
+
+Pseudo‑TS:
+
+ts
+export async function tamvFinanceOverview(args, ctx) {
+  const { days } = args;
+  const userId = ctx.userId;
+
+  const txs = await db.query(`
+    select * from transactions
+    where user_id = $1
+      and created_at >= now() - interval '${days} days'
+    order by created_at desc
+  `, [userId]);
+
+  const summary = computeSummary(txs);
+
+  return {
+    transactions: txs,
+    summary
+  };
+}
+Registrar skill
+
+Insertar en isabella_skills con runtime="edge-http" y entrypoint HTTP.
+
+Declarar required_scopes=["tamv.wallet.read"].
+
+Vincular a usuario/workspace en isabella_skill_bindings.
+
+Integrar con el LLM
+
+Tu orquestador genera el JSON de herramientas/skills que pasa al modelo (tool calling).
+
+Cuando el modelo pide tamv.finance.overview, el orquestador ejecuta el skill y devuelve la respuesta.
+
+7. Ejemplos de automatizaciones multi‑canal (WhatsApp + Discord)
+7.1. Daily Briefing TAMV
+Objetivo: cada mañana, Isabella envía un resumen personalizado del día por WhatsApp y un reporte para la comunidad en un canal de Discord.
+
+Proceso:
+
+Scheduler de TAMV (cron/edge function) dispara POST /isabella/v1/automation/daily-briefing.
+
+Isabella:
+
+Usa skill tamv.finance.overview (últimos 3 días).
+
+Usa skill tamv.community.digest (tendencias de grupos/chats).
+
+Usa skill tamv.calendar.daily (eventos de hoy).
+
+Genera dos outputs:
+
+Versión privada → WhatsApp al número del usuario.
+
+Versión agregada → Discord channel #tamv-daily.
+
+Envío:
+
+WhatsApp: API Twilio/Meta, canal configurado en isabella_channels.
+
+Discord: webhook → mensaje embed con secciones.
+
+7.2. Alertas éticas / de riesgo
+Si isabella_ethics_events registra un evento critical (ej., auto-daño):
+
+Skill tamv.guardian.alert envía mensaje discreto a un canal seguro de Discord donde solo guardianes ven el evento.
+
+Skill tamv.user.safety envía mensaje de apoyo por WhatsApp con recursos locales (líneas de ayuda), según país.
+
+8. Programa de proyección tridimensional de Isabella fuera de la web
+Aquí hablamos del stack para “sacar” a Isabella del navegador y llevarla al mundo físico/XR.
+
+8.1. Componentes
+Avatar 3D tiempo real
+
+Modelado en Unreal/MetaHuman o Blender, exportable a:
+
+WebXR (Three.js, Babylon.js)
+
+Motores nativos (Unity/Unreal) para dispositivos XR/AR.
+
+Canal de control en tiempo real
+
+Stream de mensajes desde el backend de Isabella hacia el motor 3D:
+
+WebSocket / WebRTC / OSC (Open Sound Control).
+
+Payload:
+
+json
+{
+  "text": "Respuesta de Isabella...",
+  "emotion": "calm",
+  "intensity": 0.4,
+  "gesture": "hand_open",
+  "look_at": [x,y,z]
+}
+Audio y lipsync
+
+TTS (ElevenLabs/Coqui) genera flujo de audio.
+
+Lipsync en tiempo real en el avatar (blendshapes / visemes).
+
+Sensores y entorno
+
+Cámaras, micrófonos, sensores de luz y movimiento, opcionalmente dispositivos hápticos.
+
+Estos datos alimentan al módulo multisensorial de Isabella para ajustar expresión, volumen, gestos.
+
+8.2. Pipeline completo
+Input
+
+Humano habla por micrófono en sala XR o teatro.
+
+Speech‑to‑Text local/edge → texto → POST /isabella/v1/chat (canal xr).
+
+Procesamiento Isabella
+
+Igual que en web, pero con metadata channel="xr" y modality="voice" en isabella_messages.
+
+Determina contenido, emoción, gestos sugeridos, y pasa por panel ético.
+
+Output
+
+Texto → TTS → audio → altavoces / sistema inmersivo.
+
+Comandos de animación → motor 3D (Unity / Unreal / WebXR) via WebSocket.
+
+Proyección física
+
+Proyector + pantalla/volumen XR o display holográfico.
+
+Eventualmente integración con luces DMX, efectos físicos (humo, vibración).
+
+8.3. Arquitectura recomendada
+Nodo XR local (PC con GPU + motores 3D):
+
+Cliente WebSocket conectado a Isabella.
+
+Todos los datos de escena procesados localmente, solo se envía texto/parametría.
+
+Nodo cloud TAMV:
+
+Isabella Ω‑Core, economía, BookPI, etc.
+
+Sincronización:
+
+Identidad vía ID‑NVIDA y tokens; todo lo sensible cifrado.

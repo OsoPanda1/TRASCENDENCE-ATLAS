@@ -1,0 +1,2523 @@
+Analiza la siguiene informacion y crea una versión mucho mas robusta y completamente blindada a prueba de errores sin ningun punto debil o criticque ueda ser victima de ataques intento de hackeo, fraude o robo de activos o información sensible. Una vez tengas toda la estructura y la informacion totalmene desarrollada integrala diretamenta al proyecto bajo la supervisión y manejo del modulo CATTLEYA, las tarjetas tendran un costo de activacion de $9,99 USD, y podran ser personalizadas de 10 diferentes maneras con diseños preestablecidos que serviran como plantillas para que el usuario pueda tener una tarjeta con costo de $9,99 USD basica, o la personalización tendra un costo adicional 5 personalizaciones regulares preestablecidas de las cuales podra elegir una por $9,99 USD, 3 personalizaciones edición especial por $14,99 USD cada una o 2 personalizaciones edición coleccionable por $24,99 USD. 
+
+cambia el nombre de la moneda interna TNX nuestra moneda se  llamara 
+
+Guía Completa: Integración de Stripe Issuing para Tarjetas de Débito Virtuales
+FASE 1: PREPARACIÓN Y REQUISITOS PREVIOS
+1.1 Verificación de Cuenta Stripe Existente
+
+Paso 1: Revisar Estado de tu Cuenta
+- Accede a tu Dashboard de Stripe
+- Ve a Settings → Account details
+- Verifica que tu cuenta esté completamente verificada
+- Confirma que tienes activado "Full account access"
+
+Paso 2: Verificar País de Operación
+- Stripe Issuing está disponible en: US, UK, EU (países específicos), Australia, Singapore
+- Si tu país no está soportado, necesitarás crear una entidad legal en un país soportado
+
+Paso 3: Documentación Requerida
+- Artículos de incorporación de tu empresa
+- EIN/Tax ID de tu negocio
+- Identificación personal del representante legal
+- Estados financieros de los últimos 2 años
+- Plan de negocio detallado para el programa de tarjetas
+
+1.2 Preparación Legal y Compliance
+
+KYC (Know Your Customer) Mejorado:
+- Implementa verificación de identidad más estricta
+- Requiere documentos adicionales: comprobante de domicilio, ingresos
+- Configura límites basados en nivel de verificación
+
+Términos y Condiciones:
+- Actualiza tus T&C para incluir uso de tarjetas
+- Agrega políticas específicas de tarjetas de débito
+- Incluye limitaciones de uso y responsabilidades
+
+Política de Privacidad:
+- Actualiza para incluir manejo de datos de tarjetas
+- Especifica cómo se almacenan y procesan los datos sensibles
+
+FASE 2: SOLICITUD Y CONFIGURACIÓN DE STRIPE ISSUING
+2.1 Aplicar para Stripe Issuing
+
+Paso 1: Iniciar Aplicación
+
+1. Ve a Dashboard → Products → Issuing
+2. Click en "Request Access"
+3. Completa el formulario detallado:
+   - Descripción de tu negocio
+   - Volumen esperado de tarjetas
+   - Casos de uso específicos
+   - Mercado objetivo
+
+Paso 2: Documentación del Plan de Negocio
+Prepara un documento que incluya:
+- Modelo de negocio para tarjetas
+- Proyecciones de volumen (número de tarjetas, transacciones mensuales)
+- Medidas de control de riesgo
+- Experiencia previa en servicios financieros
+- Plan de marketing y adquisición de usuarios
+
+Paso 3: Proceso de Revisión
+- Stripe revisará tu aplicación (2-4 semanas típicamente)
+- Pueden solicitar información adicional
+- Posible llamada de due diligence con el equipo de Stripe
+
+2.2 Configuración Inicial Post-Aprobación
+
+Configurar Webhooks:
+javascript
+// Eventos críticos a monitorear
+const requiredWebhooks = [
+  'issuing_card.created',
+  'issuing_card.updated', 
+  'issuing_transaction.created',
+  'issuing_transaction.updated',
+  'issuing_authorization.created',
+  'issuing_authorization.updated'
+];
+
+Configurar Spending Controls Globales:
+javascript
+// Ejemplo de controles por defecto
+const defaultSpendingControls = {
+  spending_limits: [
+    {
+      amount: 50000, // $500 en centavos
+      interval: 'daily'
+    },
+    {
+      amount: 200000, // $2000 en centavos  
+      interval: 'monthly'
+    }
+  ],
+  allowed_categories: ['gas_stations', 'grocery_stores', 'restaurants'],
+  blocked_categories: ['gambling']
+};
+
+FASE 3: DESARROLLO BACKEND
+
+3.1 Configuración del Entorno
+
+Instalación de Dependencias:
+bash
+Node.js
+npm install stripe dotenv express
+
+Python  
+pip install stripe python-dotenv flask
+
+PHP
+composer require stripe/stripe-php
+
+
+Variables de Entorno:
+env
+.env file
+STRIPE_SECRET_KEY=sk_test_...  Cambiar a sk_live_ en producción
+STRIPE_PUBLISHABLE_KEY=pk_test_... Cambiar a pk_live_ en producción
+STRIPE_WEBHOOK_SECRET=whsec_...
+DATABASE_URL=your_database_url
+APP_ENV=development production para live
+
+3.2 Estructura de Base de Datos
+
+Tabla: virtual_cards
+sql
+CREATE TABLE virtual_cards (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    stripe_card_id VARCHAR(255) UNIQUE NOT NULL,
+    card_holder_name VARCHAR(255) NOT NULL,
+    last4 VARCHAR(4) NOT NULL,
+    brand VARCHAR(20) NOT NULL,
+    exp_month INT NOT NULL,
+    exp_year INT NOT NULL,
+    status ENUM('active', 'inactive', 'canceled') DEFAULT 'active',
+    spending_limit_daily INT DEFAULT 50000,
+    spending_limit_monthly INT DEFAULT 200000,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    INDEX idx_user_id (user_id),
+    INDEX idx_stripe_card_id (stripe_card_id),
+    INDEX idx_status (status)
+);
+
+Tabla: card_transactions
+sql
+CREATE TABLE card_transactions (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    card_id BIGINT NOT NULL,
+    stripe_transaction_id VARCHAR(255) UNIQUE NOT NULL,
+    amount INT NOT NULL,
+    currency VARCHAR(3) DEFAULT 'USD',
+    merchant_name VARCHAR(255),
+    merchant_category VARCHAR(50),
+    transaction_type ENUM('purchase', 'refund', 'adjustment') DEFAULT 'purchase',
+    status ENUM('pending', 'approved', 'declined') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (card_id) REFERENCES virtual_cards(id),
+    INDEX idx_card_id (card_id),
+    INDEX idx_stripe_transaction_id (stripe_transaction_id),
+    INDEX idx_status (status),
+    INDEX idx_created_at (created_at)
+);
+```
+
+Tabla: user_balances
+sql
+CREATE TABLE user_balances (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT UNIQUE NOT NULL,
+    available_balance INT DEFAULT 0,
+    pending_balance INT DEFAULT 0,
+    currency VARCHAR(3) DEFAULT 'USD',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    INDEX idx_user_id (user_id)
+);
+
+
+3.3 Implementación de APIs Backend
+
+Controlador Principal de Tarjetas (Node.js/Express):
+javascript
+// controllers/cardController.js
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const db = require('../database/connection');
+
+class CardController {
+    
+    // Crear nueva tarjeta virtual
+    async createVirtualCard(req, res) {
+        try {
+            const { user_id, cardholder_name, spending_limits, shipping } = req.body;
+            
+            // 1. Verificar balance del usuario
+            const userBalance = await this.getUserBalance(user_id);
+            if (userBalance.available_balance < 1000) { // Mínimo $10
+                return res.status(400).json({
+                    error: 'Insufficient balance to create card'
+                });
+            }
+            
+            // 2. Crear cardholder en Stripe si no existe
+            let cardholder = await this.getOrCreateCardholder(user_id, cardholder_name);
+            
+            // 3. Crear tarjeta en Stripe
+            const stripeCard = await stripe.issuing.cards.create({
+                cardholder: cardholder.id,
+                currency: 'usd',
+                type: 'virtual',
+                spending_controls: {
+                    spending_limits: spending_limits || [
+                        {
+                            amount: 50000, // $500
+                            interval: 'daily'
+                        }
+                    ],
+                    allowed_categories: ['gas_stations', 'grocery_stores', 'restaurants'],
+                    blocked_categories: ['gambling', 'adult_digital_goods']
+                },
+                status: 'active'
+            });
+            
+            // 4. Guardar en base de datos
+            const cardData = {
+                user_id,
+                stripe_card_id: stripeCard.id,
+                card_holder_name: cardholder_name,
+                last4: stripeCard.last4,
+                brand: stripeCard.brand,
+                exp_month: stripeCard.exp_month,
+                exp_year: stripeCard.exp_year,
+                status: 'active',
+                spending_limit_daily: spending_limits?.[0]?.amount || 50000,
+                spending_limit_monthly: spending_limits?.[1]?.amount || 200000
+            };
+            
+            const result = await db.query(
+                'INSERT INTO virtual_cards SET ?', 
+                [cardData]
+            );
+            
+            // 5. Retornar datos de tarjeta (incluyendo datos sensibles solo una vez)
+            const fullCardData = await stripe.issuing.cards.retrieve(
+                stripeCard.id,
+                { expand: ['number', 'cvc'] }
+            );
+            
+            res.json({
+                success: true,
+                card: {
+                    id: result.insertId,
+                    stripe_id: stripeCard.id,
+                    number: fullCardData.number,
+                    cvc: fullCardData.cvc,
+                    exp_month: stripeCard.exp_month,
+                    exp_year: stripeCard.exp_year,
+                    brand: stripeCard.brand,
+                    cardholder_name: cardholder_name,
+                    status: 'active'
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error creating virtual card:', error);
+            res.status(500).json({
+                error: 'Failed to create virtual card',
+                details: error.message
+            });
+        }
+    }
+    
+    // Obtener o crear cardholder
+    async getOrCreateCardholder(user_id, name) {
+        try {
+            // Verificar si ya existe cardholder para este usuario
+            const existing = await db.query(
+                'SELECT stripe_cardholder_id FROM users WHERE id = ?',
+                [user_id]
+            );
+            
+            if (existing[0]?.stripe_cardholder_id) {
+                return await stripe.issuing.cardholders.retrieve(
+                    existing[0].stripe_cardholder_id
+                );
+            }
+            
+            // Crear nuevo cardholder
+            const cardholder = await stripe.issuing.cardholders.create({
+                name: name,
+                email: await this.getUserEmail(user_id),
+                type: 'individual',
+                billing: {
+                    address: {
+                        line1: '123 Main Street', // Obtener de datos del usuario
+                        city: 'San Francisco',
+                        state: 'CA',
+                        postal_code: '94111',
+                        country: 'US'
+                    }
+                }
+            });
+            
+            // Guardar cardholder ID en base de datos
+            await db.query(
+                'UPDATE users SET stripe_cardholder_id = ? WHERE id = ?',
+                [cardholder.id, user_id]
+            );
+            
+            return cardholder;
+            
+        } catch (error) {
+            throw new Error(`Failed to create cardholder: ${error.message}`);
+        }
+    }
+    
+    // Obtener tarjetas del usuario
+    async getUserCards(req, res) {
+        try {
+            const { user_id } = req.params;
+            
+            const cards = await db.query(`
+                SELECT 
+                    id,
+                    stripe_card_id,
+                    card_holder_name,
+                    last4,
+                    brand,
+                    exp_month,
+                    exp_year,
+                    status,
+                    spending_limit_daily,
+                    spending_limit_monthly,
+                    created_at
+                FROM virtual_cards 
+                WHERE user_id = ? 
+                ORDER BY created_at DESC
+            `, [user_id]);
+            
+            res.json({
+                success: true,
+                cards: cards
+            });
+            
+        } catch (error) {
+            console.error('Error fetching user cards:', error);
+            res.status(500).json({
+                error: 'Failed to fetch cards'
+            });
+        }
+    }
+    
+    // Congelar/Descongelar tarjeta
+    async toggleCardStatus(req, res) {
+        try {
+            const { card_id } = req.params;
+            const { status } = req.body; // 'active' o 'inactive'
+            
+            // 1. Obtener tarjeta de BD
+            const card = await db.query(
+                'SELECT * FROM virtual_cards WHERE id = ?',
+                [card_id]
+            );
+            
+            if (!card[0]) {
+                return res.status(404).json({
+                    error: 'Card not found'
+                });
+            }
+            
+            // 2. Actualizar en Stripe
+            const updatedCard = await stripe.issuing.cards.update(
+                card[0].stripe_card_id,
+                { status: status }
+            );
+            
+            // 3. Actualizar en BD
+            await db.query(
+                'UPDATE virtual_cards SET status = ? WHERE id = ?',
+                [status, card_id]
+            );
+            
+            res.json({
+                success: true,
+                card: {
+                    id: card_id,
+                    status: status
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error updating card status:', error);
+            res.status(500).json({
+                error: 'Failed to update card status'
+            });
+        }
+    }
+    
+    // Obtener transacciones de tarjeta
+    async getCardTransactions(req, res) {
+        try {
+            const { card_id } = req.params;
+            const { limit = 50, page = 1 } = req.query;
+            const offset = (page - 1) * limit;
+            
+            const transactions = await db.query(`
+                SELECT 
+                    id,
+                    stripe_transaction_id,
+                    amount,
+                    currency,
+                    merchant_name,
+                    merchant_category,
+                    transaction_type,
+                    status,
+                    created_at
+                FROM card_transactions 
+                WHERE card_id = ? 
+                ORDER BY created_at DESC 
+                LIMIT ? OFFSET ?
+            `, [card_id, parseInt(limit), offset]);
+            
+            // Obtener count total para paginación
+            const countResult = await db.query(
+                'SELECT COUNT(*) as total FROM card_transactions WHERE card_id = ?',
+                [card_id]
+            );
+            
+            res.json({
+                success: true,
+                transactions: transactions,
+                pagination: {
+                    page: parseInt(page),
+                    limit: parseInt(limit),
+                    total: countResult[0].total,
+                    pages: Math.ceil(countResult[0].total / limit)
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error fetching card transactions:', error);
+            res.status(500).json({
+                error: 'Failed to fetch transactions'
+            });
+        }
+    }
+    
+    // Funciones auxiliares
+    async getUserBalance(user_id) {
+        const result = await db.query(
+            'SELECT * FROM user_balances WHERE user_id = ?',
+            [user_id]
+        );
+        return result[0] || { available_balance: 0, pending_balance: 0 };
+    }
+    
+    async getUserEmail(user_id) {
+        const result = await db.query(
+            'SELECT email FROM users WHERE id = ?',
+            [user_id]
+        );
+        return result[0]?.email;
+    }
+}
+
+module.exports = new CardController();
+
+
+Manejo de Webhooks:
+
+javascript
+// controllers/webhookController.js
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const db = require('../database/connection');
+
+class WebhookController {
+    
+    async handleWebhook(req, res) {
+        const sig = req.headers['stripe-signature'];
+        let event;
+        
+        try {
+            event = stripe.webhooks.constructEvent(
+                req.body, 
+                sig, 
+                process.env.STRIPE_WEBHOOK_SECRET
+            );
+        } catch (err) {
+            console.error('Webhook signature verification failed:', err.message);
+            return res.status(400).send(`Webhook Error: ${err.message}`);
+        }
+        
+        // Manejar diferentes tipos de eventos
+        switch (event.type) {
+            case 'issuing_authorization.created':
+                await this.handleAuthorizationCreated(event.data.object);
+                break;
+                
+            case 'issuing_authorization.updated':
+                await this.handleAuthorizationUpdated(event.data.object);
+                break;
+                
+            case 'issuing_transaction.created':
+                await this.handleTransactionCreated(event.data.object);
+                break;
+                
+            case 'issuing_transaction.updated':
+                await this.handleTransactionUpdated(event.data.object);
+                break;
+                
+            case 'issuing_card.created':
+                await this.handleCardCreated(event.data.object);
+                break;
+                
+            default:
+                console.log(`Unhandled event type ${event.type}`);
+        }
+        
+        res.json({received: true});
+    }
+    
+    async handleAuthorizationCreated(authorization) {
+        console.log('New authorization:', authorization.id);
+        
+        // Lógica para manejar autorización en tiempo real
+        // Por ejemplo, notificaciones push, validaciones adicionales
+        try {
+            // Obtener tarjeta asociada
+            const card = await db.query(
+                'SELECT * FROM virtual_cards WHERE stripe_card_id = ?',
+                [authorization.card]
+            );
+            
+            if (card[0]) {
+                // Enviar notificación al usuario
+                await this.sendNotification(card[0].user_id, {
+                    type: 'authorization_attempt',
+                    amount: authorization.amount,
+                    merchant: authorization.merchant_data?.name,
+                    status: authorization.approved ? 'approved' : 'declined'
+                });
+            }
+            
+        } catch (error) {
+            console.error('Error handling authorization:', error);
+        }
+    }
+    
+    async handleTransactionCreated(transaction) {
+        console.log('New transaction:', transaction.id);
+        
+        try {
+            // Obtener tarjeta de la BD
+            const cardResult = await db.query(
+                'SELECT * FROM virtual_cards WHERE stripe_card_id = ?',
+                [transaction.card]
+            );
+            
+            if (!cardResult[0]) {
+                console.error('Card not found for transaction:', transaction.card);
+                return;
+            }
+            
+            const card = cardResult[0];
+            
+            // Guardar transacción en BD
+            const transactionData = {
+                card_id: card.id,
+                stripe_transaction_id: transaction.id,
+                amount: transaction.amount,
+                currency: transaction.currency,
+                merchant_name: transaction.merchant_data?.name || 'Unknown Merchant',
+                merchant_category: transaction.merchant_data?.category,
+                transaction_type: this.getTransactionType(transaction),
+                status: 'approved', // Las transacciones creadas ya están aprobadas
+                created_at: new Date(transaction.created * 1000)
+            };
+            
+            await db.query(
+                'INSERT INTO card_transactions SET ?',
+                [transactionData]
+            );
+            
+            // Actualizar balance del usuario
+            await this.updateUserBalance(card.user_id, -transaction.amount);
+            
+            // Enviar notificación
+            await this.sendNotification(card.user_id, {
+                type: 'transaction_completed',
+                amount: transaction.amount,
+                merchant: transaction.merchant_data?.name,
+                balance_remaining: await this.getUserBalance(card.user_id)
+            });
+            
+        } catch (error) {
+            console.error('Error handling transaction created:', error);
+        }
+    }
+    
+    async updateUserBalance(user_id, amount_change) {
+        try {
+            await db.query(`
+                UPDATE user_balances 
+                SET available_balance = available_balance + ?
+                WHERE user_id = ?
+            `, [amount_change, user_id]);
+            
+        } catch (error) {
+            console.error('Error updating user balance:', error);
+        }
+    }
+    
+    async sendNotification(user_id, data) {
+        // Implementar lógica de notificaciones (push, email, etc.)
+        console.log(`Sending notification to user ${user_id}:`, data);
+        
+        // Ejemplo: guardar notificación en BD para mostrar in-app
+        try {
+            await db.query(`
+                INSERT INTO notifications (user_id, type, title, message, data, created_at)
+                VALUES (?, ?, ?, ?, ?, NOW())
+            `, [
+                user_id,
+                data.type,
+                this.getNotificationTitle(data.type),
+                this.getNotificationMessage(data),
+                JSON.stringify(data)
+            ]);
+        } catch (error) {
+            console.error('Error saving notification:', error);
+        }
+    }
+    
+    getNotificationTitle(type) {
+        const titles = {
+            'authorization_attempt': 'Card Authorization',
+            'transaction_completed': 'Transaction Completed',
+            'card_created': 'New Card Created'
+        };
+        return titles[type] || 'Card Activity';
+    }
+    
+    getNotificationMessage(data) {
+        switch(data.type) {
+            case 'authorization_attempt':
+                return `Authorization ${data.status} for $${(data.amount/100).toFixed(2)} at ${data.merchant}`;
+            case 'transaction_completed':
+                return `$${(data.amount/100).toFixed(2)} charged at ${data.merchant}`;
+            default:
+                return 'Card activity detected';
+        }
+    }
+    
+    getTransactionType(transaction) {
+        if (transaction.amount < 0) return 'refund';
+        return 'purchase';
+    }
+    
+    async getUserBalance(user_id) {
+        const result = await db.query(
+            'SELECT available_balance FROM user_balances WHERE user_id = ?',
+            [user_id]
+        );
+        return result[0]?.available_balance || 0;
+    }
+}
+
+module.exports = new WebhookController();
+```
+
+**Rutas de la API:**
+
+```javascript
+// routes/cards.js
+const express = require('express');
+const router = express.Router();
+const cardController = require('../controllers/cardController');
+const authMiddleware = require('../middleware/auth');
+const webhookController = require('../controllers/webhookController');
+
+// Middleware de autenticación para todas las rutas excepto webhook
+router.use((req, res, next) => {
+    if (req.path === '/webhook') {
+        return next();
+    }
+    return authMiddleware(req, res, next);
+});
+
+// Rutas principales
+router.post('/create', cardController.createVirtualCard);
+router.get('/user/:user_id', cardController.getUserCards);
+router.put('/:card_id/status', cardController.toggleCardStatus);
+router.get('/:card_id/transactions', cardController.getCardTransactions);
+
+// Webhook de Stripe (sin autenticación)
+router.post('/webhook', express.raw({type: 'application/json'}), webhookController.handleWebhook);
+
+module.exports = router;
+```
+
+FASE 4: DESARROLLO FRONTEND
+
+4.1 Componentes React para Tarjetas
+
+Componente Principal de Tarjetas:
+jsx
+// components/VirtualCards/CardManager.jsx
+import React, { useState, useEffect } from 'react';
+import CardList from './CardList';
+import CreateCardModal from './CreateCardModal';
+import CardDetailsModal from './CardDetailsModal';
+import TransactionHistory from './TransactionHistory';
+import { cardService } from '../../services/cardService';
+
+const CardManager = ({ userId }) => {
+    const [cards, setCards] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [selectedCard, setSelectedCard] = useState(null);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [showTransactions, setShowTransactions] = useState(false);
+    const [userBalance, setUserBalance] = useState(0);
+
+    useEffect(() => {
+        loadCards();
+        loadUserBalance();
+    }, [userId]);
+
+    const loadCards = async () => {
+        try {
+            setLoading(true);
+            const response = await cardService.getUserCards(userId);
+            if (response.success) {
+                setCards(response.cards);
+            }
+        } catch (error) {
+            console.error('Error loading cards:', error);
+            // Mostrar error toast/notification
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const loadUserBalance = async () => {
+        try {
+            const response = await cardService.getUserBalance(userId);
+            if (response.success) {
+                setUserBalance(response.balance);
+            }
+        } catch (error) {
+            console.error('Error loading balance:', error);
+        }
+    };
+
+    const handleCreateCard = async (cardData) => {
+        try {
+            const response = await cardService.createCard(userId, cardData);
+            if (response.success) {
+                setCards([response.card, ...cards]);
+                setShowCreateModal(false);
+                // Mostrar success notification
+                // Mostrar datos sensibles de la tarjeta por única vez
+                setSelectedCard(response.card);
+                setShowDetailsModal(true);
+            }
+        } catch (error) {
+            console.error('Error creating card:', error);
+            // Mostrar error notification
+        }
+    };
+
+    const handleToggleCardStatus = async (cardId, newStatus) => {
+        try {
+            const response = await cardService.toggleCardStatus(cardId, newStatus);
+            if (response.success) {
+                setCards(cards.map(card => 
+                    card.id === cardId ? { ...card, status: newStatus } : card
+                ));
+                // Mostrar success notification
+            }
+        } catch (error) {
+            console.error('Error updating card status:', error);
+        }
+    };
+
+    const handleViewTransactions = (card) => {
+        setSelectedCard(card);
+        setShowTransactions(true);
+    };
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="max-w-6xl mx-auto p-6">
+            {/* Header con balance */}
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white mb-6">
+                <h1 className="text-3xl font-bold mb-2">Virtual Cards</h1>
+                <p className="text-blue-100">Available Balance: ${(userBalance / 100).toFixed(2)}</p>
+            </div>
+
+            {/* Botón crear tarjeta */}
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-semibold">Your Cards</h2>
+                <button
+                    onClick={() => setShowCreateModal(true)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
+                    disabled={userBalance < 1000} // Mínimo $10
+                >
+                    Create New Card
+                </button>
+            </div>
+
+            {/* Lista de tarjetas */}
+            <CardList
+                cards={cards}
+                onToggleStatus={handleToggleCardStatus}
+                onViewTransactions={handleViewTransactions}
+            />
+
+            {/* Modales */}
+            {showCreateModal && (
+                <CreateCardModal
+                    onClose={() => setShowCreateModal(false)}
+                    onSubmit={handleCreateCard}
+                    userBalance={userBalance}
+                />
+            )}
+
+            {showDetailsModal && selectedCard && (
+                <CardDetailsModal
+                    card={selectedCard}
+                    onClose={() => {
+                        setShowDetailsModal(false);
+                        setSelectedCard(null);
+                    }}
+                />
+            )}
+
+            {showTransactions && selectedCard && (
+                <TransactionHistory
+                    card={selectedCard}
+                    onClose={() => {
+                        setShowTransactions(false);
+                        setSelectedCard(null);
+                    }}
+                />
+            )}
+        </div>
+    );
+};
+
+export default CardManager;
+```
+
+**Componente de Lista de Tarjetas:**
+
+```jsx
+// components/VirtualCards/CardList.jsx
+import React from 'react';
+import CardItem from './CardItem';
+
+const CardList = ({ cards, onToggleStatus, onViewTransactions }) => {
+    if (cards.length === 0) {
+        return (
+            <div className="text-center py-12">
+                <div className="text-gray-400 text-lg mb-4">No cards yet</div>
+                <p className="text-gray-500">Create your first virtual card to get started</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {cards.map(card => (
+                <CardItem
+                    key={card.id}
+                    card={card}
+                    onToggleStatus={onToggleStatus}
+                    onViewTransactions={onViewTransactions}
+                />
+            ))}
+        </div>
+    );
+};
+
+export default CardList;
+```
+
+**Componente Individual de Tarjeta:**
+
+```jsx
+// components/VirtualCards/CardItem.jsx
+import React, { useState } from 'react';
+
+const CardItem = ({ card, onToggleStatus, onViewTransactions }) => {
+    const [isToggling, setIsToggling] = useState(false);
+
+    const handleToggleStatus = async () => {
+        setIsToggling(true);
+        const newStatus = card.status === 'active' ? 'inactive' : 'active';
+        await onToggleStatus(card.id, newStatus);
+        setIsToggling(false);
+    };
+
+    const getBrandLogo = (brand) => {
+        const logos = {
+            'visa': '/images/visa-logo.png',
+            'mastercard': '/images/mastercar
+            
+            Guía Completa: Integración de Stripe Issuing - Continuación
+
+FASE 4: DESARROLLO FRONTEND (Continuación)
+
+Componente Individual de Tarjeta (Continuación):
+jsx
+// components/VirtualCards/CardItem.jsx (continuación)
+const CardItem = ({ card, onToggleStatus, onViewTransactions }) => {
+    const [isToggling, setIsToggling] = useState(false);
+
+    const handleToggleStatus = async () => {
+        setIsToggling(true);
+        const newStatus = card.status === 'active' ? 'inactive' : 'active';
+        await onToggleStatus(card.id, newStatus);
+        setIsToggling(false);
+    };
+
+    const getBrandLogo = (brand) => {
+        const logos = {
+            'visa': '/images/visa-logo.png',
+            'mastercard': '/images/mastercard-logo.png',
+            'amex': '/images/amex-logo.png'
+        };
+        return logos[brand.toLowerCase()] || '/images/default-card.png';
+    };
+
+    const getStatusColor = (status) => {
+        return status === 'active' 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-red-100 text-red-800';
+    };
+
+    return (
+        <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+            {/* Tarjeta Visual */}
+            <div className={`h-48 rounded-t-xl p-6 text-white relative overflow-hidden ${
+                card.customization?.background_id 
+                    ? `bg-gradient-to-br ${getCustomBackground(card.customization.background_id)}`
+                    : 'bg-gradient-to-br from-gray-700 to-gray-900'
+            }`}>
+                {/* Imagen de fondo personalizada si existe */}
+                {card.customization?.background_id && (
+                    <div 
+                        className="absolute inset-0 opacity-20"
+                        style={{
+                            backgroundImage: `url(/images/card-backgrounds/bg-${card.customization.background_id}.jpg)`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
+                    />
+                )}
+                
+                {/* Logo de marca */}
+                <div className="flex justify-between items-start mb-8">
+                    <img 
+                        src={getBrandLogo(card.brand)} 
+                        alt={card.brand} 
+                        className="h-8 w-auto"
+                    />
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(card.status)}`}>
+                        {card.status.toUpperCase()}
+                    </span>
+                </div>
+                
+                {/* Número de tarjeta (solo últimos 4) */}
+                <div className="text-lg font-mono tracking-wider mb-4">
+                    •••• •••• •••• {card.last4}
+                </div>
+                
+                {/* Nombre y expiración */}
+                <div className="flex justify-between items-end">
+                    <div>
+                        <p className="text-xs opacity-80">CARDHOLDER</p>
+                        <p className="font-semibold text-sm uppercase">
+                            {card.card_holder_name}
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-xs opacity-80">EXPIRES</p>
+                        <p className="font-mono text-sm">
+                            {String(card.exp_month).padStart(2, '0')}/{String(card.exp_year).slice(-2)}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            {/* Información y acciones */}
+            <div className="p-4">
+                <div className="mb-4">
+                    <div className="flex justify-between text-sm text-gray-600 mb-1">
+                        <span>Daily Limit:</span>
+                        <span>${(card.spending_limit_daily / 100).toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-gray-600">
+                        <span>Monthly Limit:</span>
+                        <span>${(card.spending_limit_monthly / 100).toFixed(2)}</span>
+                    </div>
+                </div>
+                
+                <div className="flex gap-2">
+                    <button
+                        onClick={handleToggleStatus}
+                        disabled={isToggling}
+                        className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+                            card.status === 'active'
+                                ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                                : 'bg-green-100 text-green-700 hover:bg-green-200'
+                        } ${isToggling ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                        {isToggling ? 'Updating...' : (card.status === 'active' ? 'Freeze' : 'Unfreeze')}
+                    </button>
+                    
+                    <button
+                        onClick={() => onViewTransactions(card)}
+                        className="flex-1 bg-blue-100 text-blue-700 hover:bg-blue-200 py-2 px-4 rounded-lg text-sm font-medium transition-colors"
+                    >
+                        Transactions
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Función helper para fondos personalizados
+const getCustomBackground = (backgroundId) => {
+    const backgrounds = {
+        1: 'from-purple-600 to-blue-600',
+        2: 'from-green-600 to-teal-600',
+        3: 'from-pink-600 to-purple-600',
+        4: 'from-yellow-600 to-orange-600',
+        5: 'from-indigo-600 to-purple-600',
+        6: 'from-red-600 to-pink-600',
+        7: 'from-blue-600 to-indigo-600',
+        8: 'from-teal-600 to-green-600',
+        9: 'from-orange-600 to-red-600',
+        10: 'from-gray-800 to-black'
+    };
+    return backgrounds[backgroundId] || 'from-gray-700 to-gray-900';
+};
+
+export default CardItem;
+
+Modal para Crear Tarjeta con Personalización:
+
+jsx
+// components/VirtualCards/CreateCardModal.jsx
+import React, { useState } from 'react';
+
+const CreateCardModal = ({ onClose, onSubmit, userBalance }) => {
+    const [formData, setFormData] = useState({
+        cardholder_name: '',
+        daily_limit: 50000, // $500
+        monthly_limit: 200000, // $2000
+        customization: {
+            background_id: null,
+            is_premium: false
+        }
+    });
+    const [loading, setLoading] = useState(false);
+    const [showCustomization, setShowCustomization] = useState(false);
+
+    const cardBackgrounds = [
+        { id: 1, name: 'Ocean Waves', preview: 'from-blue-600 to-cyan-600', premium: false },
+        { id: 2, name: 'Forest Green', preview: 'from-green-600 to-teal-600', premium: false },
+        { id: 3, name: 'Sunset Pink', preview: 'from-pink-600 to-purple-600', premium: false },
+        { id: 4, name: 'Golden Hour', preview: 'from-yellow-600 to-orange-600', premium: true },
+        { id: 5, name: 'Royal Purple', preview: 'from-indigo-600 to-purple-600', premium: true },
+        { id: 6, name: 'Cherry Blossom', preview: 'from-red-600 to-pink-600', premium: true },
+        { id: 7, name: 'Sky Blue', preview: 'from-blue-600 to-indigo-600', premium: true },
+        { id: 8, name: 'Mint Fresh', preview: 'from-teal-600 to-green-600', premium: true },
+        { id: 9, name: 'Fire Gradient', preview: 'from-orange-600 to-red-600', premium: true },
+        { id: 10, name: 'Dark Elite', preview: 'from-gray-800 to-black', premium: true }
+    ];
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            const submitData = {
+                ...formData,
+                spending_limits: [
+                    {
+                        amount: formData.daily_limit,
+                        interval: 'daily'
+                    },
+                    {
+                        amount: formData.monthly_limit,
+                        interval: 'monthly'
+                    }
+                ]
+            };
+
+            // Si es personalización premium, agregar costo
+            if (formData.customization.background_id && 
+                cardBackgrounds.find(bg => bg.id === formData.customization.background_id)?.premium) {
+                submitData.customization.is_premium = true;
+                submitData.customization_fee = 999; // $9.99
+            }
+
+            await onSubmit(submitData);
+        } catch (error) {
+            console.error('Error creating card:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleBackgroundSelect = (backgroundId) => {
+        const background = cardBackgrounds.find(bg => bg.id === backgroundId);
+        setFormData({
+            ...formData,
+            customization: {
+                background_id: backgroundId,
+                is_premium: background?.premium || false
+            }
+        });
+    };
+
+    const selectedBackground = cardBackgrounds.find(bg => bg.id === formData.customization.background_id);
+    const customizationCost = selectedBackground?.premium ? 999 : 0;
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl max-w-md w-full mx-4 max-h-screen overflow-y-auto">
+                <div className="p-6">
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-bold">Create Virtual Card</h2>
+                        <button
+                            onClick={onClose}
+                            className="text-gray-400 hover:text-gray-600"
+                        >
+                            ✕
+                        </button>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Preview de la tarjeta */}
+                        <div className="mb-6">
+                            <div className={`h-48 rounded-xl p-6 text-white relative overflow-hidden ${
+                                selectedBackground 
+                                    ? `bg-gradient-to-br ${selectedBackground.preview}`
+                                    : 'bg-gradient-to-br from-gray-700 to-gray-900'
+                            }`}>
+                                <div className="flex justify-between items-start mb-8">
+                                    <div className="h-8 w-12 bg-white bg-opacity-20 rounded"></div>
+                                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">
+                                        ACTIVE
+                                    </span>
+                                </div>
+                                
+                                <div className="text-lg font-mono tracking-wider mb-4">
+                                    •••• •••• •••• ••••
+                                </div>
+                                
+                                <div className="flex justify-between items-end">
+                                    <div>
+                                        <p className="text-xs opacity-80">CARDHOLDER</p>
+                                        <p className="font-semibold text-sm uppercase">
+                                            {formData.cardholder_name || 'Your Name'}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs opacity-80">EXPIRES</p>
+                                        <p className="font-mono text-sm">••/••</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Nombre del titular */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Cardholder Name
+                            </label>
+                            <input
+                                type="text"
+                                value={formData.cardholder_name}
+                                onChange={(e) => setFormData({...formData, cardholder_name: e.target.value})}
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Enter cardholder name"
+                            />
+                        </div>
+
+                        {/* Límites de gasto */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Daily Limit
+                                </label>
+                                <input
+                                    type="number"
+                                    value={formData.daily_limit / 100}
+                                    onChange={(e) => setFormData({
+                                        ...formData, 
+                                        daily_limit: Math.round(parseFloat(e.target.value) * 100)
+                                    })}
+                                    min="10"
+                                    max={userBalance / 100}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Monthly Limit
+                                </label>
+                                <input
+                                    type="number"
+                                    value={formData.monthly_limit / 100}
+                                    onChange={(e) => setFormData({
+                                        ...formData, 
+                                        monthly_limit: Math.round(parseFloat(e.target.value) * 100)
+                                    })}
+                                    min="10"
+                                    max={userBalance / 100}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Personalización */}
+                        <div>
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-lg font-medium">Card Customization</h3>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowCustomization(!showCustomization)}
+                                    className="text-blue-600 hover:text-blue-700 text-sm"
+                                >
+                                    {showCustomization ? 'Hide Options' : 'Customize Card'}
+                                </button>
+                            </div>
+
+                            {showCustomization && (
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {cardBackgrounds.map((background) => (
+                                            <div
+                                                key={background.id}
+                                                className={`relative cursor-pointer rounded-lg border-2 transition-colors ${
+                                                    formData.customization.background_id === background.id
+                                                        ? 'border-blue-500'
+                                                        : 'border-gray-200 hover:border-gray-300'
+                                                }`}
+                                                onClick={() => handleBackgroundSelect(background.id)}
+                                            >
+                                                <div className={`h-20 rounded-lg bg-gradient-to-br ${background.preview} p-3`}>
+                                                    <div className="h-2 w-6 bg-white bg-opacity-30 rounded mb-2"></div>
+                                                    <div className="text-xs text-white opacity-80 font-mono">
+                                                        •••• ••••
+                                                    </div>
+                                                </div>
+                                                <div className="p-2">
+                                                    <p className="text-xs font-medium">{background.name}</p>
+                                                    {background.premium && (
+                                                        <p className="text-xs text-amber-600">Premium - $9.99</p>
+                                                    )}
+                                                </div>
+                                                {background.premium && (
+                                                    <div className="absolute top-1 right-1">
+                                                        <span className="bg-amber-100 text-amber-800 text-xs px-1 py-0.5 rounded">
+                                                            ⭐
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {customizationCost > 0 && (
+                                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                                            <p className="text-sm text-amber-800">
+                                                <strong>Premium Customization:</strong> $9.99 will be charged for this design.
+                                                Your personalized card will be visible to anyone who receives payments from you.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Costo total */}
+                        <div className="bg-gray-50 rounded-lg p-4">
+                            <div className="flex justify-between text-sm">
+                                <span>Card Creation:</span>
+                                <span>Free</span>
+                            </div>
+                            {customizationCost > 0 && (
+                                <div className="flex justify-between text-sm">
+                                    <span>Premium Customization:</span>
+                                    <span>${(customizationCost / 100).toFixed(2)}</span>
+                                </div>
+                            )}
+                            <hr className="my-2" />
+                            <div className="flex justify-between font-medium">
+                                <span>Total:</span>
+                                <span>${(customizationCost / 100).toFixed(2)}</span>
+                            </div>
+                        </div>
+
+                        {/* Botones */}
+                        <div className="flex gap-3">
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={loading || !formData.cardholder_name}
+                                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                            >
+                                {loading ? 'Creating...' : 'Create Card'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default CreateCardModal;
+
+Servicio para API de Tarjetas:
+
+javascript
+// services/cardService.js
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
+
+class CardService {
+    async getUserCards(userId) {
+        const response = await fetch(`${API_BASE_URL}/cards/user/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return await response.json();
+    }
+
+    async createCard(userId, cardData) {
+        const response = await fetch(`${API_BASE_URL}/cards/create`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                ...cardData
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return await response.json();
+    }
+
+    async toggleCardStatus(cardId, status) {
+        const response = await fetch(`${API_BASE_URL}/cards/${cardId}/status`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return await response.json();
+    }
+
+    async getCardTransactions(cardId, page = 1, limit = 50) {
+        const response = await fetch(`${API_BASE_URL}/cards/${cardId}/transactions?page=${page}&limit=${limit}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return await response.json();
+    }
+
+    async getUserBalance(userId) {
+        const response = await fetch(`${API_BASE_URL}/users/${userId}/balance`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return await response.json();
+    }
+}
+
+export const cardService = new CardService();
+
+
+FASE 5: SEGURIDAD Y COMPLIANCE
+
+5.1 Implementación de Seguridad Avanzada
+
+Middleware de Seguridad:
+
+javascript
+// middleware/security.js
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const crypto = require('crypto');
+
+// Rate limiting específico para operaciones sensibles
+const cardOperationsLimit = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 10, // máximo 10 operaciones de tarjetas por ventana
+    message: {
+        error: 'Too many card operations, please try again later'
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Rate limiting para creación de tarjetas
+const cardCreationLimit = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hora
+    max: 3, // máximo 3 tarjetas por hora
+    message: {
+        error: 'Card creation limit reached, please try again later'
+    }
+});
+
+// Middleware de validación de integridad de datos
+const validateRequestIntegrity = (req, res, next) => {
+    const timestamp = req.headers['x-timestamp'];
+    const signature = req.headers['x-signature'];
+    const body = JSON.stringify(req.body);
+    
+    // Verificar timestamp (no más de 5 minutos de antigüedad)
+    if (!timestamp || Date.now() - parseInt(timestamp) > 300000) {
+        return res.status(400).json({
+            error: 'Request timestamp invalid or expired'
+        });
+    }
+    
+    // Verificar firma HMAC
+    if (signature) {
+        const expectedSignature = crypto
+            .createHmac('sha256', process.env.REQUEST_SIGNING_SECRET)
+            .update(timestamp + body)
+            .digest('hex');
+            
+        if (signature !== expectedSignature) {
+            return res.status(400).json({
+                error: 'Request signature invalid'
+            });
+        }
+    }
+    
+    next();
+};
+
+// Sanitización de datos de tarjeta
+const sanitizeCardData = (req, res, next) => {
+    if (req.body.cardholder_name) {
+        // Remover caracteres especiales y limitar longitud
+        req.body.cardholder_name = req.body.cardholder_name
+            .replace(/[^a-zA-Z\s]/g, '')
+            .substring(0, 50)
+            .trim()
+            .toUpperCase();
+    }
+    
+    if (req.body.spending_limits) {
+        // Validar límites de gasto
+        req.body.spending_limits = req.body.spending_limits.map(limit => ({
+            amount: Math.max(1000, Math.min(1000000, parseInt(limit.amount))), // $10 - $10,000
+            interval: ['daily', 'weekly', 'monthly'].includes(limit.interval) 
+                ? limit.interval : 'daily'
+        }));
+    }
+    
+    next();
+};
+
+module.exports = {
+    cardOperationsLimit,
+    cardCreationLimit,
+    validateRequestIntegrity,
+    sanitizeCardData,
+    helmet: helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                styleSrc: ["'self'", "'unsafe-inline'"],
+                scriptSrc: ["'self'", "https://js.stripe.com"],
+                connectSrc: ["'self'", "https://api.stripe.com"],
+                frameSrc: ["https://js.stripe.com"],
+                imgSrc: ["'self'", "data:", "https:"]
+            }
+        }
+    })
+};
+```
+
+**Sistema de Auditoría:**
+
+```javascript
+// utils/auditLogger.js
+const db = require('../database/connection');
+
+class AuditLogger {
+    async logCardOperation(userId, operation, cardId, details = {}) {
+        try {
+            await db.query(`
+                INSERT INTO audit_logs (
+                    user_id, 
+                    operation_type, 
+                    resource_type, 
+                    resource_id, 
+                    details, 
+                    ip_address, 
+                    user_agent,
+                    created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+            `, [
+                userId,
+                operation, // 'CREATE_CARD', 'UPDATE_STATUS', 'VIEW_DETAILS', etc.
+                'VIRTUAL_CARD',
+                cardId,
+                JSON.stringify(details),
+                details.ip_address || null,
+                details.user_agent || null
+            ]);
+        } catch (error) {
+            console.error('Error logging audit event:', error);
+        }
+    }
+
+    async logSuspiciousActivity(userId, activityType, details = {}) {
+        try {
+            await db.query(`
+                INSERT INTO security_alerts (
+                    user_id,
+                    alert_type,
+                    severity,
+                    details,
+                    status,
+                    created_at
+                ) VALUES (?, ?, ?, ?, ?, NOW())
+            `, [
+                userId,
+                activityType, // 'RAPID_CARD_CREATION', 'UNUSUAL_SPENDING', etc.
+                this.calculateSeverity(activityType),
+                JSON.stringify(details),
+                'PENDING'
+            ]);
+
+            // Enviar notificación inmediata para alertas de alta severidad
+            if (this.calculateSeverity(activityType) === 'HIGH') {
+                await this.sendSecurityAlert(userId, activityType, details);
+            }
+        } catch (error) {
+            console.error('Error logging security alert:', error);
+        }
+    }
+
+    calculateSeverity(activityType) {
+        const severityMap = {
+            'RAPID_CARD_CREATION': 'MEDIUM',
+            'UNUSUAL_SPENDING_PATTERN': 'MEDIUM',
+            'FAILED_AUTHENTICATION': 'HIGH',
+            'CARD_DATA_ACCESS': 'HIGH',
+            'SUSPICIOUS_TRANSACTION': 'HIGH'
+        };
+        return severityMap[activityType] || 'LOW';
+    }
+
+    async sendSecurityAlert(userId, alertType, details) {
+        // Implementar notificación de seguridad
+        // Email, SMS, push notification, etc.
+        console.log(`SECURITY ALERT for user ${userId}: ${alertType}`, details);
+    }
+}
+
+module.exports = new AuditLogger();
+
+
+5.2 Validaciones y Controles KYC/AML
+
+Sistema de Verificación de Usuario Mejorado:
+
+javascript
+// controllers/kycController.js
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const auditLogger = require('../utils/auditLogger');
+
+class KYCController {
+    async verifyUserForCardIssuance(req, res) {
+        try {
+            const { user_id } = req.params;
+            const { 
+                identity_document, 
+                proof_of_address, 
+                income_verification,
+                phone_number 
+            } = req.body;
+
+            // 1. Verificar documentos de identidad
+            const identityVerification = await this.verifyIdentityDocument(
+                identity_document, 
+                user_id
+            );
+
+            // 2. Verificar comprobante de domicilio
+            const addressVerification = await this.verifyAddress(
+                proof_of_address, 
+                user_id
+            );
+
+            // 3. Verificación de ingresos (opcional para límites más altos)
+            let incomeVerification = null;
+            if (income_verification) {
+                incomeVerification = await this.verifyIncome(
+                    income_verification, 
+                    user_id
+                );
+            }
+
+            // 4. Verificación telefónica
+            const phoneVerification = await this.verifyPhoneNumber(
+                phone_number, 
+                user_id
+            );
+
+            // 5. Calcular nivel de verificación
+            const verificationLevel = this.calculateVerificationLevel({
+                identity: identityVerification.status,
+                address: addressVerification.status,
+                income: incomeVerification?.status,
+                phone: phoneVerification.status
+            });
+
+            // 6. Actualizar base de datos
+            await this.updateUserVerificationStatus(user_id, {
+                verification_level: verificationLevel,
+                identity_verified: identityVerification.status === 'verified',
+                address_verified: addressVerification.status === 'verified',
+                income_verified: incomeVerification?.status === 'verified',
+                
+                Guía Completa: Integración de Stripe Issuing para Tarjetas de Débito Virtuales
+Versión Robusta, Segura y con Personalización Avanzada
+
+
+FASE 5: SEGURIDAD Y COMPLIANCE (CONTINUACIÓN)
+5.2 Sistema KYC/AML Completo y Robusto
+
+javascript
+// controllers/kycController.js (Continuación)
+class KYCController {
+    async verifyUserForCardIssuance(req, res) {
+        try {
+            const { user_id } = req.params;
+            const { 
+                identity_document, 
+                proof_of_address, 
+                income_verification,
+                phone_number 
+            } = req.body;
+
+            // 1. Verificar documentos de identidad con AI/ML
+            const identityVerification = await this.verifyIdentityDocument(
+                identity_document, 
+                user_id
+            );
+
+            // 2. Verificar comprobante de domicilio
+            const addressVerification = await this.verifyAddress(
+                proof_of_address, 
+                user_id
+            );
+
+            // 3. Verificación de ingresos (requerida para límites altos)
+            let incomeVerification = null;
+            if (income_verification) {
+                incomeVerification = await this.verifyIncome(
+                    income_verification, 
+                    user_id
+                );
+            }
+
+            // 4. Verificación telefónica con SMS
+            const phoneVerification = await this.verifyPhoneNumber(
+                phone_number, 
+                user_id
+            );
+
+            // 5. Verificación biométrica opcional
+            const biometricVerification = await this.performBiometricCheck(
+                req.body.biometric_data,
+                user_id
+            );
+
+            // 6. Calcular nivel de verificación y límites permitidos
+            const verificationResult = this.calculateVerificationLevel({
+                identity: identityVerification.status,
+                address: addressVerification.status,
+                income: incomeVerification?.status,
+                phone: phoneVerification.status,
+                biometric: biometricVerification?.status
+            });
+
+            // 7. Actualizar base de datos con cifrado
+            await this.updateUserVerificationStatus(user_id, {
+                verification_level: verificationResult.level,
+                identity_verified: identityVerification.status === 'verified',
+                address_verified: addressVerification.status === 'verified',
+                income_verified: incomeVerification?.status === 'verified',
+                phone_verified: phoneVerification.status === 'verified',
+                biometric_verified: biometricVerification?.status === 'verified',
+                max_daily_limit: verificationResult.dailyLimit,
+                max_monthly_limit: verificationResult.monthlyLimit,
+                card_creation_limit: verificationResult.cardLimit,
+                verification_completed_at: new Date()
+            });
+
+            // 8. Log de auditoría
+            await auditLogger.logCardOperation(user_id, 'KYC_VERIFICATION', null, {
+                verification_level: verificationResult.level,
+                ip_address: req.ip,
+                user_agent: req.headers['user-agent']
+            });
+
+            res.json({
+                success: true,
+                verification_level: verificationResult.level,
+                limits: {
+                    daily: verificationResult.dailyLimit,
+                    monthly: verificationResult.monthlyLimit,
+                    cards: verificationResult.cardLimit
+                },
+                message: 'Verification completed successfully'
+            });
+
+        } catch (error) {
+            console.error('Error in KYC verification:', error);
+            await auditLogger.logSuspiciousActivity(req.params.user_id, 'KYC_VERIFICATION_FAILED', {
+                error: error.message,
+                ip_address: req.ip
+            });
+            
+            res.status(500).json({
+                error: 'Verification failed',
+                details: error.message
+            });
+        }
+    }
+
+    async verifyIdentityDocument(document, userId) {
+        // Integración con servicios como Jumio, Onfido, o AWS Rekognition
+        try {
+            // Simular verificación de documento con IA
+            const verificationResult = await this.performDocumentOCR(document);
+            
+            // Validaciones avanzadas
+            const checks = {
+                documentType: this.validateDocumentType(verificationResult.type),
+                documentExpiry: this.checkDocumentExpiry(verificationResult.expiry),
+                faceMatch: await this.performFaceMatching(document.selfie, verificationResult.photo),
+                fraudCheck: await this.performFraudCheck(verificationResult),
+                sanctionsList: await this.checkSanctionsList(verificationResult.name, verificationResult.dob)
+            };
+
+            const status = Object.values(checks).every(check => check.passed) ? 'verified' : 'rejected';
+            
+            return {
+                status,
+                checks,
+                confidence_score: this.calculateConfidenceScore(checks),
+                document_data: this.sanitizeDocumentData(verificationResult)
+            };
+
+        } catch (error) {
+            console.error('Document verification error:', error);
+            return {
+                status: 'failed',
+                error: error.message
+            };
+        }
+    }
+
+    calculateVerificationLevel(verificationStatuses) {
+        let score = 0;
+        let dailyLimit = 10000; // $100 base
+        let monthlyLimit = 100000; // $1000 base
+        let cardLimit = 1;
+
+        // Sistema de puntuación
+        if (verificationStatuses.identity === 'verified') score += 40;
+        if (verificationStatuses.address === 'verified') score += 20;
+        if (verificationStatuses.phone === 'verified') score += 15;
+        if (verificationStatuses.income === 'verified') score += 20;
+        if (verificationStatuses.biometric === 'verified') score += 5;
+
+        // Determinar nivel y límites basados en puntuación
+        let level = 'BASIC';
+        if (score >= 90) {
+            level = 'PREMIUM';
+            dailyLimit = 500000; // $5000
+            monthlyLimit = 2000000; // $20000
+            cardLimit = 5;
+        } else if (score >= 70) {
+            level = 'ADVANCED';
+            dailyLimit = 200000; // $2000
+            monthlyLimit = 800000; // $8000
+            cardLimit = 3;
+        } else if (score >= 50) {
+            level = 'STANDARD';
+            dailyLimit = 50000; // $500
+            monthlyLimit = 200000; // $2000
+            cardLimit = 2;
+        }
+
+        return { level, dailyLimit, monthlyLimit, cardLimit, score };
+    }
+
+    async performFraudCheck(documentData) {
+        // Integración con servicios anti-fraude
+        // Verificar contra bases de datos de documentos robados/falsificados
+        const fraudIndicators = [
+            this.checkDocumentInFraudDatabase(documentData.number),
+            this.analyzeDocumentMicroprints(documentData.image),
+            this.validateDocumentHologram(documentData.image),
+            this.crossReferenceWithGovernmentDB(documentData.number)
+        ];
+
+        const fraudScore = await Promise.all(fraudIndicators);
+        return {
+            passed: fraudScore.every(indicator => !indicator.suspicious),
+            fraud_score: fraudScore.reduce((acc, curr) => acc + curr.score, 0),
+            flags: fraudScore.filter(indicator => indicator.suspicious)
+        };
+    }
+
+    async checkSanctionsList(name, dob) {
+        // Verificar contra listas de sanciones internacionales
+        const sanctionsAPIs = [
+            'https://api.worldcheck.com/screening',
+            'https://ofac.treasury.gov/api/search'
+        ];
+
+        try {
+            const checks = await Promise.all(
+                sanctionsAPIs.map(api => this.querySanctionsAPI(api, name, dob))
+            );
+            
+            return {
+                passed: checks.every(check => !check.match),
+                matches: checks.filter(check => check.match)
+            };
+        } catch (error) {
+            // En caso de error, denegar por seguridad
+            return { passed: false, error: 'Sanctions check failed' };
+        }
+    }
+}
+
+5.3 Sistema de Monitoreo en Tiempo Real
+
+javascript
+// services/transactionMonitoring.js
+class TransactionMonitoringService {
+    constructor() {
+        this.riskThresholds = {
+            HIGH_VELOCITY: { transactions: 10, timeframe: 3600000 }, // 10 transacciones en 1 hora
+            UNUSUAL_AMOUNT: { multiplier: 5 }, // 5x el promedio histórico
+            SUSPICIOUS_MERCHANT: ['gambling', 'adult', 'crypto_exchange'],
+            GEO_ANOMALY: { max_distance_km: 500 }, // 500km de ubicación usual
+            TIME_ANOMALY: { unusual_hours: [2, 3, 4, 5] } // 2-5 AM
+        };
+    }
+
+    async analyzeTransaction(transaction, cardData, userProfile) {
+        const riskFactors = await Promise.all([
+            this.checkVelocityRisk(transaction, cardData.user_id),
+            this.checkAmountRisk(transaction, userProfile),
+            this.checkMerchantRisk(transaction),
+            this.checkGeographicRisk(transaction, userProfile),
+            this.checkTemporalRisk(transaction, userProfile),
+            this.checkDeviceRisk(transaction, userProfile)
+        ]);
+
+        const totalRiskScore = riskFactors.reduce((sum, factor) => sum + factor.score, 0);
+        const riskLevel = this.calculateRiskLevel(totalRiskScore);
+
+        // Decidir acción basada en riesgo
+        const action = await this.determineAction(riskLevel, riskFactors);
+
+        // Log de análisis de riesgo
+        await this.logRiskAnalysis({
+            transaction_id: transaction.id,
+            user_id: cardData.user_id,
+            risk_score: totalRiskScore,
+            risk_level: riskLevel,
+            risk_factors: riskFactors,
+            action: action
+        });
+
+        return { riskLevel, action, riskFactors };
+    }
+
+    async checkVelocityRisk(transaction, userId) {
+        const recentTransactions = await db.query(`
+            SELECT COUNT(*) as count 
+            FROM card_transactions 
+            WHERE user_id = ? 
+            AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+        `, [userId]);
+
+        const count = recentTransactions[0].count;
+        const score = count > this.riskThresholds.HIGH_VELOCITY.transactions ? 30 : 0;
+
+        return {
+            type: 'VELOCITY_RISK',
+            score,
+            details: { transaction_count: count, threshold: this.riskThresholds.HIGH_VELOCITY.transactions }
+        };
+    }
+
+    async checkAmountRisk(transaction, userProfile) {
+        const avgAmount = userProfile.average_transaction_amount || 5000; // $50 default
+        const multiplier = transaction.amount / avgAmount;
+        const score = multiplier > this.riskThresholds.UNUSUAL_AMOUNT.multiplier ? 25 : 0;
+
+        return {
+            type: 'AMOUNT_RISK',
+            score,
+            details: { amount: transaction.amount, average: avgAmount, multiplier }
+        };
+    }
+
+    async determineAction(riskLevel, riskFactors) {
+        switch (riskLevel) {
+            case 'HIGH':
+                return {
+                    type: 'BLOCK',
+                    message: 'Transaction blocked due to high risk',
+                    require_manual_review: true,
+                    notify_user: true
+                };
+            case 'MEDIUM':
+                return {
+                    type: 'CHALLENGE',
+                    message: 'Additional verification required',
+                    require_2fa: true,
+                    notify_user: true
+                };
+            case 'LOW':
+                return {
+                    type: 'ALLOW',
+                    message: 'Transaction approved',
+                    monitor: true
+                };
+            default:
+                return {
+                    type: 'ALLOW',
+                    message: 'Transaction approved'
+                };
+        }
+    }
+
+    calculateRiskLevel(score) {
+        if (score >= 70) return 'HIGH';
+        if (score >= 40) return 'MEDIUM';
+        if (score >= 20) return 'LOW';
+        return 'MINIMAL';
+    }
+}
+
+
+FASE 6: SISTEMA DE PERSONALIZACIÓN AVANZADO
+
+6.1 Gestión de Imágenes y Personalización
+
+javascript
+// services/cardCustomizationService.js
+class CardCustomizationService {
+    constructor() {
+        this.customizationOptions = {
+            backgrounds: [
+                { id: 1, name: 'Ocean Waves', category: 'nature', premium: false, file: 'bg-ocean.jpg' },
+                { id: 2, name: 'Mountain Sunset', category: 'nature', premium: false, file: 'bg-mountain.jpg' },
+                { id: 3, name: 'City Lights', category: 'urban', premium: false, file: 'bg-city.jpg' },
+                { id: 4, name: 'Abstract Gold', category: 'luxury', premium: true, file: 'bg-gold.jpg' },
+                { id: 5, name: 'Marble Elegance', category: 'luxury', premium: true, file: 'bg-marble.jpg' },
+                { id: 6, name: 'Cosmic Nebula', category: 'space', premium: true, file: 'bg-nebula.jpg' },
+                { id: 7, name: 'Forest Dawn', category: 'nature', premium: true, file: 'bg-forest.jpg' },
+                { id: 8, name: 'Geometric Pattern', category: 'modern', premium: true, file: 'bg-geometric.jpg' },
+                { id: 9, name: 'Rose Gold', category: 'luxury', premium: true, file: 'bg-rosegold.jpg' },
+                { id: 10, name: 'Carbon Fiber', category: 'tech', premium: true, file: 'bg-carbon.jpg' }
+            ],
+            colors: [
+                { id: 1, name: 'Classic Blue', hex: '#1e40af', premium: false },
+                { id: 2, name: 'Emerald Green', hex: '#059669', premium: false },
+                { id: 3, name: 'Deep Purple', hex: '#7c3aed', premium: false },
+                { id: 4, name: 'Sunset Orange', hex: '#ea580c', premium: true },
+                { id: 5, name: 'Rose Gold', hex: '#f59e0b', premium: true },
+                { id: 6, name: 'Platinum Silver', hex: '#64748b', premium: true }
+            ],
+            textStyles: [
+                { id: 1, name: 'Modern Sans', font: 'Inter', premium: false },
+                { id: 2, name: 'Elegant Serif', font: 'Playfair Display', premium: true },
+                { id: 3, name: 'Futuristic', font: 'Orbitron', premium: true }
+            ]
+        };
+        this.premiumPrice = 999; // $9.99 in cents
+    }
+
+    async processCustomization(userId, customizationData) {
+        try {
+            // 1. Validar opciones de personalización
+            const validation = await this.validateCustomizationOptions(customizationData);
+            if (!validation.valid) {
+                throw new Error(`Invalid customization options: ${validation.errors.join(', ')}`);
+            }
+
+            // 2. Calcular costo total
+            const cost = this.calculateCustomizationCost(customizationData);
+
+            // 3. Procesar pago si es premium
+            if (cost > 0) {
+                const paymentResult = await this.processCustomizationPayment(userId, cost);
+                if (!paymentResult.success) {
+                    throw new Error('Payment failed for premium customization');
+                }
+            }
+
+            // 4. Generar imagen de tarjeta personalizada
+            const cardImage = await this.generateCustomCardImage(customizationData);
+
+            // 5. Optimizar y guardar imagen
+            const optimizedImage = await this.optimizeCardImage(cardImage);
+            const imageUrl = await this.uploadCardImage(userId, optimizedImage);
+
+            // 6. Guardar configuración en base de datos
+            const customizationRecord = await this.saveCustomizationConfig(userId, {
+                ...customizationData,
+                image_url: imageUrl,
+                cost_paid: cost,
+                is_premium: cost > 0
+            });
+
+            return {
+                success: true,
+                customization_id: customizationRecord.id,
+                image_url: imageUrl,
+                cost: cost,
+                preview_url: await this.generatePreviewUrl(customizationRecord.id)
+            };
+
+        } catch (error) {
+            console.error('Error processing customization:', error);
+            throw error;
+        }
+    }
+
+    async generateCustomCardImage(customization) {
+        const sharp = require('sharp');
+        const path = require('path');
+
+        // Dimensiones de tarjeta estándar (ISO/IEC 7810 ID-1)
+        const cardWidth = 856; // 85.6mm at 254 DPI
+        const cardHeight = 539; // 53.9mm at 254 DPI
+
+        try {
+            // 1. Cargar imagen de fondo base
+            let cardBase = sharp({
+                create: {
+                    width: cardWidth,
+                    height: cardHeight,
+                    channels: 4,
+                    background: { r: 255, g: 255, b: 255, alpha: 1 }
+                }
+            });
+
+            // 2. Aplicar fondo personalizado
+            if (customization.background_id) {
+                const background = this.customizationOptions.backgrounds.find(
+                    bg => bg.id === customization.background_id
+                );
+                if (background) {
+                    const backgroundPath = path.join(__dirname, '../assets/backgrounds', background.file);
+                    cardBase = cardBase.composite([{
+                        input: backgroundPath,
+                        gravity: 'center'
+                    }]);
+                }
+            }
+
+            // 3. Aplicar overlay de color si está especificado
+            if (customization.color_overlay) {
+                const colorOverlay = await sharp({
+                    create: {
+                        width: cardWidth,
+                        height: cardHeight,
+                        channels: 4,
+                        background: { 
+                            ...this.hexToRgb(customization.color_overlay.hex), 
+                            alpha: 0.3 
+                        }
+                    }
+                }).png().toBuffer();
+
+                cardBase = cardBase.composite([{
+                    input: colorOverlay,
+                    blend: 'overlay'
+                }]);
+            }
+
+            // 4. Añadir elementos de seguridad (hologramas, microtext)
+            const securityElements = await this.addSecurityElements();
+            cardBase = cardBase.composite(securityElements);
+
+            // 5. Añadir logotipos de redes de pago
+            const paymentLogos = await this.addPaymentNetworkLogos();
+            cardBase = cardBase.composite([{
+                input: paymentLogos,
+                gravity: 'northeast',
+                left: -50,
+                top: 30
+            }]);
+
+            // 6. Añadir espacios para datos variables
+            const dataAreas = await this.createDataAreas(customization.text_style);
+            cardBase = cardBase.composite(dataAreas);
+
+            // 7. Aplicar efectos finales (brillo, sombras)
+            const finalImage = await cardBase
+                .sharpen()
+                .png({ 
+                    quality: 95,
+                    compressionLevel: 6,
+                    adaptiveFiltering: true
+                })
+                .toBuffer();
+
+            return finalImage;
+
+        } catch (error) {
+            console.error('Error generating card image:', error);
+            throw error;
+        }
+    }
+
+    async addSecurityElements() {
+        // Añadir elementos de seguridad visuales
+        const securityFeatures = [
+            // Microtext en bordes
+            this.generateMicrotext(),
+            // Patrón de seguridad sutil
+            this.generateSecurityPattern(),
+            // Código QR invisible (solo visible con UV)
+            this.generateSecurityQR()
+        ];
+
+        return await Promise.all(securityFeatures);
+    }
+
+    calculateCustomizationCost(customization) {
+        let cost = 0;
+        
+        // Background premium
+        if (customization.background_id) {
+            const background = this.customizationOptions.backgrounds.find(
+                bg => bg.id === customization.background_id
+            );
+            if (background && background.premium) {
+                cost += this.premiumPrice;
+            }
+        }
+
+        // Color premium
+        if (customization.color_id) {
+            const color = this.customizationOptions.colors.find(
+                c => c.id === customization.color_id
+            );
+            if (color && color.premium) {
+                cost += 499; // $4.99 adicional
+            }
+        }
+
+        // Font premium
+        if (customization.text_style_id) {
+            const textStyle = this.customizationOptions.textStyles.find(
+                ts => ts.id === customization.text_style_id
+            );
+            if (textStyle && textStyle.premium) {
+                cost += 299; // $2.99 adicional
+            }
+        }
+
+        return cost;
+    }
+
+    async validateCustomizationOptions(customization) {
+        const errors = [];
+
+        // Validar background
+        if (customization.background_id) {
+            const validBackground = this.customizationOptions.backgrounds.find(
+                bg => bg.id === customization.background_id
+            );
+            if (!validBackground) {
+                errors.push('Invalid background selection');
+            }
+        }
+
+        // Validar color
+        if (customization.color_id) {
+            const validColor = this.customizationOptions.colors.find(
+                c => c.id === customization.color_id
+            );
+            if (!validColor) {
+                errors.push('Invalid color selection');
+            }
+        }
+
+        // Validar estilo de texto
+        if (customization.text_style_id) {
+            const validTextStyle = this.customizationOptions.textStyles.find(
+                ts => ts.id === customization.text_style_id
+            );
+            if (!validTextStyle) {
+                errors.push('Invalid text style selection');
+            }
+        }
+
+        return {
+            valid: errors.length === 0,
+            errors
+        };
+    }
+}
+
+ 6.2 API para Personalización de Tarjetas
+
+javascript
+// routes/customization.js
+const express = require('express');
+const router = express.Router();
+const customizationService = new (require('../services/cardCustomizationService'))();
+const authMiddleware = require('../middleware/auth');
+const { cardOperationsLimit } = require('../middleware/security');
+
+// Obtener opciones de personalización disponibles
+router.get('/options', authMiddleware, async (req, res) => {
+    try {
+        const options = customizationService.customizationOptions;
+        
+        // Filtrar por plan del usuario si es necesario
+        const userPlan = req.user.subscription_plan || 'basic';
+        
+        res.json({
+            success: true,
+            options: {
+                backgrounds: options.backgrounds,
+                colors: options.colors,
+                textStyles: options.textStyles,
+                pricing: {
+                    premium_background: 9.99,
+                    premium_color: 4.99,
+                    premium_font: 2.99
+                }
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: 'Failed to fetch customization options',
+            details: error.message
+        });
+    }
+});
+
+// Preview de personalización
+router.post('/preview', authMiddleware, cardOperationsLimit, async (req, res) => {
+    try {
+        const { customization_data } = req.body;
+        
+        // Generar preview sin guardar
+        const previewImage = await customizationService.generateCustomCardImage(customization_data);
+        
+        // Convertir a base64 para preview
+        const previewBase64 = `data:image/png;base64,${previewImage.toString('base64')}`;
+        
+        const cost = customizationService.calculateCustomizationCost(customization_data);
+        
+        res.json({
+            success: true,
+            preview: previewBase64,
+            cost: cost,
+            cost_usd: (cost / 100).toFixed(2)
+        });
+        
+    } catch (error) {
+        console.error('Error generating preview:', error);
+        res.status(500).json({
+            error: 'Failed to generate preview',
+            details: error.message
+        });
+    }
+});
+
+// Aplicar personalización a tarjeta
+router.post('/apply/:card_id', authMiddleware, cardOperationsLimit, async (req, res) => {
+    try {
+        const { card_id } = req.params;
+        const { customization_data } = req.body;
+        const user_id = req.user.id;
+
+        // 1. Verificar que la tarjeta pertenece al usuario
+        const card = await db.query(
+            'SELECT * FROM virtual_cards WHERE id = ? AND user_id = ?',
+            [card_id, user_id]
+        );
+
+        if (!card[0]) {
+            return res.status(404).json({
+                error: 'Card not found or access denied'
+            });
+        }
+
+        // 2. Procesar personalización
+        const result = await customizationService.processCustomization(
+            user_id, 
+            customization_data
+        );
+
+        // 3. Actualizar tarjeta con personalización
+        await db.query(`
+            UPDATE virtual_cards 
+            SET customization_id = ?, 
+                updated_at = NOW() 
+            WHERE id = ?
+        `, [result.customization_id, card_id]);
+
+        // 4. Log de auditoría
+        await auditLogger.logCardOperation(user_id, 'CARD_CUSTOMIZATION', card_id, {
+            customization_id: result.customization_id,
+            cost: result.cost,
+            ip_address: req.ip
+        });
+
+        res.json({
+            success: true,
+            message: 'Customization applied successfully',
+            customization: {
+                id: result.customization_id,
+                preview_url: result.preview_url,
+                cost_paid: result.cost
+            }
+        });
+
+    } catch (error) {
+        console.error('Error applying customization:', error);
+        res.status(500).json({
+            error: 'Failed to apply customization',
+            details: error.message
+        });
+    }
+});
+
+module.exports = router;
+
+
+ 6.3 Componente Frontend para Personalización
+
+jsx
+// components/CardCustomization/CustomizationStudio.jsx
+import React, { useState, useEffect } from 'react';
+import { customizationService } from '../../services/customizationService';
+
+const CustomizationStudio = ({ cardId, onClose, onApply }) => {
+    const [customizationOptions, setCustomizationOptions] = useState(null);
+    const [selectedOptions, setSelectedOptions] = useState({
+        background_id: null,
+        color_id: null,
+        text_style_id: null
+    });
+    const [preview, setPreview] = useState(null);
+    const [cost, setCost] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [applying, setApplying] = useState(false);
+
+    useEffect(() => {
+        loadCustomizationOptions();
+    }, []);
+
+    useEffect(() => {
+        if (Object.values(selectedOptions).some(v => v !== null)) {
+            generatePreview();
+        }
+    }, [selectedOptions]);
+
+    const loadCustomizationOptions = async () => {
+        try {
+            const response = await customizationService.getOptions();
+            if (response.success) {
+                setCustomizationOptions(response.options);
+            }
+        } catch (error) {
+            console.error('Error loading customization options:', error);
+        }
+    };
+
+    const generatePreview = async () => {
+        if (!selectedOptions.background_id && !selectedOptions.color_id && !selectedOptions.text_style_id) {
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await customizationService.generatePreview({
+                customization_data: selectedOptions
+            });
+            
+            if (response.success) {
+                setPreview(response.preview);
+                setCost(response.cost);
+            }
+        } catch (error) {
+            console.error('Error generating preview:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleOptionSelect = (category, optionId) => {
+        setSelectedOptions(prev => ({
+            ...prev,
+            [`${category}_id`]: optionId
+        }));
+    };
+
+    const handleApplyCustomization = async () => {
+        setApplying(true);
+        try {
+            const response = await customizationService.applyCustomization(cardId, {
+                customization_data: selectedOptions
+            });
+            
+            if (response.success) {
+                onApply(response.customization);
+                onClose();
+            }
+        } catch (error) {
+            console.error('Error applying customization:', error);
+            // Mostrar error al usuario
+        } finally {
+            setApplying(false);
+        }
+    };
+
+    if (!customizationOptions) {
+        return (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-xl p-8">
+                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto"></div>
+                    <p className="text-center mt-4">Loading customization options...</p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl max-w-6xl w-full mx-4 max-h-screen overflow-y-auto">
+                <div className="flex">
+                    {/* Panel de opciones */}
+                    <div className="w-1/2 p-6 border-r">
+                        <div className="flex justify-between items-center mb-6
