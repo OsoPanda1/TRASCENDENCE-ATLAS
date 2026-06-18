@@ -1,0 +1,1775 @@
+Lo que describes, bien formulado, es básicamente un **motor híbrido CITEMESH‑grade**: un pipeline doble (alto y bajo costo) sobre Lumen/Nanite, con gemelos de render, precálculos universales y orquestación por IA para optimizar rendimiento y energía.
+
+Te lo traduzco a arquitectura concreta y a “qué estarías creando”.
+
+***
+
+## 1. Qué sería ese sistema en una frase
+
+Estarías creando un **Hybrid Civilizational Rendering Orchestrator**:  
+
+> Un pipeline híbrido de renderizado (raster + Lumen/ray tracing) con doble ruta (high‑fidelity y low‑latency), gemelos de escena sincronizados, precálculos universales y un orquestador IA (Isabella) que decide en tiempo real qué ruta usar y qué efectos activar para maximizar calidad percibida y minimizar costo energético/latencia. [forums.unrealengine](https://forums.unrealengine.com/t/how-to-optimize-performance-with-nanite-and-lumen-in-unreal-engine-5-for-mobile-games/2508247)
+
+***
+
+## 2. Cómo funcionaría por dentro (flujo conceptual)
+
+### 2.1. Doble pipeline gráfico
+
+1. **Pipeline A – High Fidelity (desktop/alto nivel):**  
+   - Lumen para GI + reflexiones.  
+   - Nanite o geometría densa.  
+   - Ray tracing selectivo para reflejos/sombras críticas.  
+   - Efectos volumétricos completos. [dev.epicgames](https://dev.epicgames.com/documentation/en-us/unreal-engine/using-lumen-global-illumination-on-mobile-in-unreal-engine)
+
+2. **Pipeline B – Low Latency (móvil/web):**  
+   - Rasterización forward/deferred con URP‑like tuning: sombras simplificadas, SSAO ligero, reflejos screen‑space.  
+   - Postprocesado configurable (blooms, DOF, motion blur) en niveles. [tomlooman](https://tomlooman.com/unreal-engine-5-7-performance-highlights/)
+   - Ray tracing sólo para casos puntuales (si el hardware lo permite) o desactivado.
+
+### 2.2. Gemelos de escena en paralelo
+
+Mantienes **dos representaciones sincronizadas de la misma escena**:
+
+- Gemelo **“Físico”**: todos los datos necesarios para el pipeline A (assets high‑poly, materiales complejos, iluminación completa).  
+- Gemelo **“Eficiente”**: versiones reducidas de geometría, materiales y efectos para el pipeline B (LOD agresivos, texturas comprimidas, menos luces dinámicas). [dl.ifip](https://dl.ifip.org/db/conf/iwec/icec2012/SabinoACMP12.pdf)
+
+Un sistema de sincronización (state replication) asegura que:
+
+- Posición de actores, animaciones, estado de juego, lógica social → son compartidos.  
+- Sólo cambia la “vista” (qué pipeline y qué nivel de detalle usa cada cliente).
+
+### 2.3. Precálculos universales al inicio (pre‑boot)
+
+Al iniciar el mundo o al cambiar de “zona”:
+
+- **Baked / precómputo obligado** (cuando tenga sentido):  
+  - Mapa de visibilidad estática (occlusion culling / portals).  
+  - Field de importancia para efectos volumétricos (zonas donde sí se justifican). [dl.ifip](https://dl.ifip.org/db/conf/iwec/icec2012/SabinoACMP12.pdf)
+  - LOD bounds y clusters para streaming de geometría (Nanite/propio).  
+- **Setup energético y de rendimiento**:  
+  - Umbrales por dispositivo (perfil móvil/desktop, GPU tier, batería).  
+  - Target FPS/latencia deseada para cada clase de dispositivo. [devpath](https://www.devpath.com/courses/mobile-system-design/optimizing-rendering-performance-for-mobile-apps)
+
+Esto reduce trabajo repetitivo frame a frame y da a Isabella un mapa de “costos” por feature.
+
+### 2.4. Isabella como orquestador adaptativo
+
+Isabella no sólo conversa; actúa como **control loop inteligente**:
+
+1. Recibe métricas en tiempo real:  
+   - FPS, tiempo de frame por etapa (raster, RT, post), temperatura, nivel de batería, latencia de red. [arxiv](https://arxiv.org/pdf/2308.08292.pdf)
+
+2. Evalúa “estado del mundo” y del usuario:  
+   - ¿Está en una escena social tranquila o en combate masivo?  
+   - ¿Está en un dispositivo móvil caliente con 20% batería o en un desktop con RTX?  
+
+3. Decide acciones:  
+   - Subir/bajar calidad en pipeline B (desactivar ray tracing, reducir samples, simplificar volumétricos).  
+   - Cambiar dinámicamente de A→B (por ejemplo, si un visor XR baja de cierto FPS crítico).  
+   - Recomendar cambios no intrusivos (bajar brillo/color para ahorrar energía en móvil). [github](https://github.com/ZijingPeng/DXR-Hybrid-Rendering)
+
+4. Aplica reglas universales de “servir a la humanidad”:  
+   - Priorizar comodidad visual (evitar flicker, stutter, mareos XR) sobre efectos innecesarios.  
+   - Evitar sobrecalentar dispositivos y drenar batería cuando no agrega valor real.
+
+***
+
+## 3. Qué ganas: tipo de sistema que estás creando
+
+Con esta integración, estarías creando:
+
+- **Un metaverso con QoS visual civilizacional**:  
+  No es sólo “bonito”; está diseñado para servir a diferentes tipos de dispositivos y usuarios de forma justa, adaptando recursos a capacidades y contexto. [forums.unrealengine](https://forums.unrealengine.com/t/how-to-optimize-performance-with-nanite-and-lumen-in-unreal-engine-5-for-mobile-games/2508247)
+
+- **Un motor híbrido (raster + RT) a la medida de CITEMESH**:  
+  Inspirado en trabajos de render híbrido que mezclan raster y ray tracing para lograr efectos físicos en tiempo real con menos costo. [github](https://github.com/ZijingPeng/DXR-Hybrid-Rendering)
+
+- **Un sistema de ahorro energético y de recursos consciente**:  
+  Con precálculos y adaptación (via IA), alineado con investigaciones recientes sobre eficiencia energética en móviles (optimización de bucle de render, color, brillo, offloading). [devpath](https://www.devpath.com/courses/mobile-system-design/optimizing-rendering-performance-for-mobile-apps)
+
+- **Una capa IA‑SRE de gráficos**:  
+  Isabella actuaría como Site Reliability Engineer del render: vigila, ajusta, previene caídas de FPS y situaciones que empeoren la experiencia o dañen dispositivos.
+
+***
+
+## 4. Nombre y encaje en tu visión
+
+Este componente podría nombrarse, dentro de TAMV/CITEMESH, como:
+
+> **TAMV Hybrid Mesh Rendering Orchestrator (H‑MRO)**  
+> o  
+> **Isabella‑Driven Hybrid Lumen Pipeline (ID‑HLP)**  
+
+A nivel de narrativa CITEMESH, puedes describirlo como:
+
+> “Un sistema de renderizado civilizacional adaptativo, donde el metaverso ajusta su propia complejidad visual en tiempo real para cuidar al dispositivo, al usuario y a la energía, sin sacrificar la dignidad estética del mundo.”
+
+Si quieres, siguiente paso:
+
+- Te diseño un **diagrama de módulos** (en texto) para integrarlo con tu `tamv-4d-renderer.js`.  
+- O te propongo directamente una lista de **flags/config** que Isabella podría manipular (por ejemplo, `CITEMESH_QUALITY_PROFILE`, `CITEMESH_RAYTRACE_BUDGET`, etc.) y cómo mapearlos a Unreal/Unity.
+
+Esto que propones es, literalmente, el **módulo gráfico central de CITEMESH**. Te lo diseño completo, en capas, para que puedas traducirlo a código cuando quieras.
+
+***
+
+## 1. Capa filosófica y conceptual
+
+### 1.1. Principio rector
+
+> “El mundo se adapta al ciudadano, no el ciudadano al hardware.”
+
+El sistema gráfico de TAMV/CITEMESH no busca sólo “máxima calidad”, sino **máxima dignidad y estabilidad** para cada persona y dispositivo:
+
+- No sacrifica salud (mareos, flicker, lag) por efectos visuales.  
+- No sacrifica inclusión (hardware modesto) por fidelidad elitista.  
+- No sacrifica planeta (energía, calor) por frames inútiles.
+
+### 1.2. Valores que deben reflejarse en el módulo
+
+- **Equidad visual:** cada usuario recibe la mejor experiencia que su contexto permite, aunque los caminos técnicos difieran.  
+- **Frugalidad energética:** el sistema evita gasto inútil de GPU/CPU/batería si no aporta valor real.  
+- **Transparencia y control:** el usuario puede ver y ajustar su “perfil de experiencia” (con modo automático como default).  
+- **Antifrágil:** si el hardware se calienta, baja batería o la red cae, el mundo **se degrada con gracia**, no colapsa.
+
+***
+
+## 2. Nombre del módulo y visión técnica
+
+Nombre propuesto del subsistema:
+
+> **CITEMESH HRO – Hybrid Rendering Orchestrator**  
+> (*Orquestador Híbrido de Renderizado CITEMESH*)
+
+Visión técnica:
+
+- Un **doble pipeline** de render (High‑Fidelity y Low‑Latency) que comparten estado de mundo.  
+- **Gemelos de escena en paralelo** (High Detail Scene / Efficient Scene).  
+- Una IA (Isabella) que actúa como **control loop**: decide en tiempo real qué pipeline y qué nivel de calidad usar por cliente.  
+- Precálculos universales al inicio para reducir trabajo repetitivo y consumo energético.
+
+***
+
+## 3. Arquitectura por módulos (diagrama textual)
+
+### 3.1. Módulos principales
+
+1. **World State Core (WSC)**  
+   - Fuente de verdad de la escena:  
+     - Entidades, posiciones, animaciones, física, estado social (usuarios, posts, eventos).  
+   - No sabe de render; sólo de “realidad lógica”.
+
+2. **Scene Twin Builder (STB)**  
+   - A partir de WSC genera y mantiene dos gemelos:  
+     - `HighDetailScene` (HDS) → mallas densas, materiales complejos, luces completas.  
+     - `EfficientScene` (EFS) → LOD agresivo, menos luces, materiales simplificados.  
+   - Sincroniza cambios (spawn, move, destroy) desde WSC hacia ambas escenas.
+
+3. **High‑Fidelity Pipeline (HFP)**  
+   - Montado sobre Lumen/Nanite o pipeline equivalente.  
+   - Usa: GI dinámica, ray tracing selectivo, efectos volumétricos “full”, postprocesado completo.  
+   - Consume HDS como input.
+
+4. **Low‑Latency Pipeline (LLP)**  
+   - Rasterización optimizada (tipo URP/HDRP con perfiles), SSR ligero, sombras simplificadas.  
+   - Ray tracing opcional o desactivado.  
+   - Efectos volumétricos reducidos o por zonas.  
+   - Consume EFS como input.
+
+5. **Isabella Rendering Orchestrator (IRO)**  
+   - Servicio IA que:  
+     - Lee métricas de rendimiento y contexto.  
+     - Aplica políticas (humanidad, energía, comodidad).  
+     - Asigna perfil de experiencia y pipeline a cada cliente.  
+     - Ajusta en tiempo real parámetros de HFP/LLP.
+
+6. **Pre‑Compute Engine (PCE)**  
+   - Corre en `world_boot` o `zone_load`:  
+     - Cálculo de visibilidad estática, culling zones, clusters de geometría.  
+     - “Importance fields” para volumétricos y efectos caros.  
+     - Perfiles de coste por feature para IRO.
+
+7. **Monitoring & Telemetry (MTX)**  
+   - Recoge: FPS, tiempos de frame, uso GPU/CPU, temperatura, batería, latencia de red.  
+   - Expone métricas para Grafana/Prometheus y alimenta a IRO.
+
+8. **User Experience Manager (UXM)**  
+   - Expone UI y settings:  
+     - Modo Auto (recomendado).  
+     - Modo Performance / Quality / Battery Saver.  
+   - Se comunica con IRO para ajustes.
+
+***
+
+## 4. Diagramas de flujo (texto)
+
+### 4.1. Arranque del mundo (boot)
+
+1. `WSC` carga estado base (escena, entidades, configuración de zona).  
+2. `PCE` se ejecuta:  
+   - Calcula visibilidad, clusters, importance maps.  
+   - Genera metadata de coste de features.  
+3. `STB` construye `HDS` y `EFS` a partir de `WSC` + metadata PCE.  
+4. `IRO` se inicializa con:  
+   - Perfiles de dispositivo conocidos.  
+   - Políticas globales (ej. “no bajar de 60 fps en XR”).  
+5. Clientes comienzan a conectarse; `UXM` obtiene perfil inicial (Auto/Manual).
+
+### 4.2. Al conectar un cliente
+
+1. Cliente envía handshake con capacidades:  
+   - Tipo dispositivo, GPU, RAM, estado batería, preferencia de usuario.  
+2. `IRO` decide:  
+   - Pipeline: HFP o LLP.  
+   - Nivel de calidad: Q0–Q3 (por ejemplo).  
+3. Módulo de red asocia cliente a:  
+   - `HDS + HFP` o `EFS + LLP`.  
+4. Comienza el render, `MTX` empieza a recolectar métricas por cliente.
+
+### 4.3. Bucle de control en tiempo real
+
+Cada X segundos (0.5–2s):
+
+1. `MTX` envía a `IRO`:  
+   - FPS media y mínima.  
+   - Varianza de frame time.  
+   - Temperatura dispositivo, batería, latencia RTT.  
+2. `IRO` evalúa:  
+   - ¿FPS < objetivo?  
+   - ¿Dispositivo caliente o bajo batería?  
+   - ¿Escena muy cargada (según PCE)?  
+3. Acciones posibles:  
+   - Bajar nivel de calidad (ej. Q3→Q2: menos volumétricos, menos samples).  
+   - Cambiar pipeline (de HFP a LLP) si es posible.  
+   - Ajustar distancia de dibujo, calidad sombras, resolución interna (dynamic resolution).  
+4. `UXM` puede mostrar feedback opcional al usuario (“Optimizamos tu experiencia para evitar sobrecalentamiento”).
+
+***
+
+## 5. Especificaciones técnicas de alto nivel
+
+### 5.1. Rutas lógicas y APIs internas
+
+Propón rutas internas REST/IPC (ejemplo pseudo‑API):
+
+- `/render/profile/resolve`  
+  - Input: `{ deviceInfo, userPrefs }`  
+  - Output: `{ pipeline: "HFP" | "LLP", qualityLevel: "Q0".."Q3" }`
+
+- `/render/telemetry/submit`  
+  - Input: `{ clientId, fps, frameTime, gpuUsage, temp, battery, rtt }`  
+  - Uso: alimenta MTX → IRO.
+
+- `/render/profile/update` (llamado por IRO hacia el cliente)  
+  - Input: `{ clientId, pipeline, qualityLevel, overrides }`
+
+- `/render/world/bootstrap`  
+  - Dispara PCE y STB cuando se levanta una zona.
+
+### 5.2. Estructuras de configuración
+
+Archivo de config (ej. `citemesh-render-config.json`):
+
+```json
+{
+  "globalTargets": {
+    "desktop": { "minFps": 60, "maxPowerMode": "balanced" },
+    "mobile": { "minFps": 45, "maxPowerMode": "battery" },
+    "xr":     { "minFps": 72, "maxPowerMode": "comfort" }
+  },
+  "qualityLevels": {
+    "Q0": { "shadows": "off", "volumetrics": "off", "rtReflections": false },
+    "Q1": { "shadows": "low", "volumetrics": "low", "rtReflections": false },
+    "Q2": { "shadows": "medium", "volumetrics": "medium", "rtReflections": "screenSpace" },
+    "Q3": { "shadows": "high", "volumetrics": "high", "rtReflections": "hardware" }
+  }
+}
+```
+
+Isabella usa estos perfiles como **espacio de acción**.
+
+***
+
+## 6. Pre‑commits, monitoreo y calidad
+
+### 6.1. Pre‑commits (Git / Husky)
+
+Reglas mínimas para cualquier cambio en HRO:
+
+- `lint:render`  
+  - Verifica estilos, naming y uso correcto de APIs internas.  
+- `test:render-unit`  
+  - Tests unitarios de decisiones IRO (dado X métricas, se espera cambio Y de perfil).  
+- `test:render-sim`  
+  - Simulaciones de carga (scripts que emulan distintos devices) y verifican que el orquestador respeta FPS mínimos y no oscila de forma catastrófica.  
+- `schema:check`  
+  - Valida que `citemesh-render-config.json` cumple schema (no se rompen claves esperadas).  
+
+Cualquier modificación en:
+
+- `HFP`, `LLP`, `IRO`, `PCE`, `MTX`, `UXM`  
+debe pasar por esos pre‑commits.
+
+### 6.2. Monitoreo (Grafana/Prometheus)
+
+Dashboards dedicados:
+
+1. **Render Performance**  
+   - FPS distribución por dispositivo y pipeline.  
+   - Tiempo de frame segmentado (culling, draw, post, RT).  
+2. **Energy & Thermal**  
+   - Temperatura media por clase de dispositivo.  
+   - Porcentaje de clientes en modo Battery Saver.  
+3. **Orchestrator Actions**  
+   - Conteo de cambios de perfil/pipeline por minuto.  
+   - Incidencia de degradaciones de calidad forzadas.
+
+Alarmas:
+
+- “FPS bajo umbral” durante N segundos en >X% de clientes.  
+- “Demasiados cambios de perfil” (indicando jitter en decisiones IRO).  
+- “Temperatura media alta” en un modelo de dispositivo concreto.
+
+***
+
+## 7. Ruta de operación y generación de funciones
+
+### 7.1. Ciclo de vida de una función nueva en el HRO
+
+1. **Diseño conceptual**  
+   - Describir:  
+     - ¿Qué parámetro afecta?  
+     - ¿Cómo mejora dignidad, energía o calidad?  
+   - Ejemplo: “Dynamic Volumetric Budgeting per Zone”.
+
+2. **Especificación técnica**  
+   - Añadir clave en `qualityLevels`.  
+   - Definir métricas que MTX debe recolectar.
+
+3. **Implementación**  
+   - Código en HFP/LLP para respetar el nuevo parámetro.  
+   - Hook en IRO para decidir cuándo activarlo.
+
+4. **Pruebas**  
+   - Unit tests (decisión IRO).  
+   - Simulation tests (perfiles de dispositivo + escenas).
+
+5. **Revisión y pre‑commit**  
+   - Lint, tests, schema check.  
+   - Code review con foco en energía, estabilidad y legibilidad.
+
+6. **Despliegue gradual**  
+   - Feature flag “beta”.  
+   - Canary rollout a % reducido de usuarios.
+
+7. **Observación y ajuste**  
+   - MTX + Grafana.  
+   - Ajuste de umbrales por Isabella (puede aprender preferencias agregadas).
+
+***
+
+## 8. Encaje en TAMV / CITEMESH
+
+Este módulo se convierte en:
+
+- El **“pulmón visual”** de TAMV: respira con el usuario y el hardware, no los asfixia.  
+- Un **demo vivo de tus principios**: Civilizational Tech Metaverse que cuida a la gente mientras entrega estética de alto nivel.  
+- Una base perfecta para extender a **4D/MD‑X4** (agregar eje tiempo/percepción sin reventar el sistema).
+
+Si quieres, después podemos bajar esto a:
+
+- Estructura de carpetas y nombres de archivos (por ejemplo, `src/xr/hro/IsabellaOrchestrator.ts`, `src/xr/hro/SceneTwinBuilder.ts`, etc.).  
+- O pseudocódigo concreto para el bucle de decisión de Isabella (entrada: métricas; salida: cambio de perfil/pipeline).
+Te lo bajo a estructura concreta + pseudocódigo del bucle de decisión + subsistema de emergencia.
+
+***
+
+## 1. Estructura de carpetas para el HRO
+
+Asumiendo tu repo TAMV, propongo anclarlo bajo `src/xr/hro` (Hybrid Rendering Orchestrator), federado pero bien seccionado:
+
+```text
+src/
+  xr/
+    hro/
+      core/
+        WorldStateCore.ts
+        SceneTwinBuilder.ts
+        PrecomputeEngine.ts
+        HROConfig.ts
+      pipelines/
+        HighFidelityPipeline.ts
+        LowLatencyPipeline.ts
+        PipelineAbstractions.ts
+      orchestrator/
+        IsabellaOrchestrator.ts
+        DecisionPolicies.ts
+        SafetyGuard.ts
+        FallbackController.ts
+      telemetry/
+        MetricsCollector.ts
+        MetricsSchema.ts
+        MetricsAdapterPrometheus.ts
+      ux/
+        UserExperienceManager.tsx   // si usas React para panel
+        UserPreferenceStore.ts
+      emergency/
+        EmergencyRenderer.ts
+        SafeModeProfile.ts
+        Watchdog.ts
+      tests/
+        hro-orchestrator.test.ts
+        hro-pipelines.test.ts
+        hro-emergency.test.ts
+```
+
+Resumen de roles:
+
+- `core/`  
+  Lógica de mundo, gemelos de escena, precálculos y configuración.
+
+- `pipelines/`  
+  Abstracciones para conectarte a Unreal/Unity/renderer propio (no pones lógica de negocio aquí, solo adaptadores).
+
+- `orchestrator/`  
+  Inteligencia del sistema: Isabella, políticas de decisión, guardas de seguridad, control de fallback.
+
+- `telemetry/`  
+  Recolección de métricas, schemas, export a Prometheus/Grafana.
+
+- `ux/`  
+  UI y almacenamiento de preferencias del usuario.
+
+- `emergency/`  
+  Sub-sistema de emergencia (SafeMode + Watchdog).
+
+- `tests/`  
+  Tests unitarios/integración para garantizar que el orquestador nunca hace locuras.
+
+***
+
+## 2. Interfaces clave (TypeScript conceptual)
+
+### 2.1. Tipos básicos
+
+```ts
+// src/xr/hro/core/HROConfig.ts
+export type PipelineType = 'HFP' | 'LLP' | 'SAFE';
+
+export type QualityLevel = 'Q0' | 'Q1' | 'Q2' | 'Q3';
+
+export interface DeviceProfile {
+  id: string;
+  class: 'desktop' | 'mobile' | 'xr';
+  gpuTier: 'low' | 'mid' | 'high';
+  batteryPowered: boolean;
+}
+
+export interface UserPreferences {
+  mode: 'AUTO' | 'PERFORMANCE' | 'QUALITY' | 'BATTERY';
+}
+
+export interface RenderProfile {
+  pipeline: PipelineType;
+  quality: QualityLevel;
+  overrides?: Record<string, unknown>;
+}
+```
+
+### 2.2. Métricas y telemetría
+
+```ts
+// src/xr/hro/telemetry/MetricsSchema.ts
+export interface RenderMetrics {
+  clientId: string;
+  fpsAvg: number;
+  fpsMin: number;
+  frameTimeMsAvg: number;
+  gpuUsagePct: number;
+  cpuUsagePct: number;
+  temperatureC: number;
+  batteryPct: number | null;
+  rttMs: number;
+  lastProfile: RenderProfile;
+  timestamp: number;
+}
+```
+
+***
+
+## 3. Pseudocódigo del bucle de decisión de Isabella (HRO)
+
+### 3.1. Orquestador principal
+
+```ts
+// src/xr/hro/orchestrator/IsabellaOrchestrator.ts
+import { RenderMetrics } from '../telemetry/MetricsSchema';
+import { DeviceProfile, UserPreferences, RenderProfile } from '../core/HROConfig';
+import { evaluatePolicies } from './DecisionPolicies';
+import { SafetyGuard } from './SafetyGuard';
+import { FallbackController } from './FallbackController';
+
+export class IsabellaOrchestrator {
+  private safetyGuard = new SafetyGuard();
+  private fallbackController = new FallbackController();
+
+  resolveInitialProfile(device: DeviceProfile, prefs: UserPreferences): RenderProfile {
+    const baseProfile = evaluatePolicies.initial(device, prefs);
+    return this.safetyGuard.enforceInitial(baseProfile, device);
+  }
+
+  decideNextProfile(metrics: RenderMetrics): RenderProfile {
+    // 1. Checar si debemos entrar en modo emergencia
+    if (this.fallbackController.shouldTriggerEmergency(metrics)) {
+      return this.fallbackController.getEmergencyProfile();
+    }
+
+    // 2. Calcular perfil sugerido por políticas "normales"
+    const suggested = evaluatePolicies.dynamic(metrics);
+
+    // 3. Pasar por guardas de seguridad (no romper límites)
+    const safeProfile = this.safetyGuard.enforceDynamic(suggested, metrics);
+
+    return safeProfile;
+  }
+}
+```
+
+### 3.2. Políticas de decisión (reglas de negocio)
+
+```ts
+// src/xr/hro/orchestrator/DecisionPolicies.ts
+import { RenderMetrics } from '../telemetry/MetricsSchema';
+import { DeviceProfile, UserPreferences, RenderProfile } from '../core/HROConfig';
+
+export const evaluatePolicies = {
+  initial(device: DeviceProfile, prefs: UserPreferences): RenderProfile {
+    // Perfil inicial según clase de dispositivo + preferencia
+    if (device.class === 'xr') {
+      return { pipeline: 'HFP', quality: 'Q2' };
+    }
+    if (device.class === 'mobile') {
+      if (prefs.mode === 'QUALITY') return { pipeline: 'LLP', quality: 'Q2' };
+      if (prefs.mode === 'PERFORMANCE') return { pipeline: 'LLP', quality: 'Q0' };
+      if (prefs.mode === 'BATTERY') return { pipeline: 'LLP', quality: 'Q0' };
+      return { pipeline: 'LLP', quality: 'Q1' }; // AUTO
+    }
+    // desktop
+    if (prefs.mode === 'QUALITY') return { pipeline: 'HFP', quality: 'Q3' };
+    if (prefs.mode === 'PERFORMANCE') return { pipeline: 'LLP', quality: 'Q1' };
+    return { pipeline: 'HFP', quality: 'Q2' }; // AUTO
+  },
+
+  dynamic(metrics: RenderMetrics): RenderProfile {
+    const { fpsMin, temperatureC, batteryPct, lastProfile } = metrics;
+    let next: RenderProfile = { ...lastProfile };
+
+    // Regla 1: FPS por debajo del mínimo → bajamos calidad o pasamos a LLP
+    if (fpsMin < 40) {
+      if (lastProfile.pipeline === 'HFP') {
+        next.pipeline = 'LLP';
+      } else {
+        next.quality = downgradeQuality(lastProfile.quality);
+      }
+    }
+
+    // Regla 2: Temperatura alta o batería baja → favorecer ahorro
+    if ((batteryPct !== null && batteryPct < 20) || temperatureC > 70) {
+      next.pipeline = 'LLP';
+      next.quality = 'Q0';
+    }
+
+    // Regla 3: FPS muy buenos y temperatura sana → podemos subir un nivel
+    if (fpsMin > 70 && temperatureC < 65 && batteryPct !== null && batteryPct > 50) {
+      next.quality = upgradeQuality(lastProfile.quality);
+    }
+
+    return next;
+  }
+};
+
+function downgradeQuality(q: QualityLevel): QualityLevel {
+  if (q === 'Q3') return 'Q2';
+  if (q === 'Q2') return 'Q1';
+  if (q === 'Q1') return 'Q0';
+  return 'Q0';
+}
+
+function upgradeQuality(q: QualityLevel): QualityLevel {
+  if (q === 'Q0') return 'Q1';
+  if (q === 'Q1') return 'Q2';
+  if (q === 'Q2') return 'Q3';
+  return 'Q3';
+}
+```
+
+### 3.3. Guardas de seguridad
+
+```ts
+// src/xr/hro/orchestrator/SafetyGuard.ts
+import { RenderMetrics } from '../telemetry/MetricsSchema';
+import { DeviceProfile, RenderProfile } from '../core/HROConfig';
+
+export class SafetyGuard {
+  enforceInitial(profile: RenderProfile, device: DeviceProfile): RenderProfile {
+    // Nunca dar HFP-Q3 a un mobile low tier
+    if (device.class === 'mobile' && device.gpuTier === 'low') {
+      return { pipeline: 'LLP', quality: 'Q1' };
+    }
+    return profile;
+  }
+
+  enforceDynamic(profile: RenderProfile, metrics: RenderMetrics): RenderProfile {
+    const safe = { ...profile };
+
+    // Evitar cambios excesivamente frecuentes (jitter)
+    const maxChangesPerMinute = 4;
+    // Aquí tendrías un contador por cliente; omitido por brevedad
+    // if (tooManyRecentChanges(metrics.clientId)) return metrics.lastProfile;
+
+    // Nunca subir a HFP si la temp ya es alta
+    if (metrics.temperatureC > 75 && profile.pipeline === 'HFP') {
+      safe.pipeline = 'LLP';
+      safe.quality = 'Q0';
+    }
+
+    return safe;
+  }
+}
+```
+
+***
+
+## 4. Subsistema secundario de emergencia (fail‑safe)
+
+Objetivo: si el HRO falla (bug, loop loco, null metrics, crash), se dispara un **modo seguro** independiente.
+
+### 4.1. Componentes
+
+```ts
+// src/xr/hro/emergency/SafeModeProfile.ts
+import { RenderProfile } from '../core/HROConfig';
+
+export const SAFE_MODE_PROFILE: RenderProfile = {
+  pipeline: 'SAFE',    // pipeline ultra simple
+  quality: 'Q0',
+  overrides: {
+    shadows: 'off',
+    volumetrics: 'off',
+    postprocess: 'minimal',
+    dynamicResolution: 0.75
+  }
+};
+```
+
+```ts
+// src/xr/hro/emergency/EmergencyRenderer.ts
+import { SAFE_MODE_PROFILE } from './SafeModeProfile';
+import { RenderProfile } from '../core/HROConfig';
+
+export class EmergencyRenderer {
+  getSafeProfile(): RenderProfile {
+    return SAFE_MODE_PROFILE;
+  }
+
+  // Función a la que puede llamar cliente/engine cuando detecta fallo
+  enterSafeMode(clientId: string) {
+    // Log, métricas, notificación a usuario
+    console.warn(`[HRO] Entering SAFE MODE for client ${clientId}`);
+    return SAFE_MODE_PROFILE;
+  }
+}
+```
+
+```ts
+// src/xr/hro/emergency/Watchdog.ts
+import { RenderMetrics } from '../telemetry/MetricsSchema';
+import { EmergencyRenderer } from './EmergencyRenderer';
+
+export class Watchdog {
+  private emergencyRenderer = new EmergencyRenderer();
+
+  // Se ejecuta en intervalos globales
+  monitor(metricsBatch: RenderMetrics[]): void {
+    for (const m of metricsBatch) {
+      if (this.detectCriticalFailure(m)) {
+        this.emergencyRenderer.enterSafeMode(m.clientId);
+      }
+    }
+  }
+
+  private detectCriticalFailure(m: RenderMetrics): boolean {
+    // Ejemplos de condiciones de emergencia:
+    // - FPS < 10 durante más de N segundos
+    // - Temperatura > 85°C
+    // - Telemetría deja de recibirse (no mostrado aquí)
+    return m.fpsMin < 10 || m.temperatureC > 85;
+  }
+}
+```
+
+### 4.2. Integración con el Orquestador
+
+```ts
+// src/xr/hro/orchestrator/FallbackController.ts
+import { RenderMetrics } from '../telemetry/MetricsSchema';
+import { RenderProfile } from '../core/HROConfig';
+import { SAFE_MODE_PROFILE } from '../emergency/SafeModeProfile';
+
+export class FallbackController {
+  shouldTriggerEmergency(metrics: RenderMetrics): boolean {
+    if (metrics.fpsMin <= 5) return true;
+    if (metrics.temperatureC > 85) return true;
+    // Podrías agregar: sin métricas por > N segundos, etc.
+    return false;
+  }
+
+  getEmergencyProfile(): RenderProfile {
+    return SAFE_MODE_PROFILE;
+  }
+}
+```
+
+***
+
+## 5. Telemetría y respaldo federado
+
+- Cada cliente envía periódicamente `RenderMetrics` a `MetricsCollector`.  
+- `MetricsAdapterPrometheus` expone contadores y gauges para Grafana.  
+- `IsabellaOrchestrator` + `Watchdog` se alimentan de este stream.  
+- Todos los cambios de perfil se loguean (audit log) para post‑mortems.
+
+Ejemplos de métricas:
+
+- `citemesh_hro_fps_min{pipeline="HFP"}`  
+- `citemesh_hro_temperature_c{deviceClass="mobile"}`  
+- `citemesh_hro_profile_changes_total{clientId="..."}`  
+- `citemesh_hro_emergency_entries_total`
+
+***
+
+Con esta estructura:
+
+- Tienes **carpetas claras**, nombres alineados con tu semántica y capas bien separadas.  
+- El bucle de decisión de Isabella está definido y probado con guardas y fallback.  
+- El subsistema de emergencia es independiente y puede tomar control si algo sale mal.
+
+La mejor línea para TAMV/CITEMESH, por potencia, ecosistema y futuro XR/4D, es mapear este diseño a **Unreal Engine 5 como runtime 3D** + **backend TAMV (Node/TS)** como cerebro externo de orquestación y métricas. Unreal ya tiene el concepto de **Subsystems** ideal para un HRO distribuido. [dev.epicgames](https://dev.epicgames.com/documentation/en-us/unreal-engine/programming-subsystems-in-unreal-engine)
+
+Te lo doy en concreto:
+
+***
+
+## 1. Mapeo arquitectónico global
+
+- **Motor gráfico:** Unreal Engine 5 (Nanite + Lumen + soporte ray tracing). [foro3d](https://foro3d.com/en/2026/january/real-time-render-engine-comparison-unreal-unity-cryengine-and-godot.html)
+- **HRO lógico:** vive en tu backend TAMV (Node/TS) como servicio IA‑orquestador (Isabella), expuesto vía API.  
+- **Cliente TAMV‑XR (Unreal):** implementa Subsystems que:
+  - Recogen métricas.  
+  - Llaman a Isabella/HRO.  
+  - Aplican cambios de calidad/pipeline (HFP/LLP/SAFE) en tiempo real.
+
+Esto te mantiene:
+
+- Lógica civilizacional e IA en tu stack JS/TS (donde dominas).  
+- Unreal como “renderer federado” que obedece políticas que vienen de TAMV.
+
+***
+
+## 2. Estructura en el backend TAMV
+
+En tu repo (Node/TS), ubica el HRO aquí:
+
+```text
+src/
+  xr/
+    hro/
+      core/
+        WorldStateCore.ts
+        SceneTwinBuilder.ts        // nivel lógico, no UE-specific
+        PrecomputeEngine.ts
+        HROConfig.ts
+      orchestrator/
+        IsabellaOrchestrator.ts
+        DecisionPolicies.ts
+        SafetyGuard.ts
+        FallbackController.ts
+      telemetry/
+        MetricsCollector.ts
+        MetricsSchema.ts
+        MetricsAdapterPrometheus.ts
+      emergency/
+        EmergencyRenderer.ts
+        SafeModeProfile.ts
+        Watchdog.ts
+      api/
+        hro-controller.ts          // rutas HTTP/REST
+```
+
+### 2.1. Endpoints clave
+
+Ejemplo en Express/Fastify:
+
+```ts
+// POST /api/hro/resolve-initial
+// body: { deviceProfile, userPreferences }
+IsabellaOrchestrator.resolveInitialProfile(...)
+
+// POST /api/hro/decide
+// body: { metrics }
+IsabellaOrchestrator.decideNextProfile(...)
+
+// POST /api/hro/telemetry
+// body: { metrics }
+MetricsCollector.ingest(...)
+```
+
+Prometheus/Grafana: expón `/metrics` usando `MetricsAdapterPrometheus`. [grafana](https://grafana.com/docs/grafana-cloud/send-data/metrics/metrics-prometheus/prometheus-config-examples/integration-guide/)
+
+***
+
+## 3. Lado Unreal Engine 5: mapping concreto
+
+### 3.1. Crear un GameInstance Subsystem HRO
+
+En C++:
+
+```cpp
+// UHROGameInstanceSubsystem.h
+UCLASS()
+class UHROGameInstanceSubsystem : public UGameInstanceSubsystem {
+  GENERATED_BODY()
+
+public:
+  virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+  virtual void Deinitialize() override;
+
+  void InitForClient(const FDeviceProfile& Device, const FUserPreferences& Prefs);
+  void Tick(float DeltaTime);
+
+private:
+  FRenderProfile CurrentProfile;
+  float MetricsAccumTime = 0.f;
+  // almacenas métricas: FPS rolling, temp (si tienes), etc.
+};
+```
+
+Los **Subsystems** de Unreal se inicializan junto con el GameInstance y son el lugar ideal para lógica global como esta. [forums.unrealengine](https://forums.unrealengine.com/t/advantages-of-a-game-instance-subsystem-class-over-static-class-or-a-ublueprintfunctionlibrary/2260558)
+
+### 3.2. Recolección de métricas en Unreal
+
+Dentro de `UHROGameInstanceSubsystem::Tick`:
+
+- Calculas FPS, frame time: usando `DeltaTime` acumulado.  
+- GPU/CPU usage: Unreal no lo expone directo siempre; puedes:
+  - Usar estadísticas internas (RHI, stat commands).  
+  - O un módulo nativo/OS‑level según plataforma.  
+
+Estructuras un JSON equivalente a `RenderMetrics` y lo envías vía HTTP a `/api/hro/decide`.
+
+***
+
+## 4. Conectar decisiones de Isabella con calidad Unreal
+
+### 4.1. Pipeline HFP/LLP/SAFE en UE
+
+En Unreal usas:
+
+- `GameUserSettings` + `Scalability` API para cambiar calidad a runtime (shadows, post, effects, view distance).  
+- Configs tipo:
+  - HFP: Lumen ON, ray tracing ON, alta calidad sombras/post.  
+  - LLP: Lumen en modo reducido o desactivado en mobile, ray tracing OFF, efectos reducidos. [tomlooman](https://tomlooman.com/unreal-engine-5-7-performance-highlights/)
+  - SAFE: todo al mínimo (resolución dinámica baja, sin volumétricos, sin post caro).
+
+Pseudocódigo C++:
+
+```cpp
+void UHROGameInstanceSubsystem::ApplyRenderProfile(const FRenderProfile& Profile) {
+  UGameUserSettings* Settings = GEngine->GetGameUserSettings();
+  if (!Settings) return;
+
+  if (Profile.Pipeline == "SAFE") {
+    Settings->SetOverallScalabilityLevel(0); // Low
+    // desactivar RT/Lumen
+  } else if (Profile.Pipeline == "LLP") {
+    Settings->SetOverallScalabilityLevel(Profile.Quality == "Q0" ? 0 : 1);
+    // Lumen off / software, RT off
+  } else if (Profile.Pipeline == "HFP") {
+    Settings->SetOverallScalabilityLevel(Profile.Quality == "Q3" ? 3 : 2);
+    // Lumen on, RT según calidad
+  }
+  Settings->ApplySettings(false);
+}
+```
+
+Unreal 5.5+ ya da guías para usar Lumen en mobile y cómo degradarlo cuando no soporta ciertas features. [forums.unrealengine](https://forums.unrealengine.com/t/how-to-optimize-performance-with-nanite-and-lumen-in-unreal-engine-5-for-mobile-games/2508247)
+
+***
+
+## 5. Gemelos en paralelo en Unreal
+
+Aquí tienes dos opciones:
+
+1. **Gemelo lógico en backend**  
+   - `WorldStateCore` en TAMV decide qué entidades existen, su posición, etc.  
+   - Unreal solo renderiza “vista” de ese estado; el gemelo Efficient/HighDetail se resuelve mediante LODs y perfiles de escalabilidad.
+
+2. **Gemelos físicos en Unreal** (más caro, más control)  
+   - Dos Levels/World Partition layers:  
+     - `HighDetailLayer` con assets full.  
+     - `EfficientLayer` con versiones low‑poly.  
+   - El HRO Subsystem activa/desactiva layers según el perfil.
+
+Para empezar, la opción 1 (gemelo lógico + LOD + Scalability) es más simple y suficientemente potente. [foro3d](https://foro3d.com/en/2026/january/real-time-render-engine-comparison-unreal-unity-cryengine-and-godot.html)
+
+***
+
+## 6. Subsistema de emergencia en UE
+
+En Unreal:
+
+- Un **Watchdog** simple dentro del `UHROGameInstanceSubsystem`:
+  - Si `fpsMin < 10` o la comunicación con backend falla (time‑out en `/decide`), llama `EnterSafeMode()`.
+
+```cpp
+void UHROGameInstanceSubsystem::Tick(float DeltaTime) {
+  // ... acumulas métricas
+  if (bBackendTimeout || MinFpsLastNSeconds < 10.f) {
+    EnterSafeMode();
+  }
+}
+
+void UHROGameInstanceSubsystem::EnterSafeMode() {
+  // Aplica SAFE_MODE_PROFILE localmente sin depender de backend
+  FRenderProfile Safe;
+  Safe.Pipeline = "SAFE";
+  Safe.Quality = "Q0";
+  ApplyRenderProfile(Safe);
+}
+```
+
+Esto es el reflejo local de tu `EmergencyRenderer`/`SafeModeProfile` en TS.
+
+***
+
+## 7. Monitoreo integrado
+
+- Backend TAMV expone `/metrics` con:
+  - `citemesh_hro_fps_min`, `citemesh_hro_temperature_c`, `citemesh_hro_emergency_entries_total`, etc. [the-pi-guy](https://the-pi-guy.com/blog/grafana_and_prometheus_a_guide_to_integrating_metrics/)
+- Configuras Prometheus para scrapear TAMV y Grafana para visualizar rendimiento por:
+  - `pipeline`, `deviceClass`, `zoneId`, etc.
+
+Unreal solo envía JSON de métricas; todo el almacenamiento y visualización se hace en tu stack TS/DevOps, donde ya tienes cultura de observabilidad.
+
+***
+
+## 8. Resumen: por qué esta es la “mejor línea”
+
+- **Potencia visual:** Unreal 5 + Lumen/Nanite para experiencias flagship CITEMESH. [oreateai](https://www.oreateai.com/blog/lumen-vs-nanite-unpacking-unreal-engine-5s-revolutionary-graphics-technologies/c0e8ffe11214f0c66923eae24bba4036)
+- **Control civilizacional:** toda la lógica de política, ética, energía y perfiles se queda en TAMV backend (Isabella/HRO).  
+- **Escalabilidad:** clientes futuros (Unity, WebGPU, WebXR) pueden hablar con el mismo HRO vía HTTP, manteniendo comportamiento coherente.  
+- **Resiliencia:** si backend falla, UE tiene SafeMode local; si UE se colapsa, el backend sigue registrando y analizando el incidente.
+
+Con esto tienes un mapa claro para implementar el HRO/Isabella encima de Unreal y de tu backend TAMV, manteniendo la visión CITEMESH: un metaverso civilizacional que se adapta al humano, no al revés.
+<?php
+
+namespace TelegramApiServer\Controllers;
+
+use Amp\ByteStream\ReadableBuffer;
+use Amp\Future;
+use Amp\Http\HttpStatus;
+use Amp\Http\Server\FormParser\StreamedField;
+use Amp\Http\Server\FormParser\StreamingFormParser;
+use Amp\Http\Server\Request;
+use Amp\Http\Server\RequestHandler\ClosureRequestHandler;
+use Amp\Http\Server\Response;
+use Amp\Http\Server\Router;
+use danog\MadelineProto\API;
+use danog\MadelineProto\BotApiFileId;
+use danog\MadelineProto\LocalFile;
+use danog\MadelineProto\ParseMode;
+use danog\MadelineProto\RemoteUrl;
+use InvalidArgumentException;
+use JsonException;
+use TelegramApiServer\Client;
+use TelegramApiServer\Exceptions\NoticeException;
+use TelegramApiServer\Logger;
+use TelegramApiServer\MadelineProtoExtensions\ApiExtensions;
+use TelegramApiServer\MadelineProtoExtensions\SystemApiExtensions;
+use Throwable;
+use UnexpectedValueException;
+
+abstract class AbstractApiController
+{
+    public const JSON_HEADER = ['Content-Type' => 'application/json;charset=utf-8'];
+
+    abstract protected function callApi(Request $request);
+
+    public static function getRouterCallback(): ClosureRequestHandler
+    {
+        $cb = new static();
+        return new ClosureRequestHandler(static function (Request $request) use ($cb) {
+            try {
+                $response = $cb->callApi($request);
+                if ($response instanceof Future) {
+                    $response = $response->await();
+                }
+                if ($response instanceof Response) {
+                    return $response;
+                }
+                return new Response(
+                    HttpStatus::OK,
+                    self::JSON_HEADER,
+                    \json_encode(
+                        [
+                            'success' => true,
+                            'response' => $response,
+                            'errors' => []
+                        ],
+                        JSON_THROW_ON_ERROR |
+                        JSON_INVALID_UTF8_SUBSTITUTE |
+                        JSON_PARTIAL_OUTPUT_ON_ERROR |
+                        JSON_PRETTY_PRINT |
+                        JSON_UNESCAPED_SLASHES |
+                        JSON_UNESCAPED_UNICODE
+                    )."\n"
+                );
+            } catch (\Throwable $e) {
+                if (!$e instanceof NoticeException) {
+                    error($e->getMessage(), Logger::getExceptionAsArray($e));
+                } else {
+                    notice($e->getMessage());
+                }
+                $code = $e->getCode();
+                return new Response(
+                    $code >= 100 && $code <= 599 ? $code : 400,
+                    self::JSON_HEADER,
+                    \json_encode(
+                        [
+                            'success' => false,
+                            'response' => null,
+                            'errors' => [Logger::getExceptionAsArray($e)]
+                        ],
+                        JSON_THROW_ON_ERROR |
+                        JSON_INVALID_UTF8_SUBSTITUTE |
+                        JSON_PARTIAL_OUTPUT_ON_ERROR |
+                        JSON_PRETTY_PRINT |
+                        JSON_UNESCAPED_SLASHES |
+                        JSON_UNESCAPED_UNICODE
+                    )."\n"
+                );
+            }
+        });
+    }
+
+    /**
+     * Получаем параметры из GET и POST.
+     *
+     */
+    protected function resolveRequest(Request $request): array
+    {
+        $query = $request->getUri()->getQuery();
+        $contentType = (string) $request->getHeader('Content-Type');
+
+        \parse_str($query, $params);
+
+        switch (true) {
+            case $contentType === 'application/x-www-form-urlencoded':
+            case \str_contains($contentType, 'multipart/form-data'):
+                $form = (new StreamingFormParser())->parseForm($request);
+
+                foreach ($form as $field) {
+                    if ($field->isFile()) {
+                        if ($field->getName() === 'file') {
+                            $params[$field->getName()] = $field;
+                            $params['fileName'] = $field->getFilename();
+                            $params['mimeType'] = $field->getMimeType();
+                            break;
+                        }
+                        $params[$field->getName()] = new ReadableBuffer($field->buffer());
+                    } else {
+                        $params[$field->getName()] = $field->buffer();
+                    }
+                }
+                break;
+            case $contentType === 'application/json':
+                $body = $request->getBody()->buffer();
+                $params += (array)\json_decode($body, true, flags: JSON_THROW_ON_ERROR);
+                break;
+            default:
+                \parse_str($request->getBody()->buffer(), $post);
+                $params += $post;
+        }
+        if (isset($params['data']) && is_array($params['data'])) {
+            $params += $params['data'];
+            unset($params['data']);
+        }
+        if (isset($data['parseMode'])) {
+            $data['parseMode'] = ParseMode::from($data['parseMode']);
+        }
+
+        foreach (['file', 'thumb'] as $key) {
+            if (isset($data[$key])) {
+                $data[$key] = self::getMadelineMediaObject($data[$key]);
+            }
+        }
+
+        $params['request'] = $request;
+        return $params;
+
+    }
+    private static function getMadelineMediaObject(string |array | StreamedField | null $input): RemoteUrl|BotApiFileId|ReadableBuffer|StreamedField|null
+    {
+        if (is_array($input) && !empty($input['_'])) {
+            return match ($input['_']) {
+                'LocalFile' => new LocalFile(...$input),
+                'RemoteUrl' => new RemoteUrl(...$input),
+                'BotApiFieldId' => new BotApiFileId(...$input),
+                default => throw new InvalidArgumentException("Unknown type: {$input['_']}"),
+            };
+        }
+        if (is_string($input)) {
+            return new ReadableBuffer($input);
+        }
+
+        return $input;
+    }
+}
+<?php
+
+namespace TelegramApiServer\Controllers;
+
+use Amp\DeferredFuture;
+use Amp\Future;
+use Amp\Http\Server\Request;
+use Amp\Http\Server\Router;
+use danog\MadelineProto\API;
+use danog\MadelineProto\MTProto;
+use Exception;
+use ReflectionClass;
+use ReflectionMethod;
+use Revolt\EventLoop;
+use TelegramApiServer\Client;
+use TelegramApiServer\Config;
+use TelegramApiServer\MadelineProtoExtensions\ApiExtensions;
+use UnexpectedValueException;
+
+final class ApiController extends AbstractApiController
+{
+    private ?string $session = '';
+    private readonly ApiExtensions $extension;
+
+    private array $methods = [];
+    private array $methodsMadeline = [];
+    public function __construct()
+    {
+        $this->extension = new ApiExtensions;
+        foreach ((new ReflectionClass(ApiExtensions::class))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            $args = [];
+            foreach ($method->getParameters() as $param) {
+                $args[$param->getName()] = null;
+            }
+            $name = $method->getName();
+            $needRequest = array_key_exists('request', $args);
+            $this->methods[mb_strtolower($name)] = function (API $API, ...$params) use ($args, $name, $needRequest) {
+                return $this->extension->{$name}($API, ...self::prepareArgs($needRequest, $params, $args));
+            };
+        }
+        $classes = [API::class, \danog\MadelineProto\MTProto::class];
+        foreach ($classes as $class) {
+            foreach ((new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+                $args = [];
+                foreach ($method->getParameters() as $param) {
+                    $args[$param->getName()] = null;
+                }
+                $name = $method->getName();
+                $needRequest = array_key_exists('request', $args);
+                $this->methodsMadeline[mb_strtolower($name)] = function (API|MTProto $API, ...$params) use ($args, $name, $needRequest) {
+                    return $API->{$name}(...self::prepareArgs($needRequest, $params, $args));
+                };
+            }
+        }
+
+    }
+
+    private static ?Future $w = null;
+
+    private static function prepareArgs(bool $needRequest, array $params, array $args): array
+    {
+        if (!$needRequest) {
+            unset($params['request']);
+        }
+        $argsPrepared = array_intersect_key($params, $args);
+        if (count($argsPrepared) !== count($params)) {
+            $argsPrepared = array_values($params);
+        }
+
+        return $argsPrepared;
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function callApi(Request $request): mixed
+    {
+        $path = $request->getAttribute(Router::class);
+        $session = $path['session'] ?? null;
+        $api = \explode('.', $path['method'] ?? '');
+
+        $madelineProto = Client::getInstance()->getSession($session);
+        $tick = Config::getInstance()->get('api.bulk_interval');
+        $params = $this->resolveRequest($request);
+
+        if (!$tick) {
+            return $this->callApiCommon($madelineProto, $api, $params);
+        }
+
+        if (!self::$w) {
+            $f = new DeferredFuture();
+            self::$w = $f->getFuture();
+            EventLoop::delay($tick, static function () use ($f): void {
+                $f->complete();
+                self::$w = null;
+            });
+        }
+        self::$w->await();
+
+        return $this->callApiCommon($madelineProto, $api, $params);
+    }
+
+
+    private function callApiCommon(API $madelineProto, array $api, array $parameters)
+    {
+        $pathCount = \count($api);
+        if ($pathCount === 1 && \array_key_exists(mb_strtolower($api[0]), $this->methods)) {
+            $result = $this->methods[mb_strtolower($api[0])]($madelineProto, ...$parameters);
+        } else {
+            if (mb_strtolower($api[0]) === 'api') {
+                $madelineProto = Client::getWrapper($madelineProto)->getAPI();
+                \array_shift($api);
+                $pathCount = \count($api);
+            }
+            //Проверяем нет ли в MadilineProto такого метода.
+            switch ($pathCount) {
+                case 1:
+                    $result = $this->methodsMadeline[mb_strtolower($api[0])]($madelineProto, ...$parameters);
+                    break;
+                case 2:
+                    $result = $madelineProto->{$api[0]}->{$api[1]}(...$parameters);
+                    break;
+                default:
+                    throw new UnexpectedValueException('Incorrect method format');
+            }
+        }
+
+        return $result;
+    }
+
+}
+// Copyright 2019 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto3";
+
+package google.api;
+
+import "google/api/label.proto";
+import "google/api/launch_stage.proto";
+import "google/protobuf/struct.proto";
+
+option cc_enable_arenas = true;
+option go_package = "google.golang.org/genproto/googleapis/api/monitoredres;monitoredres";
+option java_multiple_files = true;
+option java_outer_classname = "MonitoredResourceProto";
+option java_package = "com.google.api";
+option objc_class_prefix = "GAPI";
+
+// An object that describes the schema of a [MonitoredResource][google.api.MonitoredResource] object using a
+// type name and a set of labels.  For example, the monitored resource
+// descriptor for Google Compute Engine VM instances has a type of
+// `"gce_instance"` and specifies the use of the labels `"instance_id"` and
+// `"zone"` to identify particular VM instances.
+//
+// Different APIs can support different monitored resource types. APIs generally
+// provide a `list` method that returns the monitored resource descriptors used
+// by the API.
+message MonitoredResourceDescriptor {
+  // Optional. The resource name of the monitored resource descriptor:
+  // `"projects/{project_id}/monitoredResourceDescriptors/{type}"` where
+  // {type} is the value of the `type` field in this object and
+  // {project_id} is a project ID that provides API-specific context for
+  // accessing the type.  APIs that do not use project information can use the
+  // resource name format `"monitoredResourceDescriptors/{type}"`.
+  string name = 5;
+
+  // Required. The monitored resource type. For example, the type
+  // `"cloudsql_database"` represents databases in Google Cloud SQL.
+  // The maximum length of this value is 256 characters.
+  string type = 1;
+
+  // Optional. A concise name for the monitored resource type that might be
+  // displayed in user interfaces. It should be a Title Cased Noun Phrase,
+  // without any article or other determiners. For example,
+  // `"Google Cloud SQL Database"`.
+  string display_name = 2;
+
+  // Optional. A detailed description of the monitored resource type that might
+  // be used in documentation.
+  string description = 3;
+
+  // Required. A set of labels used to describe instances of this monitored
+  // resource type. For example, an individual Google Cloud SQL database is
+  // identified by values for the labels `"database_id"` and `"zone"`.
+  repeated LabelDescriptor labels = 4;
+
+  // Optional. The launch stage of the monitored resource definition.
+  LaunchStage launch_stage = 7;
+}
+
+// An object representing a resource that can be used for monitoring, logging,
+// billing, or other purposes. Examples include virtual machine instances,
+// databases, and storage devices such as disks. The `type` field identifies a
+// [MonitoredResourceDescriptor][google.api.MonitoredResourceDescriptor] object that describes the resource's
+// schema. Information in the `labels` field identifies the actual resource and
+// its attributes according to the schema. For example, a particular Compute
+// Engine VM instance could be represented by the following object, because the
+// [MonitoredResourceDescriptor][google.api.MonitoredResourceDescriptor] for `"gce_instance"` has labels
+// `"instance_id"` and `"zone"`:
+//
+//     { "type": "gce_instance",
+//       "labels": { "instance_id": "12345678901234",
+//                   "zone": "us-central1-a" }}
+message MonitoredResource {
+  // Required. The monitored resource type. This field must match
+  // the `type` field of a [MonitoredResourceDescriptor][google.api.MonitoredResourceDescriptor] object. For
+  // example, the type of a Compute Engine VM instance is `gce_instance`.
+  string type = 1;
+
+  // Required. Values for all of the labels listed in the associated monitored
+  // resource descriptor. For example, Compute Engine VM instances use the
+  // labels `"project_id"`, `"instance_id"`, and `"zone"`.
+  map<string, string> labels = 2;
+}
+
+// Auxiliary metadata for a [MonitoredResource][google.api.MonitoredResource] object.
+// [MonitoredResource][google.api.MonitoredResource] objects contain the minimum set of information to
+// uniquely identify a monitored resource instance. There is some other useful
+// auxiliary metadata. Monitoring and Logging use an ingestion
+// pipeline to extract metadata for cloud resources of all types, and store
+// the metadata in this message.
+message MonitoredResourceMetadata {
+  // Output only. Values for predefined system metadata labels.
+  // System labels are a kind of metadata extracted by Google, including
+  // "machine_image", "vpc", "subnet_id",
+  // "security_group", "name", etc.
+  // System label values can be only strings, Boolean values, or a list of
+  // strings. For example:
+  //
+  //     { "name": "my-test-instance",
+  //       "security_group": ["a", "b", "c"],
+  //       "spot_instance": false }
+  google.protobuf.Struct system_labels = 1;
+
+  // Output only. A map of user-defined metadata labels.
+  map<string, string> user_labels = 2;
+}
+// Copyright 2019 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto3";
+
+package google.api;
+
+option go_package = "google.golang.org/genproto/googleapis/api/serviceconfig;serviceconfig";
+option java_multiple_files = true;
+option java_outer_classname = "SystemParameterProto";
+option java_package = "com.google.api";
+option objc_class_prefix = "GAPI";
+
+// ### System parameter configuration
+//
+// A system parameter is a special kind of parameter defined by the API
+// system, not by an individual API. It is typically mapped to an HTTP header
+// and/or a URL query parameter. This configuration specifies which methods
+// change the names of the system parameters.
+message SystemParameters {
+  // Define system parameters.
+  //
+  // The parameters defined here will override the default parameters
+  // implemented by the system. If this field is missing from the service
+  // config, default system parameters will be used. Default system parameters
+  // and names is implementation-dependent.
+  //
+  // Example: define api key for all methods
+  //
+  //     system_parameters
+  //       rules:
+  //         - selector: "*"
+  //           parameters:
+  //             - name: api_key
+  //               url_query_parameter: api_key
+  //
+  //
+  // Example: define 2 api key names for a specific method.
+  //
+  //     system_parameters
+  //       rules:
+  //         - selector: "/ListShelves"
+  //           parameters:
+  //             - name: api_key
+  //               http_header: Api-Key1
+  //             - name: api_key
+  //               http_header: Api-Key2
+  //
+  // **NOTE:** All service configuration rules follow "last one wins" order.
+  repeated SystemParameterRule rules = 1;
+}
+
+// Define a system parameter rule mapping system parameter definitions to
+// methods.
+message SystemParameterRule {
+  // Selects the methods to which this rule applies. Use '*' to indicate all
+  // methods in all APIs.
+  //
+  // Refer to [selector][google.api.DocumentationRule.selector] for syntax details.
+  string selector = 1;
+
+  // Define parameters. Multiple names may be defined for a parameter.
+  // For a given method call, only one of them should be used. If multiple
+  // names are used the behavior is implementation-dependent.
+  // If none of the specified names are present the behavior is
+  // parameter-dependent.
+  repeated SystemParameter parameters = 2;
+}
+
+// Define a parameter's name and location. The parameter may be passed as either
+// an HTTP header or a URL query parameter, and if both are passed the behavior
+// is implementation-dependent.
+message SystemParameter {
+  // Define the name of the parameter, such as "api_key" . It is case sensitive.
+  string name = 1;
+
+  // Define the HTTP header name to use for the parameter. It is case
+  // insensitive.
+  string http_header = 2;
+
+  // Define the URL query parameter name to use for the parameter. It is case
+  // sensitive.
+  string url_query_parameter = 3;
+}
+// Copyright 2019 Google LLC.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto3";
+
+package google.api;
+
+option go_package = "google.golang.org/genproto/googleapis/api/serviceconfig;serviceconfig";
+option java_multiple_files = true;
+option java_outer_classname = "LoggingProto";
+option java_package = "com.google.api";
+option objc_class_prefix = "GAPI";
+
+// Logging configuration of the service.
+//
+// The following example shows how to configure logs to be sent to the
+// producer and consumer projects. In the example, the `activity_history`
+// log is sent to both the producer and consumer projects, whereas the
+// `purchase_history` log is only sent to the producer project.
+//
+//     monitored_resources:
+//     - type: library.googleapis.com/branch
+//       labels:
+//       - key: /city
+//         description: The city where the library branch is located in.
+//       - key: /name
+//         description: The name of the branch.
+//     logs:
+//     - name: activity_history
+//       labels:
+//       - key: /customer_id
+//     - name: purchase_history
+//     logging:
+//       producer_destinations:
+//       - monitored_resource: library.googleapis.com/branch
+//         logs:
+//         - activity_history
+//         - purchase_history
+//       consumer_destinations:
+//       - monitored_resource: library.googleapis.com/branch
+//         logs:
+//         - activity_history
+message Logging {
+  // Configuration of a specific logging destination (the producer project
+  // or the consumer project).
+  message LoggingDestination {
+    // The monitored resource type. The type must be defined in the
+    // [Service.monitored_resources][google.api.Service.monitored_resources] section.
+    string monitored_resource = 3;
+
+    // Names of the logs to be sent to this destination. Each name must
+    // be defined in the [Service.logs][google.api.Service.logs] section. If the log name is
+    // not a domain scoped name, it will be automatically prefixed with
+    // the service name followed by "/".
+    repeated string logs = 1;
+  }
+
+  // Logging configurations for sending logs to the producer project.
+  // There can be multiple producer destinations, each one must have a
+  // different monitored resource type. A log can be used in at most
+  // one producer destination.
+  repeated LoggingDestination producer_destinations = 1;
+
+  // Logging configurations for sending logs to the consumer project.
+  // There can be multiple consumer destinations, each one must have a
+  // different monitored resource type. A log can be used in at most
+  // one consumer destination.
+  repeated LoggingDestination consumer_destinations = 2;
+}
+// Protocol Buffers - Google's data interchange format
+// Copyright 2008 Google Inc.  All rights reserved.
+// https://developers.google.com/protocol-buffers/
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+syntax = "proto3";
+
+package google.protobuf;
+
+import "google/protobuf/source_context.proto";
+import "google/protobuf/type.proto";
+
+option csharp_namespace = "Google.Protobuf.WellKnownTypes";
+option java_package = "com.google.protobuf";
+option java_outer_classname = "ApiProto";
+option java_multiple_files = true;
+option objc_class_prefix = "GPB";
+option go_package = "google.golang.org/genproto/protobuf/api;api";
+
+// Api is a light-weight descriptor for an API Interface.
+//
+// Interfaces are also described as "protocol buffer services" in some contexts,
+// such as by the "service" keyword in a .proto file, but they are different
+// from API Services, which represent a concrete implementation of an interface
+// as opposed to simply a description of methods and bindings. They are also
+// sometimes simply referred to as "APIs" in other contexts, such as the name of
+// this message itself. See https://cloud.google.com/apis/design/glossary for
+// detailed terminology.
+message Api {
+
+  // The fully qualified name of this interface, including package name
+  // followed by the interface's simple name.
+  string name = 1;
+
+  // The methods of this interface, in unspecified order.
+  repeated Method methods = 2;
+
+  // Any metadata attached to the interface.
+  repeated Option options = 3;
+
+  // A version string for this interface. If specified, must have the form
+  // `major-version.minor-version`, as in `1.10`. If the minor version is
+  // omitted, it defaults to zero. If the entire version field is empty, the
+  // major version is derived from the package name, as outlined below. If the
+  // field is not empty, the version in the package name will be verified to be
+  // consistent with what is provided here.
+  //
+  // The versioning schema uses [semantic
+  // versioning](http://semver.org) where the major version number
+  // indicates a breaking change and the minor version an additive,
+  // non-breaking change. Both version numbers are signals to users
+  // what to expect from different versions, and should be carefully
+  // chosen based on the product plan.
+  //
+  // The major version is also reflected in the package name of the
+  // interface, which must end in `v<major-version>`, as in
+  // `google.feature.v1`. For major versions 0 and 1, the suffix can
+  // be omitted. Zero major versions must only be used for
+  // experimental, non-GA interfaces.
+  //
+  //
+  string version = 4;
+
+  // Source context for the protocol buffer service represented by this
+  // message.
+  SourceContext source_context = 5;
+
+  // Included interfaces. See [Mixin][].
+  repeated Mixin mixins = 6;
+
+  // The source syntax of the service.
+  Syntax syntax = 7;
+}
+
+// Method represents a method of an API interface.
+message Method {
+
+  // The simple name of this method.
+  string name = 1;
+
+  // A URL of the input message type.
+  string request_type_url = 2;
+
+  // If true, the request is streamed.
+  bool request_streaming = 3;
+
+  // The URL of the output message type.
+  string response_type_url = 4;
+
+  // If true, the response is streamed.
+  bool response_streaming = 5;
+
+  // Any metadata attached to the method.
+  repeated Option options = 6;
+
+  // The source syntax of this method.
+  Syntax syntax = 7;
+}
+
+// Declares an API Interface to be included in this interface. The including
+// interface must redeclare all the methods from the included interface, but
+// documentation and options are inherited as follows:
+//
+// - If after comment and whitespace stripping, the documentation
+//   string of the redeclared method is empty, it will be inherited
+//   from the original method.
+//
+// - Each annotation belonging to the service config (http,
+//   visibility) which is not set in the redeclared method will be
+//   inherited.
+//
+// - If an http annotation is inherited, the path pattern will be
+//   modified as follows. Any version prefix will be replaced by the
+//   version of the including interface plus the [root][] path if
+//   specified.
+//
+// Example of a simple mixin:
+//
+//     package google.acl.v1;
+//     service AccessControl {
+//       // Get the underlying ACL object.
+//       rpc GetAcl(GetAclRequest) returns (Acl) {
+//         option (google.api.http).get = "/v1/{resource=**}:getAcl";
+//       }
+//     }
+//
+//     package google.storage.v2;
+//     service Storage {
+//       rpc GetAcl(GetAclRequest) returns (Acl);
+//
+//       // Get a data record.
+//       rpc GetData(GetDataRequest) returns (Data) {
+//         option (google.api.http).get = "/v2/{resource=**}";
+//       }
+//     }
+//
+// Example of a mixin configuration:
+//
+//     apis:
+//     - name: google.storage.v2.Storage
+//       mixins:
+//       - name: google.acl.v1.AccessControl
+//
+// The mixin construct implies that all methods in `AccessControl` are
+// also declared with same name and request/response types in
+// `Storage`. A documentation generator or annotation processor will
+// see the effective `Storage.GetAcl` method after inherting
+// documentation and annotations as follows:
+//
+//     service Storage {
+//       // Get the underlying ACL object.
+//       rpc GetAcl(GetAclRequest) returns (Acl) {
+//         option (google.api.http).get = "/v2/{resource=**}:getAcl";
+//       }
+//       ...
+//     }
+//
+// Note how the version in the path pattern changed from `v1` to `v2`.
+//
+// If the `root` field in the mixin is specified, it should be a
+// relative path under which inherited HTTP paths are placed. Example:
+//
+//     apis:
+//     - name: google.storage.v2.Storage
+//       mixins:
+//       - name: google.acl.v1.AccessControl
+//         root: acls
+//
+// This implies the following inherited HTTP annotation:
+//
+//     service Storage {
+//       // Get the underlying ACL object.
+//       rpc GetAcl(GetAclRequest) returns (Acl) {
+//         option (google.api.http).get = "/v2/acls/{resource=**}:getAcl";
+//       }
+//       ...
+//     }
+message Mixin {
+  // The fully qualified name of the interface which is included.
+  string name = 1;
+
+  // If non-empty specifies a path under which inherited HTTP paths
+  // are rooted.
+  string root = 2;
+}

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TAMV Metasystem – Supreme Concentric Map</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    body {
+      background-color: #030306;
+      color: #F3F4F6;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+    }
+    .premium-switch {
+      position: relative;
+      display: inline-block;
+      width: 56px;
+      height: 28px;
+    }
+    .premium-switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #0F1115;
+      transition: .4s;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 30px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px; width: 18px;
+      left: 4px; bottom: 4px;
+      background-color: #64748B;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: rgba(0, 242, 254, 0.1);
+      border-color: #00F2FE;
+    }
+    input:checked + .slider:before {
+      transform: translateX(28px);
+      background-color: #00F2FE;
+      box-shadow: 0 0 12px #00F2FE;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between p-8 select-none">
+
+  <!-- HEADER -->
+  <header class="z-10 flex justify-between items-start border-b border-zinc-900/60 pb-5">
+    <div>
+      <h1 class="text-xl font-light tracking-[0.35em] text-white uppercase">
+        TAMV STRATEGIC TRANSFORMATION METASYSTEM
+      </h1>
+      <p class="text-[9px] text-zinc-500 uppercase tracking-[0.2em] mt-2">
+        Arquitectura Antropocéntrica Inmutable · Capas L0–L7 · M0–M7 · GEMET EOCT
+      </p>
+    </div>
+
+    <div class="flex items-center gap-4 border border-zinc-900 bg-zinc-950/80 px-5 py-3 rounded-sm backdrop-blur-md">
+      <div class="text-right">
+        <div id="plane-status"
+             class="text-[10px] font-mono uppercase tracking-widest text-zinc-400 font-bold">
+          Plano de Fricciones Críticas
+        </div>
+        <div id="plane-sub"
+             class="text-[8px] text-zinc-600 font-mono mt-0.5">
+          Auditoría de fallas colaterales
+        </div>
+      </div>
+      <label class="premium-switch">
+        <input type="checkbox" id="plane-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="flex-1 w-full my-4 relative bg-[#040408] border border-zinc-900/40 rounded-sm shadow-[inset_0_0_100px_rgba(0,0,0,0.95)]">
+    <canvas id="wef-superior-canvas" class="w-full h-full block"></canvas>
+
+    <!-- Log de secuenciador -->
+    <div id="sequencer-log"
+         class="absolute top-6 right-6 bg-black/90 border border-zinc-900 px-4 py-2 rounded-sm font-mono text-[9px] text-cyan-400 tracking-widest hidden uppercase transition-all duration-300">
+      Sincronizando módulos de mitigación...
+    </div>
+
+    <!-- Leyenda fija inferior izquierda -->
+    <div class="absolute bottom-6 left-6 bg-zinc-950/90 border border-zinc-900/80 p-5 rounded-sm max-w-xs font-mono text-[9px] space-y-2 pointer-events-none">
+      <div class="text-white font-bold uppercase tracking-wider text-[11px] border-b border-zinc-900 pb-2 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+        Topología Concéntrica Rígida
+      </div>
+      <div class="text-zinc-400 space-y-1 font-sans text-[10px]">
+        <div>• <span class="text-amber-400 font-mono font-bold text-[9px]">NÚCLEO:</span> Conciencia e Integridad Humana.</div>
+        <div>• <span class="text-cyan-400 font-mono font-bold text-[9px]">SATÉLITE:</span> Isabella AI (Puente Cognitivo).</div>
+        <div>• <span class="text-blue-400 font-mono font-bold text-[9px]">CAPA 1:</span> ID en Vida (Soberanía y No Extractivismo).</div>
+        <div>• <span class="text-zinc-300 font-mono font-bold text-[9px]">CAPA 2:</span> Capas L0–L7 & M0–M7 Heptafederadas.</div>
+        <div>• <span class="text-zinc-500 font-mono font-bold text-[9px]">PERÍMETRO:</span> Matriz de Impacto Acción/Reacción.</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="z-10 flex justify-between items-center text-[9px] text-zinc-600 font-mono tracking-[0.2em] uppercase">
+    <div>Master Systems Architecture · Pure Canvas Engineering</div>
+    <div>Nodo Cero · Real del Monte, Hidalgo</div>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('wef-superior-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Centro y radios
+    let cx = 0, cy = 0;
+    const radii = { idVida: 120, federaciones: 230, matriz: 340 };
+
+    // Órbita Isabella
+    let isabellaAngle = -Math.PI / 2;
+    const isabellaRadius = 55;
+
+    // Colores
+    const colors = {
+      bg: '#040408',
+      human: '#F59E0B',
+      isabella: '#00F2FE',
+      idVida: '#3B82F6',
+      federation: '#F8FAFC',
+      problem: '#EF4444',
+      solution: '#10B981',
+      line: 'rgba(255,255,255,0.04)'
+    };
+
+    // Nodos
+    const masterNodes = [
+      // ID en Vida
+      {
+        id: 'ID_VIDA',
+        name: 'ID EN VIDA (SOBERANÍA)',
+        layer: 'idVida',
+        angle: Math.PI * 0.5,
+        size: 5,
+        color: colors.idVida,
+        value: 'Soberanía de identidad biológica y digital. Blindaje absoluto contra el extractivismo de datos y el capitalismo de vigilancia.'
+      },
+      {
+        id: 'SYS_4L',
+        name: 'SISTEMA 4L GOBERNANZA',
+        layer: 'idVida',
+        angle: Math.PI * 1.5,
+        size: 5,
+        color: colors.idVida,
+        value: 'Modelo normativo de capas lineales que asegura la transparencia y el control humano sobre la plataforma.'
+      },
+
+      // 7 Federaciones
+      {
+        id: 'FED_1',
+        name: 'L0–L2: INFRAESTRUCTURA MESH',
+        layer: 'federaciones',
+        angle: (0 * (2 * Math.PI / 7)) - Math.PI / 2,
+        size: 6,
+        color: colors.federation,
+        value: 'Redes de malla físicas fijadas en el territorio, base de resiliencia para todos los servicios.'
+      },
+      {
+        id: 'FED_2',
+        name: 'L3–L4: KERNELS MD-X4 & X5',
+        layer: 'federaciones',
+        angle: (1 * (2 * Math.PI / 7)) - Math.PI / 2,
+        size: 6,
+        color: colors.federation,
+        value: 'Motores lógicos autopoieticos redundantes para contingencia ante ataques y fallas críticas.'
+      },
+      {
+        id: 'FED_3',
+        name: 'L5–L7: OMNIKERNEL DE RED',
+        layer: 'federaciones',
+        angle: (2 * (2 * Math.PI / 7)) - Math.PI / 2,
+        size: 6,
+        color: colors.federation,
+        value: 'Sincronización en malla distribuida, asegurando coherencia de estado y continuidad de servicio.'
+      },
+      {
+        id: 'FED_4',
+        name: 'M0–M2: GEMET EOCT ÉTICO',
+        layer: 'federaciones',
+        angle: (3 * (2 * Math.PI / 7)) - Math.PI / 2,
+        size: 6,
+        color: colors.federation,
+        value: 'Matriz algorítmica de contención que regula el comportamiento de los modelos de inferencia y su alineación ética.'
+      },
+      {
+        id: 'FED_5',
+        name: 'M3–M4: CAMPUS ONLINE UTAMV',
+        layer: 'federaciones',
+        angle: (4 * (2 * Math.PI / 7)) - Math.PI / 2,
+        size: 6,
+        color: colors.federation,
+        value: 'Estructura modular universitaria para transferencia de alta arquitectura de sistemas y soberanía digital.'
+      },
+      {
+        id: 'FED_6',
+        name: 'M5–M6: FORO RDM DIGITAL',
+        layer: 'federaciones',
+        angle: (5 * (2 * Math.PI / 7)) - Math.PI / 2,
+        size: 6,
+        color: colors.federation,
+        value: 'Canal comunitario de comunicación y coordinación de soberanía tecnológica territorial.'
+      },
+      {
+        id: 'FED_7',
+        name: 'M7: RDM LIVOS NEXTGEN',
+        layer: 'federaciones',
+        angle: (6 * (2 * Math.PI / 7)) - Math.PI / 2,
+        size: 6,
+        color: colors.federation,
+        value: 'Plataforma inteligente de desarrollo comercial y turismo, dedicada con honor a Reyna Trejo Serrano.'
+      },
+
+      // Perímetro – Problemas y soluciones
+      {
+        id: 'P_CENSURA',
+        name: 'VULNERABILIDAD: CENSURA / APAGÓN CLOUD',
+        layer: 'matriz',
+        angle: (0 * (2 * Math.PI / 7)) - Math.PI / 2 - 0.15,
+        size: 4,
+        color: colors.problem,
+        type: 'problem',
+        value: 'Bloqueos corporativos perimetrales que intentan aislar la infraestructura local y cortar continuidad de servicios.'
+      },
+      {
+        id: 'S_CENSURA',
+        name: 'SOLUCIÓN: 206 REPOSITORIOS SOB_100',
+        layer: 'matriz',
+        angle: (0 * (2 * Math.PI / 7)) - Math.PI / 2 + 0.15,
+        size: 5,
+        color: colors.solution,
+        type: 'solution',
+        targetProblem: 'P_CENSURA',
+        parentFed: 'FED_1',
+        value: 'Despliegue P2P distribuido e inmune a suspensiones o bloqueos centralizados de proveedores de nube.'
+      },
+
+      {
+        id: 'P_DATA',
+        name: 'VULNERABILIDAD: MONOPOLIO EXTRACTIVO DE DATOS',
+        layer: 'matriz',
+        angle: (3 * (2 * Math.PI / 7)) - Math.PI / 2 - 0.15,
+        size: 4,
+        color: colors.problem,
+        type: 'problem',
+        value: 'Modelos predictivos comerciales que mercantilizan el comportamiento de usuarios y comunidades.'
+      },
+      {
+        id: 'S_DATA',
+        name: 'SOLUCIÓN: FILTRO DE INFERENCIA SOBERANO',
+        layer: 'matriz',
+        angle: (3 * (2 * Math.PI / 7)) - Math.PI / 2 + 0.15,
+        size: 5,
+        color: colors.solution,
+        type: 'solution',
+        targetProblem: 'P_DATA',
+        parentFed: 'FED_4',
+        value: 'Procesamiento local en Nodo Cero, destruyendo rastro de tracking o metadatos externos y controlando inferencias.'
+      },
+
+      {
+        id: 'P_COMERCIO',
+        name: 'VULNERABILIDAD: CAPITALISMO DIGITAL EXTRACTIVO',
+        layer: 'matriz',
+        angle: (6 * (2 * Math.PI / 7)) - Math.PI / 2 - 0.15,
+        size: 4,
+        color: colors.problem,
+        type: 'problem',
+        value: 'Comisiones abusivas de pasarelas multinacionales que desangran la economía de comercios locales y artesanos.'
+      },
+      {
+        id: 'S_COMERCIO',
+        name: 'SOLUCIÓN: IMPULSO RDM LIVOS SIN COMISIÓN',
+        layer: 'matriz',
+        angle: (6 * (2 * Math.PI / 7)) - Math.PI / 2 + 0.15,
+        size: 5,
+        color: colors.solution,
+        type: 'solution',
+        targetProblem: 'P_COMERCIO',
+        parentFed: 'FED_7',
+        value: 'Directorio inteligente y pasarela soberana directa para comercios de RDM, sin intermediarios ni comisiones extractivas.'
+      }
+    ];
+
+    // Enlaces
+    const masterLinks = [
+      { from: 'ID_VIDA', to: 'FED_1' },
+      { from: 'ID_VIDA', to: 'FED_4' },
+      { from: 'SYS_4L', to: 'FED_7' },
+
+      // Anillo heptagonal
+      { from: 'FED_1', to: 'FED_2' },
+      { from: 'FED_2', to: 'FED_3' },
+      { from: 'FED_3', to: 'FED_4' },
+      { from: 'FED_4', to: 'FED_5' },
+      { from: 'FED_5', to: 'FED_6' },
+      { from: 'FED_6', to: 'FED_7' },
+      { from: 'FED_7', to: 'FED_1' },
+
+      // Enlaces a fricciones
+      { from: 'FED_1', to: 'P_CENSURA' },
+      { from: 'FED_4', to: 'P_DATA' },
+      { from: 'FED_7', to: 'P_COMERCIO' }
+    ];
+
+    // Estado del plano
+    let planeActive = false;
+    let visibleSolutions = [];
+    let sequencerTimers = [];
+    let hoverNode = null;
+
+    function resizeCanvas() {
+      const parent = canvas.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = parent.getBoundingClientRect();
+
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      cx = rect.width / 2;
+      cy = rect.height / 2;
+    }
+
+    function getNodeCoords(node) {
+      if (!node) return { x: cx, y: cy };
+      if (node.id === 'HUMAN') return { x: cx, y: cy };
+      const r = radii[node.layer];
+      return {
+        x: cx + r * Math.cos(node.angle),
+        y: cy + r * Math.sin(node.angle)
+      };
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Círculos
+      ctx.save();
+      ctx.lineWidth = 1;
+
+      ctx.strokeStyle = 'rgba(59,130,246,0.12)';
+      ctx.beginPath(); ctx.arc(cx, cy, radii.idVida, 0, Math.PI * 2); ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.beginPath(); ctx.arc(cx, cy, radii.federaciones, 0, Math.PI * 2); ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.02)';
+      ctx.beginPath(); ctx.arc(cx, cy, radii.matriz, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+
+      // Isabella órbita
+      isabellaAngle += 0.003;
+      const isaX = cx + isabellaRadius * Math.cos(isabellaAngle);
+      const isaY = cy + isabellaRadius * Math.sin(isabellaAngle);
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0,242,254,0.2)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(isaX, isaY); ctx.stroke();
+
+      ctx.strokeStyle = 'rgba(0,242,254,0.04)';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.arc(cx, cy, isabellaRadius, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+
+      // Enlaces
+      ctx.save();
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      masterLinks.forEach(link => {
+        const nFrom = masterNodes.find(n => n.id === link.from);
+        const nTo = masterNodes.find(n => n.id === link.to);
+        if (!nFrom || !nTo) return;
+        const cFrom = getNodeCoords(nFrom);
+        const cTo = getNodeCoords(nTo);
+
+        ctx.beginPath();
+        ctx.moveTo(cFrom.x, cFrom.y);
+        ctx.quadraticCurveTo(cx, cy, cTo.x, cTo.y);
+        ctx.stroke();
+      });
+      ctx.restore();
+
+      // Soluciones activas
+      if (planeActive) {
+        masterNodes
+          .filter(n => n.type === 'solution' && visibleSolutions.includes(n.id))
+          .forEach(sol => {
+            const cSol = getNodeCoords(sol);
+            const parentFed = masterNodes.find(n => n.id === sol.parentFed);
+            const targetProb = masterNodes.find(n => n.id === sol.targetProblem);
+
+            if (parentFed) {
+              const cFed = getNodeCoords(parentFed);
+              ctx.save();
+              ctx.strokeStyle = 'rgba(16,185,129,0.15)';
+              ctx.beginPath();
+              ctx.moveTo(cFed.x, cFed.y);
+              ctx.quadraticCurveTo(cx, cy, cSol.x, cSol.y);
+              ctx.stroke();
+              ctx.restore();
+            }
+
+            if (targetProb) {
+              const cProb = getNodeCoords(targetProb);
+              ctx.save();
+              ctx.strokeStyle = colors.solution;
+              ctx.setLineDash([2, 4]);
+              ctx.beginPath();
+              ctx.moveTo(cSol.x, cSol.y);
+              ctx.lineTo(cProb.x, cProb.y);
+              ctx.stroke();
+              ctx.setLineDash([]);
+              ctx.restore();
+            }
+          });
+      }
+
+      // Nodos
+      masterNodes.forEach(node => {
+        if (node.type === 'solution' && (!planeActive || !visibleSolutions.includes(node.id))) return;
+        const { x, y } = getNodeCoords(node);
+        node.x = x; node.y = y;
+
+        const isHovered = hoverNode && hoverNode.id === node.id;
+
+        ctx.save();
+        ctx.fillStyle = node.color;
+        ctx.beginPath();
+        ctx.arc(x, y, isHovered ? node.size + 3 : node.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (node.layer === 'federaciones') {
+          ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.arc(x, y, node.size + 4, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        if (node.layer !== 'matriz' || isHovered) {
+          ctx.fillStyle = isHovered ? '#FFFFFF' : '#94A3B8';
+          ctx.font = isHovered ? 'bold 9px monospace' : '9px monospace';
+
+          const sideRight = node.angle > 0 && node.angle < Math.PI;
+          ctx.textAlign = sideRight ? 'left' : 'right';
+          ctx.fillText(node.name, x + (sideRight ? 12 : -12), y + 3);
+        }
+        ctx.restore();
+      });
+
+      // Núcleo humano
+      ctx.save();
+      const humanHovered = hoverNode && hoverNode.id === 'HUMAN';
+      ctx.fillStyle = colors.human;
+      ctx.beginPath();
+      ctx.arc(cx, cy, humanHovered ? 18 : 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(cx, cy, humanHovered ? 22 : 18, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 9px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('HUMANO', cx, cy + 3);
+      ctx.restore();
+
+      // Isabella
+      ctx.save();
+      const isaHovered = hoverNode && hoverNode.id === 'ISABELLA';
+      ctx.fillStyle = colors.isabella;
+      ctx.beginPath();
+      ctx.arc(isaX, isaY, isaHovered ? 8 : 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#00F2FE';
+      ctx.font = '8px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('ISABELLA AI', isaX, isaY - 10);
+      ctx.restore();
+
+      // Tooltip
+      if (hoverNode) {
+        const cardWidth = 260;
+        let tx = cx - cardWidth / 2;
+        let ty = cy + radii.idVida - 35;
+
+        // Si el nodo está abajo, subimos el card
+        if (hoverNode.y > cy) {
+          ty = cy - radii.idVida - 100;
+        }
+
+        ctx.save();
+        ctx.fillStyle = 'rgba(5,5,12,0.96)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+        ctx.lineWidth = 1;
+        ctx.fillRect(tx, ty, cardWidth, 85);
+        ctx.strokeRect(tx, ty, cardWidth, 85);
+
+        ctx.fillStyle = hoverNode.color || colors.federation;
+        ctx.fillRect(tx, ty, cardWidth, 2);
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = 'bold 9px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(hoverNode.name.substring(0, 38), tx + 12, ty + 16);
+
+        ctx.fillStyle = '#94A3B8';
+        ctx.font = '10px system-ui, sans-serif';
+        const words = (hoverNode.value || '').split(' ');
+        let line = '';
+        let yOffset = ty + 32;
+        const maxChars = 42;
+        words.forEach((w, i) => {
+          const test = line + w + ' ';
+          if (test.length > maxChars && i > 0) {
+            ctx.fillText(line, tx + 12, yOffset);
+            line = w + ' ';
+            yOffset += 13;
+          } else {
+            line = test;
+          }
+        });
+        if (line) ctx.fillText(line, tx + 12, yOffset);
+        ctx.restore();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    function togglePlane(isChecked) {
+      sequencerTimers.forEach(clearTimeout);
+      sequencerTimers = [];
+      visibleSolutions = [];
+
+      const logElement = document.getElementById('sequencer-log');
+      const statusText = document.getElementById('plane-status');
+      const subText = document.getElementById('plane-sub');
+
+      if (isChecked) {
+        planeActive = true;
+        statusText.innerText = 'Desplegando plano de soluciones...';
+        statusText.style.color = colors.solution;
+        subText.innerText = 'Sincronización asíncrona de acciones éticas';
+        logElement.classList.remove('hidden');
+
+        const solutionNodes = masterNodes.filter(n => n.type === 'solution');
+
+        solutionNodes.forEach((sol, index) => {
+          const timer = setTimeout(() => {
+            visibleSolutions.push(sol.id);
+            logElement.innerText = `CONECTADO: ${sol.name}`;
+            if (index === solutionNodes.length - 1) {
+              logElement.classList.add('hidden');
+              statusText.innerText = 'Ecosistema sincronizado completo';
+            }
+          }, (index + 1) * 3500);
+          sequencerTimers.push(timer);
+        });
+      } else {
+        planeActive = false;
+        statusText.innerText = 'Plano de fricciones críticas';
+        statusText.style.color = colors.problem;
+        subText.innerText = 'Auditoría de fallas colaterales';
+        logElement.classList.add('hidden');
+      }
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      const mouseX = (e.clientX - rect.left);
+      const mouseY = (e.clientY - rect.top);
+
+      // Núcleo humano
+      if (Math.hypot(mouseX - cx, mouseY - cy) < 18) {
+        hoverNode = {
+          id: 'HUMAN',
+          name: 'NÚCLEO: SER HUMANO',
+          value: 'Origen y fin último de la arquitectura del TAMV. Todos los datos permanecen bajo control biológico consciente.',
+          color: colors.human
+        };
+        return;
+      }
+
+      // Isabella
+      const isaX = cx + isabellaRadius * Math.cos(isabellaAngle);
+      const isaY = cy + isabellaRadius * Math.sin(isabellaAngle);
+      if (Math.hypot(mouseX - isaX, mouseY - isaY) < 10) {
+        hoverNode = {
+          id: 'ISABELLA',
+          name: 'SATÉLITE: ISABELLA ENGINE AI',
+          value: 'Puente cognitivo institucional. Mediador y escudo de inferencia para asegurar que la tecnología sirva estrictamente al ser humano.',
+          color: colors.isabella
+        };
+        return;
+      }
+
+      let found = null;
+      masterNodes.forEach(node => {
+        if (node.type === 'solution' && (!planeActive || !visibleSolutions.includes(node.id))) return;
+        if (typeof node.x !== 'number' || typeof node.y !== 'number') return;
+        const dist = Math.hypot(mouseX - node.x, mouseY - node.y);
+        if (dist < node.size + 8) {
+          found = node;
+        }
+      });
+
+      hoverNode = found;
+    });
+
+    // Init
+    window.addEventListener('resize', resizeCanvas);
+    document.getElementById('plane-toggle').addEventListener('change', e => togglePlane(e.target.checked));
+
+    resizeCanvas();
+    draw();
+  </script>
+</body>
+</html>

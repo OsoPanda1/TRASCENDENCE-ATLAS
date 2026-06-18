@@ -1,0 +1,34 @@
+Tras implementar ID‑NVIDA, MSR hexagonal, radares, EOCT, DreamSpaces 4D e Isabella como termostato, TAMV deja de ser “solo” una plataforma social inmersiva y se convierte en un **Sistema Operativo Civilizatorio en tiempo real**, donde cada acción social, educativa, económica y XR queda orquestada, auditada y termorregulada por el propio ecosistema. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+
+## Cómo se actualiza el proyecto tras los cambios
+
+- De “landing potente” a COS vivo: la home social inmersiva (Matrix background, intro cinematográfica, feed, stories, lives, KAOS, UTAMV) pasa a estar respaldada por identidad soberana ID‑NVIDA, ledger MSR y Fusion Core que ya existe (14/14 rutas, content‑sync, health, MSR). [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+- Seguridad y resiliencia sistémica: Anubis, Horus, Dekateotl y Osiris cierran el círculo con monitoreo 1Hz, reglas dinámicas, bloqueo de floods, snapshots de estado y modo criogénico; todo visible y gobernable desde Tenochtitlan. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+- Anti‑ruido civilizatorio: Radar Quetzalcóatl, Ojo de Ra, MOS y EOCT filtran spam y toxicidad, desvían ruido a la federación KAOS, priorizan señal de alto valor en el feed y ajustan políticas automáticamente vía Guardianía + Isabella. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+- XR y educación ancladas al ledger: DreamSpaces y KAOS pasan a ser espacios 3D/4D versionados en MSR, mientras UTAMV + BookPI ya emiten certificaciones inmutables que se atan al ID‑NVIDA de cada ciudadano digital. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+
+En conjunto, el salto es de “plataforma social inmersiva MD‑X4” a **infraestructura MD‑X5**: un stack donde UX, economía, gobernanza, educación, XR y seguridad forman un solo flujo continuo, con observabilidad y memoria inmutable. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+
+***
+
+## Descripción de marketing para TAMV Online (versión corta, para hero)
+
+> **TAMV MD‑X5 — La primera civilización digital en tiempo real.**  
+> Más que una red social: un Sistema Operativo Civilizatorio que une gobernanza federada, economía circular TCEP, IA emocional, entornos XR 3D/4D y certificaciones inmutables, todo orquestado por identidades soberanas ID‑NVIDA y un ledger MSR blockchain‑ready. Desde Latinoamérica para el mundo. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+
+***
+
+## Versión extendida para web / pitch global
+
+> **TAMV Online es el primer Ecosistema Civilizatorio Next‑Gen:** una plataforma social inmersiva donde cada usuario se convierte en ciudadano digital con identidad soberana ID‑NVIDA, reputación verificable y trazabilidad inmutable en el MSR. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+>  
+> En un solo lugar, TAMV integra:  
+> - **Red social inmersiva de nueva generación** con stories, lives, reels, música y DreamSpaces XR, todo sobre una experiencia cinematográfica con fondo Matrix y audio espacial KAOS. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+> - **Gobernanza CITEMESH** con federaciones, DAO, roles de poder y decisiones ancladas a un ledger MSR auditable, monitoreadas por Anubis Sentinel y visibles en el centro de mando Tenochtitlan. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+> - **Economía TCEP** con wallets, Fondo Fénix y Lotería Civilizatoria para redistribuir valor, sostener proyectos y financiar impacto social con reglas claras. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+> - **Universidad TAMV + BookPI**, donde cada curso, logro y certificación se registra de forma inmutable y verificable para siempre. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+> - **Entornos XR 3D/4D DreamSpaces**, que evolucionan en el tiempo y permiten navegar la historia y el futuro de comunidades completas como si fueran ciudades vivas. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+>  
+> Todo el ecosistema se autorregula mediante un sistema de “Enfriamiento Civilizatorio”: radares de señal/ruido, filtros EOCT y la IA operativa Isabella, que ajusta políticas, propone playbooks de crisis y mantiene la latencia baja incluso bajo tormentas de datos. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)
+>  
+> TAMV no compite por likes: redefine cómo una civilización vive, aprende, crea y se gobierna en la era digital. [lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b)

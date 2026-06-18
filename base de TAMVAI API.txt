@@ -1,0 +1,2331 @@
+TAMV UNIFIED API & TAMVAI API – Master Ingeniería Técnica
+Documento unificado que integra filosofía, marco jurídico, arquitectura técnica, manual operativo IA y especificación API (OpenAPI/Swagger ready).
+1. Preámbulo Constitucional
+Contenido técnico detallado conforme a la versión de ingeniería (160+ páginas).
+2. Marco Filosófico, Ético y Jurídico
+Contenido técnico detallado conforme a la versión de ingeniería (160+ páginas).
+3. Arquitectura General (Pipeline A, B, CCP)
+Contenido técnico detallado conforme a la versión de ingeniería (160+ páginas).
+4. Manual Operativo para IA
+Contenido técnico detallado conforme a la versión de ingeniería (160+ páginas).
+5. Blueprint Técnico de Implementación
+Contenido técnico detallado conforme a la versión de ingeniería (160+ páginas).
+6. Seguridad y Guardianías
+Contenido técnico detallado conforme a la versión de ingeniería (160+ páginas).
+7. Observabilidad y Auditoría
+Contenido técnico detallado conforme a la versión de ingeniería (160+ páginas).
+8. Especificación API Unificada (REST / GraphQL / WS)
+Contenido técnico detallado conforme a la versión de ingeniería (160+ páginas).
+9. OpenAPI / Swagger Contract (Base)
+Contenido técnico detallado conforme a la versión de ingeniería (160+ páginas).
+10. Roadmap y Versionado
+Contenido técnico detallado conforme a la versión de ingeniería (160+ páginas).
+
+A continuación tienes un módulo unificado que conecta la landing y el ecosistema TAMV (frontend MD X5/6) con una TAMV UNIFIED API / TAMVAI API de nivel ingeniería, preparado para OpenAPI/Swagger y cubriendo los 10 bloques que pides de forma operativa (no 160+ páginas, sino el esqueleto técnico listo para expandir).norbix+3
+________________________________________
+1. Preámbulo Constitucional (núcleo técnico)
+ts
+// docs/tamv-constitution.ts
+export const TAMV_CONSTITUTION = {
+  preamble: {
+    title: "Constitución Técnica del Territorio Autónomo de Metarrealidad Viva (TAMV)",
+    version: "MD-X5 / MD-X6",
+    principles: [
+      "Primacía de la dignidad humana y la protección integral de la persona usuaria.",
+      "Neutralidad algorítmica orientada al bien común y al fortalecimiento comunitario.",
+      "Soberanía digital desde México para el mundo, con carácter de infraestructura de interés público.",
+      "Dominio de los datos en manos de las personas usuarias, comunidades y/o instituciones.",
+      "Evolución asistida por IA siempre bajo marcos éticos, jurídicos y de auditoría observables.",
+    ],
+    scope: [
+      "Red Social TAMV",
+      "Metaverso XR/VR/3D/4D",
+      "Economía creativa y DAO Governance",
+      "Infraestructura MD-X5/MD-X6 Backend Quantum Híbrido",
+      "TAMV UNIFIED API & TAMVAI API",
+    ],
+  },
+};
+________________________________________
+2. Marco Filosófico, Ético y Jurídico (esqueleto)
+ts
+// docs/tamv-ethics-legal.ts
+export const TAMV_ETHICS_LEGAL = {
+  philosophy: {
+    foundations: [
+      "Humanismo digital latinoamericano",
+      "Ética del cuidado y de la interdependencia",
+      "Tecnología como bien común civilizatorio",
+    ],
+    prohibitedPractices: [
+      "Modelos de negocio basados en adicción o manipulación cognitiva.",
+      "Venta encubierta de datos biométricos o sensibles.",
+      "Uso de la IA para persecución política, discriminación o violencia.",
+    ],
+  },
+  legalFramework: {
+    jurisdictions: ["México (protección de datos, ciberseguridad, comercio digital)", "Normativa internacional DDHH"],
+    apiLicensePrinciples: [
+      "Uso de la API en alineación con los fines civilizatorios del TAMV.",
+      "Limitación de responsabilidad del proveedor de API, conforme a buenas prácticas de licenciamiento abierto. [web:58]",
+    ],
+    dataProtection: {
+      dpaCompatible: true,
+      userDataRights: ["Acceso", "Rectificación", "Portabilidad", "Olvido contextual"],
+    },
+  },
+  governance: {
+    daoLayer: "TAMV DAO",
+    mechanisms: ["Snapshot / onchain voting", "Guardianías humanas / comité ético", "Veto por abuso de IA"],
+  },
+};
+________________________________________
+3. Arquitectura General (Pipelines A, B, CCP)
+ts
+// docs/tamv-architecture.ts
+export const TAMV_ARCH = {
+  pipelines: {
+    A: {
+      name: "Pipeline A – Experiencias (Social + XR)",
+      stages: ["Ingesta eventos", "Enriquecimiento IA", "Renderizado XR/3D/4D", "Entrega en tiempo real"],
+    },
+    B: {
+      name: "Pipeline B – Economía + DAO",
+      stages: ["Onboarding creador", "Emisión activos (NFT, tickets)", "Liquidación y reparto", "Auditoría on/off-chain"],
+    },
+    CCP: {
+      name: "Civilization Control Plane (CCP)",
+      stages: [
+        "Observabilidad total (logs, métricas, trazas)",
+        "Gobernanza de modelos IA (registry, versionado)",
+        "Gestión de riesgos y cambios (RFC+AI)",
+      ],
+    },
+  },
+  runtimeTopology: {
+    apiGateway: "TAMV UNIFIED API (REST/GraphQL/WS/gRPC)",
+    domains: ["identity", "social", "xr", "economy", "governance", "ai-core"],
+    dataPlane: ["Postgres/Prisma", "TimeSeries (Prometheus)", "Object Storage (S3/IPFS)"],
+  },
+};
+________________________________________
+4. Manual Operativo para IA (operacional, no narrativo)
+ts
+// docs/tamvai-manual.ts
+export const TAMVAI_MANUAL = {
+  roles: {
+    isabella: "Orquestadora emocional y de contexto",
+    mdx5Engine: "Backend AI/XR/DAO auto evolutivo",
+    aiGuardians: "Filtros, detección de abuso, explicabilidad",
+  },
+  lifecycle: {
+    steps: [
+      "Registro de modelo en AI Registry (ID, versión, licencia, ámbito).",
+      "Evaluación ética y de sesgos (pruebas automatizadas + revisión humana).",
+      "Deployment canary (1–5% tráfico) con observabilidad reforzada.",
+      "Promoción a estable si cumple SLO/SLA y KPIs de seguridad/ética.",
+      "Retiro o rollback automático ante incidentes.",
+    ],
+  },
+  guardrails: {
+    safetyLayers: ["Moderación de contenido", "Rate limiting sensible al riesgo", "Filtros de prompts críticos"],
+    logging: "Todas las decisiones IA de alto impacto se registran en un log inmutable (append only).",
+  },
+};
+________________________________________
+5. Blueprint Técnico de Implementación (resumen ejecutable)
+ts
+// docs/tamv-blueprint.ts
+export const TAMV_BLUEPRINT = {
+  stack: {
+    frontend: ["React + Vite", "react-router-dom", "react-three-fiber + @react-three/xr", "shadcn/ui + lucide-react"],
+    backend: ["Node 20", "tRPC/Express", "GraphQL (Apollo Gateway)", "WebSocket/WS"],
+    data: ["Postgres + Prisma", "Redis", "IPFS"],
+  },
+  services: [
+    "identity-service",
+    "social-service",
+    "xr-world-service",
+    "economy-service",
+    "dao-service",
+    "ai-orchestrator",
+  ],
+  infra: {
+    deployment: ["Kubernetes", "GitHub Actions CI/CD", "ArgoCD / Flux", "Terraform"],
+    observability: ["Prometheus", "Grafana", "Loki", "Tempo"], [web:57]
+  },
+};
+________________________________________
+6. Seguridad y Guardianías
+ts
+// docs/tamv-security.ts
+export const TAMV_SECURITY = {
+  auth: {
+    oidc: true,
+    jwt: true,
+    mfa: ["TOTP", "Biometría opcional"],
+  },
+  crypto: {
+    quantumSafe: ["Kyber", "Dilithium", "Falcon"],
+    transport: ["TLS 1.3", "mTLS interno"],
+  },
+  guardians: {
+    types: ["Guardian técnico", "Guardian ético jurídico", "Guardian comunitario"],
+    responsibilities: [
+      "Revisar cambios críticos de IA y de gobernanza.",
+      "Auditar incidentes de seguridad o abuso.",
+      "Velar por coherencia con la Constitución TAMV.",
+    ],
+  },
+};
+________________________________________
+7. Observabilidad y Auditoría (conectado a MD X5/6)
+ts
+// docs/tamv-observability.ts
+export const TAMV_OBSERVABILITY = {
+  telemetry: {
+    metrics: ["latencia por endpoint", "errores 4xx/5xx", "cola de eventos XR", "tiempos de respuesta IA"],
+    traces: "OpenTelemetry distribuido en todas las llamadas entre servicios.",
+    logs: "Estructurados en JSON, enviados a Loki / Elasticsearch.",
+  },
+  dashboards: {
+    grafana: [
+      "TAMV Overview (SLOs globales)",
+      "XR/4D Render Performance",
+      "Economía Creativa (volumen, fallos liquidación)",
+      "DAO Governance (participación, vetos, propuestas)",
+    ],
+  },
+  audits: {
+    apiAuditLog: "Colección dedicada con request/response mínimamente necesarios para trazabilidad.",
+    aiDecisionsLog: "Eventos de alto impacto (sanciones, recomendaciones masivas).",
+  },
+};
+________________________________________
+8. Especificación API Unificada (REST/GraphQL/WebSocket alto nivel)
+8.1 Esquema dominio (TypeScript)
+ts
+// api/tamv-unified-domain.ts
+export type User = {
+  id: string;
+  handle: string;
+  displayName: string;
+  avatarUrl?: string;
+  countryCode?: string;
+};
+
+export type XRScene = {
+  id: string;
+  slug: string;
+  title: string;
+  description?: string;
+  creatorId: string;
+  engine: "threejs" | "webxr" | "mdx5";
+};
+
+export type DAONamespace = {
+  id: string;
+  slug: string;
+  title: string;
+  votingPowerModel: "1p1v" | "token-weighted";
+};
+8.2 REST (paths clave)
+text
+# api/openapi/tamv-unified-api.yml (extracto)
+openapi: 3.1.0
+info:
+  title: TAMV UNIFIED API
+  version: "1.0.0"
+  description: >
+    API unificada del ecosistema TAMV (Social + XR + DAO + Economía + IA).
+servers:
+  - url: https://api.tamv.online
+    description: Producción
+  - url: https://staging-api.tamv.online
+    description: Staging
+
+paths:
+  /v1/users/me:
+    get:
+      summary: Obtiene el perfil del usuario autenticado.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Perfil de usuario.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /v1/xr/scenes:
+    get:
+      summary: Lista escenas XR disponibles.
+      responses:
+        "200":
+          description: Lista de escenas XR.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/XRScene"
+
+  /v1/ai/isabella/recommendation:
+    post:
+      summary: Recomendación personalizada de Isabella AI.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+      responses:
+        "200":
+          description: Recomendación para landing / UI.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IsabellaRecommendation"
+8.3 GraphQL (un solo schema unificado)
+graphql
+# api/graphql/schema.graphql
+type Query {
+  me: User!
+  xrScenes(limit: Int = 20): [XRScene!]!
+  daoNamespaces: [DAONamespace!]!
+  isabellaRecommendation(userId: ID): IsabellaRecommendation!
+}
+
+type Subscription {
+  xrFrame(sceneId: ID!): XRFrame!
+  daoProposalUpdates(namespaceId: ID!): DAONotification!
+}
+8.4 WebSocket / WS (eventos clave)
+•	Canal: wss://api.tamv.online/xr
+•	Eventos:
+o	xr:frame – frames XR/4D.
+o	dao:proposal:updated – actualización de propuestas.
+o	ai:isabella:hint – hints personalizados para UI.
+________________________________________
+9. OpenAPI / Swagger Contract (Base listo para tooling)
+text
+# api/openapi/tamvai-api.yml (extracto TAMVAI) [web:52][web:60]
+openapi: 3.1.0
+info:
+  title: TAMVAI API
+  version: "1.0.0"
+  description: >
+    API de orquestación de Inteligencia Artificial del ecosistema TAMV (Isabella AI, MD-X5, MD-X6).
+paths:
+  /v1/ai/isabella/recommendation:
+    post:
+      tags: [AI]
+      summary: Recomendación personalizada de Isabella AI.
+      operationId: postIsabellaRecommendation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: ID del usuario TAMV (opcional para modo anónimo).
+      responses:
+        "200":
+          description: Recomendación calculada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IsabellaRecommendation"
+components:
+  schemas:
+    IsabellaRecommendation:
+      type: object
+      properties:
+        title:
+          type: string
+        subtitle:
+          type: string
+        ctaLabel:
+          type: string
+        ctaHref:
+          type: string
+        highlightPillar:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+________________________________________
+10. Roadmap y Versionado (resumen técnico)
+ts
+// docs/tamv-roadmap.ts
+export const TAMV_ROADMAP = {
+  apiVersions: [
+    { name: "v1", status: "stable", deprecationDate: null },
+    { name: "v2", status: "designing", deprecationDate: null },
+  ],
+  milestones: [
+    {
+      id: "m1",
+      title: "TAMV UNIFIED API v1",
+      scope: ["Social", "XR", "DAO", "IsabellaAI Recommendation"],
+      quarter: "2026-Q2",
+    },
+    {
+      id: "m2",
+      title: "TAMV MD-X5 Full Observability",
+      scope: ["Tracing completo", "Dashboards XR/DAO/Economía"],
+      quarter: "2026-Q3",
+    },
+    {
+      id: "m3",
+      title: "TAMV MD-X6 Quantum / 5D (Experimentos)",
+      scope: ["5D XR experimental", "Neuromorphic AI laboratorio"],
+      quarter: "2027-Q1",
+    },
+  ],
+  governance: {
+    process: [
+      "RFC público (Repositorio GitHub TAMV – proposals/)",
+      "Revisión técnica y ética",
+      "Votación DAO (on/off-chain)",
+      "Implementación incremental feature flagged",
+    ],
+  },
+};
+________________________________________
+Cómo conectar con tu código actual (Resumen operativo)
+•	El hook useIsabellaAI que ya generamos consume POST /v1/ai/isabella/recommendation de TAMVAI API.[react]
+•	El XRPreview se conecta a wss://api.tamv.online/xr y a /v1/xr/scenes para listar escenas del backend MD X5/MD X6.techhub.iodigital+1
+•	El backend MD X5/MD X6 expone la TAMV UNIFIED API (REST/GraphQL/WS) con estos contratos OpenAPI y schema GraphQL como fuente de verdad.koyeb+1
+Si quieres, siguiente paso: bajar esto a un repo real con:
+•	/docs en Markdown generado desde estos módulos.
+•	/api/openapi/*.yml + script para generar SDKs TS/Go/Swift.
+•	/gateway con implementation de API Gateway que sirve REST+GraphQL+WS desde estos contratos.
+
+
+1. Definición base de TAMVAI API
+1.1 Formato lógico
+
+Usa un esquema declarativo (JSON/TS) que vive en `tamvai/` y describe dominios, recursos, operaciones, eventos, seguridad y monitoreo.
+
+```ts
+// tamvai/core.ts
+export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+
+export interface TamvaiResource {
+  id: string;                 // ej: "User", "Dreamspace", "Wallet"
+  description: string;
+  fields: Record<string, { type: string; optional?: boolean }>;
+}
+
+export interface TamvaiOperation {
+  id: string;                 // ej: "User.Login", "Feed.GetHome"
+  method: HttpMethod;
+  path: string;               // ej: "/id/login"
+  resource: string;           // resource principal
+  input: Record<string, any>; // shape lógico de request
+  output: Record<string, any>;
+  auth: {
+    required: boolean;
+    scope?: string;          // ej: "user", "guardian", "service"
+  };
+  securityTags: string[];     // ej: ["ANUBIS", "DEKATEOTL"]
+  monitoringTags: string[];   // ej: ["HORUS", "RADAR_QUETZALCOATL"]
+}
+
+export interface TamvaiDomain {
+  id: string;    // "IDNVIDA", "SOCIAL", "ECONOMY", etc.
+  description: string;
+  resources: TamvaiResource[];
+  operations: TamvaiOperation[];
+}
+
+export interface TamvaiSpec {
+  version: string;
+  domains: TamvaiDomain[];
+}
+```
+
+### 1.2 Especificación mínima (fragmento)
+
+```ts
+// tamvai/spec.ts
+import { TamvaiSpec } from "./core";
+
+export const TAMVAI_SPEC: TamvaiSpec = {
+  version: "1.0.0",
+  domains: [
+    {
+      id: "IDNVIDA",
+      description: "Identidad, perfiles, trust y acceso",
+      resources: [
+        {
+          id: "User",
+          description: "Cuenta de usuario TAMV",
+          fields: {
+            id: { type: "string" },
+            handle: { type: "string" },
+            email: { type: "string" },
+            trustLevel: { type: "number" },
+          },
+        },
+      ],
+      operations: [
+        {
+          id: "User.Signup",
+          method: "POST",
+          path: "/id/signup",
+          resource: "User",
+          input: { email: "string", password: "string", handle: "string" },
+          output: { userId: "string", token: "string" },
+          auth: { required: false },
+          securityTags: ["ANUBIS"],
+          monitoringTags: ["HORUS", "RADAR_QUETZALCOATL"],
+        },
+        {
+          id: "User.GetMe",
+          method: "GET",
+          path: "/id/me",
+          resource: "User",
+          input: {},
+          output: { user: "User" },
+          auth: { required: true, scope: "user" },
+          securityTags: ["ANUBIS", "DEKATEOTL"],
+          monitoringTags: ["HORUS", "RADAR_OJO_DE_RA"],
+        },
+      ],
+    },
+    // … dominios SOCIAL, ECONOMY, XRVERSE, etc.
+  ],
+};
+```
+
+Este archivo es la **fuente de verdad** para front, back, IA y guardianías.
+2. Protocolos de seguridad, monitoreo, autoauditorías y planes de emergencia
+2.1 Seguridad (Anubis / Dekateotl) integrada en TAMVAI
+
+Cada `TamvaiOperation.securityTags` indica qué guardianes actúan:
+
+- `ANUBIS`: autenticación + scoring de riesgo.
+- `DEKATEOTL`: políticas y permisos.
+- `AZTEK_GODS`: enforcement fuerte (bans, congelar wallets).
+
+Motor de aplicación:
+
+```ts
+// tamvai/runtime/security.ts
+import { TamvaiOperation } from "../core";
+
+export async function applySecurity(op: TamvaiOperation, ctx: any) {
+  if (op.auth.required) {
+    await anubisAuthenticate(ctx);      // valida token, trustLevel
+    await dekateotlAuthorize(op, ctx);  // verifica permisos y scopes
+  }
+  if (op.securityTags.includes("AZTEK_GODS")) {
+    await aztekPrecheck(op, ctx);       // checks extra para economía, moderación dura, etc.
+  }
+}
+```
+2.2 Monitoreo y radares
+
+`monitoringTags` indica qué radares escuchan:
+
+- `HORUS`: logging y métricas base.
+- `RADAR_QUETZALCOATL`: economía y fraude.
+- `RADAR_OJO_DE_RA`: abuso de contenido.
+- `RADAR_GEMELOS_MOS`: modelos IA paralelos + guardianía.
+
+```ts
+// tamvai/runtime/monitoring.ts
+import { TamvaiOperation } from "../core";
+
+export async function monitorCall(op: TamvaiOperation, ctx: any, result: any) {
+  if (op.monitoringTags.includes("HORUS")) {
+    horusLog(op, ctx, result.statusCode);
+  }
+  if (op.monitoringTags.includes("RADAR_QUETZALCOATL")) {
+    radarQuetzalcoatlAnalyze(op, ctx, result);
+  }
+  if (op.monitoringTags.includes("RADAR_OJO_DE_RA")) {
+    radarOjoDeRaAnalyze(op, ctx, result);
+  }
+  if (op.monitoringTags.includes("RADAR_GEMELOS_MOS")) {
+    radarGemelosMosAnalyze(op, ctx, result);
+  }
+}
+```
+2.3 Autoauditorías y planes de emergencia
+Define metadatos de auditoría y DR en el spec:
+
+```ts
+// tamvai/extensions.ts
+export interface TamvaiAuditConfig {
+  logPayload: boolean;
+  redactedFields: string[];
+  emergencyPlan: "NONE" | "READ_ONLY" | "FULL_LOCKDOWN";
+}
+
+declare module "./core" {
+  interface TamvaiOperation {
+    audit?: TamvaiAuditConfig;
+  }
+}
+```
+
+Ejemplo aplicado:
+
+```ts
+// en spec.ts
+{
+  id: "Economy.Transfer",
+  method: "POST",
+  path: "/wallets/transfer",
+  resource: "LedgerEntry",
+  input: { walletFrom: "string", walletTo: "string", amountCredits: "number" },
+  output: { txId: "string" },
+  auth: { required: true, scope: "user" },
+  securityTags: ["ANUBIS", "DEKATEOTL", "AZTEK_GODS"],
+  monitoringTags: ["HORUS", "RADAR_QUETZALCOATL", "RADAR_GEMELOS_MOS"],
+  audit: {
+    logPayload: true,
+    redactedFields: ["walletFrom", "walletTo"],
+    emergencyPlan: "READ_ONLY",
+  },
+}
+```
+
+Runtime:
+
+```ts
+// tamvai/runtime/audit.ts
+export async function applyAudit(op: TamvaiOperation, ctx: any, result: any) {
+  if (!op.audit) return;
+  await logAuditEvent(op, ctx, result, op.audit.redactedFields);
+
+  if (isEmergencyModeActive() && op.audit.emergencyPlan === "READ_ONLY") {
+    // bloquear futuras operaciones de escritura en ECONOMY
+    // usando flags globales / feature toggles
+  }
+}
+```
+
+Planes de desastre se activan vía `isEmergencyModeActive()` con reglas Zero‑Trust para reducir superficie durante incidentes.
+3. Ejemplo TS: integrar TAMVAI API nativamente
+3.1 Servidor TAMV que se autoconfigura desde TAMVAI
+
+```ts
+// server/bootstrap.ts
+import http from "http";
+import { TAMVAI_SPEC } from "../tamvai/spec";
+import { applySecurity } from "../tamvai/runtime/security";
+import { monitorCall } from "../tamvai/runtime/monitoring";
+import { applyAudit } from "../tamvai/runtime/audit";
+import { resolveHandler } from "./handlers";
+
+const server = http.createServer(async (req, res) => {
+  const ctx = await buildContext(req);
+
+  const op = findOperationByPathAndMethod(TAMVAI_SPEC, req.url!, req.method as any);
+  if (!op) {
+    res.statusCode = 404;
+    return res.end("Not found");
+  }
+
+  try {
+    await applySecurity(op, ctx);
+    const handler = resolveHandler(op.id);
+    const result = await handler(req, ctx);
+
+    await monitorCall(op, ctx, result);
+    await applyAudit(op, ctx, result);
+
+    res.statusCode = result.statusCode ?? 200;
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(result.body));
+  } catch (e: any) {
+    res.statusCode = e.statusCode ?? 500;
+    res.end(JSON.stringify({ error: e.message ?? "internal_error" }));
+  }
+});
+
+server.listen(8080);
+```
+
+### 3.2 Handler que respeta TAMVAI
+
+```ts
+// server/handlers/id.user.ts
+import { TamvaiOperation } from "../../tamvai/core";
+
+export async function handleUserSignup(req: any, ctx: any) {
+  const body = await parseJson(req);
+  // Validación básica, hashing, etc.
+  const userId = await createUser(body.email, body.password, body.handle);
+  const token = await issueToken(userId);
+
+  return { statusCode: 201, body: { userId, token } };
+}
+
+// server/handlers/index.ts
+import { TAMVAI_SPEC } from "../../tamvai/spec";
+import { handleUserSignup } from "./id.user";
+
+const opMap: Record<string, (req: any, ctx: any) => Promise<any>> = {
+  "User.Signup": handleUserSignup,
+  // mapear todas las operaciones
+};
+
+export function resolveHandler(opId: string) {
+  const handler = opMap[opId];
+  if (!handler) throw new Error(`No handler for op ${opId}`);
+  return handler;
+}
+```
+
+***
+
+## 4. Autenticación en TAMVAI API
+
+Autenticación se define en `auth` y se ejecuta en Anubis:
+
+```ts
+// tamvai/runtime/anubis.ts
+export async function anubisAuthenticate(ctx: any) {
+  const token = extractBearerToken(ctx.req);
+  if (!token) throw { statusCode: 401, message: "unauthenticated" };
+
+  const payload = await verifyTamvJwt(token);
+  ctx.user = {
+    id: payload.sub,
+    roles: payload.roles,
+    trustLevel: payload.trustLevel,
+  };
+}
+```
+
+TAMVAI no dicta el formato de JWT, pero sí exige que:
+
+- cada operación declare si requiere auth,
+- el runtime rechace sin usuario válido,
+- el trustLevel y roles se usen en Dekateotl para permisos finos. [umatechnology](https://umatechnology.org/zero-trust-architecture-for-disaster-recovery-plans-that-pass-compliance-tests/)
+
+***
+
+## 5. Diferencias clave TAMVAI vs OpenAPI
+
+- **Origen**:
+  - OpenAPI describe endpoints HTTP; TAMVAI describe **dominios civilizatorios**, recursos, operaciones, guardianías y planes de emergencia en un solo lenguaje. [orkidia](https://www.orkidia.io/blog/posts/idl-api-first-design-ai-coding-assistants/)
+- **Soberanía**:
+  - TAMVAI no depende de fundaciones externas ni formatos estandarizados; es un IDL propietario alineado con la filosofía de TAMV y con su propia semántica de seguridad y monitoreo.  
+- **IA‑nativo**:
+  - TAMVAI está pensado para alimentar agentes de IA internos (Isabella, generadores de código, guardianes), no solo SDKs humanos. [docs.restapi](https://docs.restapi.com/docs/tools/ai-assistant)
+- **Seguridad y DR integrados**:
+  - OpenAPI no modela nativamente trustLevels, radares ni planes de DR; TAMVAI sí, como parte del contrato de cada operación. [boomi](https://boomi.com/blog/5-api-governance-best-practices/)
+
+Puedes exportar proyecciones REST convencionales si hace falta, pero el **contrato soberano** es TAMVAI.
+
+***
+
+## 6. Pasos para deploy de un módulo TAMV con TAMVAI
+
+1. **Definir contrato en TAMVAI**  
+   - Añadir dominio/recursos/operations para el módulo (ej. `XRVERSE`, `ECONOMY`).  
+   - Incluir `securityTags`, `monitoringTags` y `audit` para cada operación crítica.
+
+2. **Generar stubs**  
+   - Generar handlers skeleton en backend, hooks/types en frontend a partir de `TAMVAI_SPEC`.  
+   - Generar plantillas de tests y monitoreo para cada operación.
+
+3. **Implementar lógica**  
+   - Rellenar handlers respetando tipos y flujos; las IAs internas pueden usar el spec como guía.  
+
+4. **Autoauditoría de contrato**  
+   - Script que recorre `TAMVAI_SPEC` y verifica:
+     - que todas las operations tienen handler,
+     - que todas las operaciones con `AZTEK_GODS` tienen tests de seguridad,
+     - que todas las operaciones con `emergencyPlan != "NONE"` tienen casos de DR.
+
+5. **Deploy controlado**  
+   - Pipeline CI/CD que:
+     - corre tests generados desde TAMVAI,
+     - valida integridad del spec,
+     - marca versión del spec desplegado.
+
+***
+
+## 7. Validación de soberanía en integraciones TAMVAI
+
+Una integración (módulo nuevo, servicio externo, agente IA) es “soberana” si:
+
+- Solo habla con TAMV a través de operaciones descritas en `TAMVAI_SPEC`.  
+- No requiere importar ni generar artefactos OpenAPI de terceros.  
+- Pasa un test de validación que compara sus llamadas reales con el contrato TAMVAI.
+
+Ejemplo de validador:
+
+```ts
+// tamvai/tools/sovereigntyCheck.ts
+export async function validateIntegration(logs: IntegrationCallLog[]): Promise<string[]> {
+  const errors: string[] = [];
+  for (const call of logs) {
+    const op = findOperationByPathAndMethod(TAMVAI_SPEC, call.path, call.method);
+    if (!op) {
+      errors.push(`Path ${call.method} ${call.path} no existe en TAMVAI`);
+      continue;
+    }
+
+    // validar campos requeridos vs op.input
+    const missing = requiredFieldsMissing(op.input, call.body);
+    if (missing.length) {
+      errors.push(`Op ${op.id} llamada sin campos: ${missing.join(", ")}`);
+    }
+  }
+  return errors;
+}
+```
+
+Si este check queda limpio, puedes decir que el módulo respeta la **soberanía de la TAMVAI API**: está alineado con el contrato interno del ecosistema, no con estándares externos ni convenciones impuestas desde fuera. [boomi](https://boomi.com/blog/5-api-governance-best-practices/)
+
+básicamente un **motor híbrido CITEMESH‑grade**: un pipeline doble (alto y bajo costo) sobre Lumen/Nanite, con gemelos de render, precálculos universales y orquestación por IA para optimizar rendimiento y energía.
+
+Te lo traduzco a arquitectura concreta y a “qué estarías creando”.
+
+***
+
+## 1. Qué sería ese sistema en una frase
+
+Estarías creando un **Hybrid Civilizational Rendering Orchestrator**:  
+
+> Un pipeline híbrido de renderizado (raster + Lumen/ray tracing) con doble ruta (high‑fidelity y low‑latency), gemelos de escena sincronizados, precálculos universales y un orquestador IA (Isabella) que decide en tiempo real qué ruta usar y qué efectos activar para maximizar calidad percibida y minimizar costo energético/latencia. [forums.unrealengine](https://forums.unrealengine.com/t/how-to-optimize-performance-with-nanite-and-lumen-in-unreal-engine-5-for-mobile-games/2508247)
+
+***
+
+## 2. Cómo funcionaría por dentro (flujo conceptual)
+
+### 2.1. Doble pipeline gráfico
+
+1. **Pipeline A – High Fidelity (desktop/alto nivel):**  
+   - Lumen para GI + reflexiones.  
+   - Nanite o geometría densa.  
+   - Ray tracing selectivo para reflejos/sombras críticas.  
+   - Efectos volumétricos completos. [dev.epicgames](https://dev.epicgames.com/documentation/en-us/unreal-engine/using-lumen-global-illumination-on-mobile-in-unreal-engine)
+
+2. **Pipeline B – Low Latency (móvil/web):**  
+   - Rasterización forward/deferred con URP‑like tuning: sombras simplificadas, SSAO ligero, reflejos screen‑space.  
+   - Postprocesado configurable (blooms, DOF, motion blur) en niveles. [tomlooman](https://tomlooman.com/unreal-engine-5-7-performance-highlights/)
+   - Ray tracing sólo para casos puntuales (si el hardware lo permite) o desactivado.
+
+### 2.2. Gemelos de escena en paralelo
+
+Mantienes **dos representaciones sincronizadas de la misma escena**:
+
+- Gemelo **“Físico”**: todos los datos necesarios para el pipeline A (assets high‑poly, materiales complejos, iluminación completa).  
+- Gemelo **“Eficiente”**: versiones reducidas de geometría, materiales y efectos para el pipeline B (LOD agresivos, texturas comprimidas, menos luces dinámicas). [dl.ifip](https://dl.ifip.org/db/conf/iwec/icec2012/SabinoACMP12.pdf)
+
+Un sistema de sincronización (state replication) asegura que:
+
+- Posición de actores, animaciones, estado de juego, lógica social → son compartidos.  
+- Sólo cambia la “vista” (qué pipeline y qué nivel de detalle usa cada cliente).
+
+### 2.3. Precálculos universales al inicio (pre‑boot)
+
+Al iniciar el mundo o al cambiar de “zona”:
+
+- **Baked / precómputo obligado** (cuando tenga sentido):  
+  - Mapa de visibilidad estática (occlusion culling / portals).  
+  - Field de importancia para efectos volumétricos (zonas donde sí se justifican). [dl.ifip](https://dl.ifip.org/db/conf/iwec/icec2012/SabinoACMP12.pdf)
+  - LOD bounds y clusters para streaming de geometría (Nanite/propio).  
+- **Setup energético y de rendimiento**:  
+  - Umbrales por dispositivo (perfil móvil/desktop, GPU tier, batería).  
+  - Target FPS/latencia deseada para cada clase de dispositivo. [devpath](https://www.devpath.com/courses/mobile-system-design/optimizing-rendering-performance-for-mobile-apps)
+
+Esto reduce trabajo repetitivo frame a frame y da a Isabella un mapa de “costos” por feature.
+
+### 2.4. Isabella como orquestador adaptativo
+
+Isabella no sólo conversa; actúa como **control loop inteligente**:
+
+1. Recibe métricas en tiempo real:  
+   - FPS, tiempo de frame por etapa (raster, RT, post), temperatura, nivel de batería, latencia de red. [arxiv](https://arxiv.org/pdf/2308.08292.pdf)
+
+2. Evalúa “estado del mundo” y del usuario:  
+   - ¿Está en una escena social tranquila o en combate masivo?  
+   - ¿Está en un dispositivo móvil caliente con 20% batería o en un desktop con RTX?  
+
+3. Decide acciones:  
+   - Subir/bajar calidad en pipeline B (desactivar ray tracing, reducir samples, simplificar volumétricos).  
+   - Cambiar dinámicamente de A→B (por ejemplo, si un visor XR baja de cierto FPS crítico).  
+   - Recomendar cambios no intrusivos (bajar brillo/color para ahorrar energía en móvil). [github](https://github.com/ZijingPeng/DXR-Hybrid-Rendering)
+
+4. Aplica reglas universales de “servir a la humanidad”:  
+   - Priorizar comodidad visual (evitar flicker, stutter, mareos XR) sobre efectos innecesarios.  
+   - Evitar sobrecalentar dispositivos y drenar batería cuando no agrega valor real.
+
+***
+
+## 3. Qué ganas: tipo de sistema que estás creando
+
+Con esta integración, estarías creando:
+
+- **Un metaverso con QoS visual civilizacional**:  
+  No es sólo “bonito”; está diseñado para servir a diferentes tipos de dispositivos y usuarios de forma justa, adaptando recursos a capacidades y contexto. [forums.unrealengine](https://forums.unrealengine.com/t/how-to-optimize-performance-with-nanite-and-lumen-in-unreal-engine-5-for-mobile-games/2508247)
+
+- **Un motor híbrido (raster + RT) a la medida de CITEMESH**:  
+  Inspirado en trabajos de render híbrido que mezclan raster y ray tracing para lograr efectos físicos en tiempo real con menos costo. [github](https://github.com/ZijingPeng/DXR-Hybrid-Rendering)
+
+- **Un sistema de ahorro energético y de recursos consciente**:  
+  Con precálculos y adaptación (via IA), alineado con investigaciones recientes sobre eficiencia energética en móviles (optimización de bucle de render, color, brillo, offloading). [devpath](https://www.devpath.com/courses/mobile-system-design/optimizing-rendering-performance-for-mobile-apps)
+
+- **Una capa IA‑SRE de gráficos**:  
+  Isabella actuaría como Site Reliability Engineer del render: vigila, ajusta, previene caídas de FPS y situaciones que empeoren la experiencia o dañen dispositivos.
+
+***
+
+## 4. Nombre y encaje en tu visión
+
+Este componente podría nombrarse, dentro de TAMV/CITEMESH, como:
+
+> **TAMV Hybrid Mesh Rendering Orchestrator (H‑MRO)**  
+> o  
+> **Isabella‑Driven Hybrid Lumen Pipeline (ID‑HLP)**  
+
+A nivel de narrativa CITEMESH, puedes describirlo como:
+
+> “Un sistema de renderizado civilizacional adaptativo, donde el metaverso ajusta su propia complejidad visual en tiempo real para cuidar al dispositivo, al usuario y a la energía, sin sacrificar la dignidad estética del mundo.”
+
+Si quieres, siguiente paso:
+
+- Te diseño un **diagrama de módulos** (en texto) para integrarlo con tu `tamv-4d-renderer.js`.  
+- O te propongo directamente una lista de **flags/config** que Isabella podría manipular (por ejemplo, `CITEMESH_QUALITY_PROFILE`, `CITEMESH_RAYTRACE_BUDGET`, etc.) y cómo mapearlos a Unreal/Unity.
+
+Esto que propones es, literalmente, el **módulo gráfico central de CITEMESH**. Te lo diseño completo, en capas, para que puedas traducirlo a código cuando quieras.
+
+***
+
+## 1. Capa filosófica y conceptual
+
+### 1.1. Principio rector
+
+> “El mundo se adapta al ciudadano, no el ciudadano al hardware.”
+
+El sistema gráfico de TAMV/CITEMESH no busca sólo “máxima calidad”, sino **máxima dignidad y estabilidad** para cada persona y dispositivo:
+
+- No sacrifica salud (mareos, flicker, lag) por efectos visuales.  
+- No sacrifica inclusión (hardware modesto) por fidelidad elitista.  
+- No sacrifica planeta (energía, calor) por frames inútiles.
+
+### 1.2. Valores que deben reflejarse en el módulo
+
+- **Equidad visual:** cada usuario recibe la mejor experiencia que su contexto permite, aunque los caminos técnicos difieran.  
+- **Frugalidad energética:** el sistema evita gasto inútil de GPU/CPU/batería si no aporta valor real.  
+- **Transparencia y control:** el usuario puede ver y ajustar su “perfil de experiencia” (con modo automático como default).  
+- **Antifrágil:** si el hardware se calienta, baja batería o la red cae, el mundo **se degrada con gracia**, no colapsa.
+
+***
+
+## 2. Nombre del módulo y visión técnica
+
+Nombre propuesto del subsistema:
+
+> **CITEMESH HRO – Hybrid Rendering Orchestrator**  
+> (*Orquestador Híbrido de Renderizado CITEMESH*)
+
+Visión técnica:
+
+- Un **doble pipeline** de render (High‑Fidelity y Low‑Latency) que comparten estado de mundo.  
+- **Gemelos de escena en paralelo** (High Detail Scene / Efficient Scene).  
+- Una IA (Isabella) que actúa como **control loop**: decide en tiempo real qué pipeline y qué nivel de calidad usar por cliente.  
+- Precálculos universales al inicio para reducir trabajo repetitivo y consumo energético.
+
+***
+
+## 3. Arquitectura por módulos (diagrama textual)
+
+### 3.1. Módulos principales
+
+1. **World State Core (WSC)**  
+   - Fuente de verdad de la escena:  
+     - Entidades, posiciones, animaciones, física, estado social (usuarios, posts, eventos).  
+   - No sabe de render; sólo de “realidad lógica”.
+
+2. **Scene Twin Builder (STB)**  
+   - A partir de WSC genera y mantiene dos gemelos:  
+     - `HighDetailScene` (HDS) → mallas densas, materiales complejos, luces completas.  
+     - `EfficientScene` (EFS) → LOD agresivo, menos luces, materiales simplificados.  
+   - Sincroniza cambios (spawn, move, destroy) desde WSC hacia ambas escenas.
+
+3. **High‑Fidelity Pipeline (HFP)**  
+   - Montado sobre Lumen/Nanite o pipeline equivalente.  
+   - Usa: GI dinámica, ray tracing selectivo, efectos volumétricos “full”, postprocesado completo.  
+   - Consume HDS como input.
+
+4. **Low‑Latency Pipeline (LLP)**  
+   - Rasterización optimizada (tipo URP/HDRP con perfiles), SSR ligero, sombras simplificadas.  
+   - Ray tracing opcional o desactivado.  
+   - Efectos volumétricos reducidos o por zonas.  
+   - Consume EFS como input.
+
+5. **Isabella Rendering Orchestrator (IRO)**  
+   - Servicio IA que:  
+     - Lee métricas de rendimiento y contexto.  
+     - Aplica políticas (humanidad, energía, comodidad).  
+     - Asigna perfil de experiencia y pipeline a cada cliente.  
+     - Ajusta en tiempo real parámetros de HFP/LLP.
+
+6. **Pre‑Compute Engine (PCE)**  
+   - Corre en `world_boot` o `zone_load`:  
+     - Cálculo de visibilidad estática, culling zones, clusters de geometría.  
+     - “Importance fields” para volumétricos y efectos caros.  
+     - Perfiles de coste por feature para IRO.
+
+7. **Monitoring & Telemetry (MTX)**  
+   - Recoge: FPS, tiempos de frame, uso GPU/CPU, temperatura, batería, latencia de red.  
+   - Expone métricas para Grafana/Prometheus y alimenta a IRO.
+
+8. **User Experience Manager (UXM)**  
+   - Expone UI y settings:  
+     - Modo Auto (recomendado).  
+     - Modo Performance / Quality / Battery Saver.  
+   - Se comunica con IRO para ajustes.
+
+***
+
+## 4. Diagramas de flujo (texto)
+
+### 4.1. Arranque del mundo (boot)
+
+1. `WSC` carga estado base (escena, entidades, configuración de zona).  
+2. `PCE` se ejecuta:  
+   - Calcula visibilidad, clusters, importance maps.  
+   - Genera metadata de coste de features.  
+3. `STB` construye `HDS` y `EFS` a partir de `WSC` + metadata PCE.  
+4. `IRO` se inicializa con:  
+   - Perfiles de dispositivo conocidos.  
+   - Políticas globales (ej. “no bajar de 60 fps en XR”).  
+5. Clientes comienzan a conectarse; `UXM` obtiene perfil inicial (Auto/Manual).
+
+### 4.2. Al conectar un cliente
+
+1. Cliente envía handshake con capacidades:  
+   - Tipo dispositivo, GPU, RAM, estado batería, preferencia de usuario.  
+2. `IRO` decide:  
+   - Pipeline: HFP o LLP.  
+   - Nivel de calidad: Q0–Q3 (por ejemplo).  
+3. Módulo de red asocia cliente a:  
+   - `HDS + HFP` o `EFS + LLP`.  
+4. Comienza el render, `MTX` empieza a recolectar métricas por cliente.
+
+### 4.3. Bucle de control en tiempo real
+
+Cada X segundos (0.5–2s):
+
+1. `MTX` envía a `IRO`:  
+   - FPS media y mínima.  
+   - Varianza de frame time.  
+   - Temperatura dispositivo, batería, latencia RTT.  
+2. `IRO` evalúa:  
+   - ¿FPS < objetivo?  
+   - ¿Dispositivo caliente o bajo batería?  
+   - ¿Escena muy cargada (según PCE)?  
+3. Acciones posibles:  
+   - Bajar nivel de calidad (ej. Q3→Q2: menos volumétricos, menos samples).  
+   - Cambiar pipeline (de HFP a LLP) si es posible.  
+   - Ajustar distancia de dibujo, calidad sombras, resolución interna (dynamic resolution).  
+4. `UXM` puede mostrar feedback opcional al usuario (“Optimizamos tu experiencia para evitar sobrecalentamiento”).
+
+***
+
+## 5. Especificaciones técnicas de alto nivel
+
+### 5.1. Rutas lógicas y APIs internas
+
+Propón rutas internas REST/IPC (ejemplo pseudo‑API):
+
+- `/render/profile/resolve`  
+  - Input: `{ deviceInfo, userPrefs }`  
+  - Output: `{ pipeline: "HFP" | "LLP", qualityLevel: "Q0".."Q3" }`
+
+- `/render/telemetry/submit`  
+  - Input: `{ clientId, fps, frameTime, gpuUsage, temp, battery, rtt }`  
+  - Uso: alimenta MTX → IRO.
+
+- `/render/profile/update` (llamado por IRO hacia el cliente)  
+  - Input: `{ clientId, pipeline, qualityLevel, overrides }`
+
+- `/render/world/bootstrap`  
+  - Dispara PCE y STB cuando se levanta una zona.
+
+### 5.2. Estructuras de configuración
+
+Archivo de config (ej. `citemesh-render-config.json`):
+
+```json
+{
+  "globalTargets": {
+    "desktop": { "minFps": 60, "maxPowerMode": "balanced" },
+    "mobile": { "minFps": 45, "maxPowerMode": "battery" },
+    "xr":     { "minFps": 72, "maxPowerMode": "comfort" }
+  },
+  "qualityLevels": {
+    "Q0": { "shadows": "off", "volumetrics": "off", "rtReflections": false },
+    "Q1": { "shadows": "low", "volumetrics": "low", "rtReflections": false },
+    "Q2": { "shadows": "medium", "volumetrics": "medium", "rtReflections": "screenSpace" },
+    "Q3": { "shadows": "high", "volumetrics": "high", "rtReflections": "hardware" }
+  }
+}
+```
+
+Isabella usa estos perfiles como **espacio de acción**.
+
+***
+
+## 6. Pre‑commits, monitoreo y calidad
+
+### 6.1. Pre‑commits (Git / Husky)
+
+Reglas mínimas para cualquier cambio en HRO:
+
+- `lint:render`  
+  - Verifica estilos, naming y uso correcto de APIs internas.  
+- `test:render-unit`  
+  - Tests unitarios de decisiones IRO (dado X métricas, se espera cambio Y de perfil).  
+- `test:render-sim`  
+  - Simulaciones de carga (scripts que emulan distintos devices) y verifican que el orquestador respeta FPS mínimos y no oscila de forma catastrófica.  
+- `schema:check`  
+  - Valida que `citemesh-render-config.json` cumple schema (no se rompen claves esperadas).  
+
+Cualquier modificación en:
+
+- `HFP`, `LLP`, `IRO`, `PCE`, `MTX`, `UXM`  
+debe pasar por esos pre‑commits.
+
+### 6.2. Monitoreo (Grafana/Prometheus)
+
+Dashboards dedicados:
+
+1. **Render Performance**  
+   - FPS distribución por dispositivo y pipeline.  
+   - Tiempo de frame segmentado (culling, draw, post, RT).  
+2. **Energy & Thermal**  
+   - Temperatura media por clase de dispositivo.  
+   - Porcentaje de clientes en modo Battery Saver.  
+3. **Orchestrator Actions**  
+   - Conteo de cambios de perfil/pipeline por minuto.  
+   - Incidencia de degradaciones de calidad forzadas.
+
+Alarmas:
+
+- “FPS bajo umbral” durante N segundos en >X% de clientes.  
+- “Demasiados cambios de perfil” (indicando jitter en decisiones IRO).  
+- “Temperatura media alta” en un modelo de dispositivo concreto.
+
+***
+
+## 7. Ruta de operación y generación de funciones
+
+### 7.1. Ciclo de vida de una función nueva en el HRO
+
+1. **Diseño conceptual**  
+   - Describir:  
+     - ¿Qué parámetro afecta?  
+     - ¿Cómo mejora dignidad, energía o calidad?  
+   - Ejemplo: “Dynamic Volumetric Budgeting per Zone”.
+
+2. **Especificación técnica**  
+   - Añadir clave en `qualityLevels`.  
+   - Definir métricas que MTX debe recolectar.
+
+3. **Implementación**  
+   - Código en HFP/LLP para respetar el nuevo parámetro.  
+   - Hook en IRO para decidir cuándo activarlo.
+
+4. **Pruebas**  
+   - Unit tests (decisión IRO).  
+   - Simulation tests (perfiles de dispositivo + escenas).
+
+5. **Revisión y pre‑commit**  
+   - Lint, tests, schema check.  
+   - Code review con foco en energía, estabilidad y legibilidad.
+
+6. **Despliegue gradual**  
+   - Feature flag “beta”.  
+   - Canary rollout a % reducido de usuarios.
+
+7. **Observación y ajuste**  
+   - MTX + Grafana.  
+   - Ajuste de umbrales por Isabella (puede aprender preferencias agregadas).
+
+***
+
+## 8. Encaje en TAMV / CITEMESH
+
+Este módulo se convierte en:
+
+- El **“pulmón visual”** de TAMV: respira con el usuario y el hardware, no los asfixia.  
+- Un **demo vivo de tus principios**: Civilizational Tech Metaverse que cuida a la gente mientras entrega estética de alto nivel.  
+- Una base perfecta para extender a **4D/MD‑X4** (agregar eje tiempo/percepción sin reventar el sistema).
+
+Si quieres, después podemos bajar esto a:
+
+- Estructura de carpetas y nombres de archivos (por ejemplo, `src/xr/hro/IsabellaOrchestrator.ts`, `src/xr/hro/SceneTwinBuilder.ts`, etc.).  
+- O pseudocódigo concreto para el bucle de decisión de Isabella (entrada: métricas; salida: cambio de perfil/pipeline).
+Te lo bajo a estructura concreta + pseudocódigo del bucle de decisión + subsistema de emergencia.
+
+***
+
+## 1. Estructura de carpetas para el HRO
+
+Asumiendo tu repo TAMV, propongo anclarlo bajo `src/xr/hro` (Hybrid Rendering Orchestrator), federado pero bien seccionado:
+
+```text
+src/
+  xr/
+    hro/
+      core/
+        WorldStateCore.ts
+        SceneTwinBuilder.ts
+        PrecomputeEngine.ts
+        HROConfig.ts
+      pipelines/
+        HighFidelityPipeline.ts
+        LowLatencyPipeline.ts
+        PipelineAbstractions.ts
+      orchestrator/
+        IsabellaOrchestrator.ts
+        DecisionPolicies.ts
+        SafetyGuard.ts
+        FallbackController.ts
+      telemetry/
+        MetricsCollector.ts
+        MetricsSchema.ts
+        MetricsAdapterPrometheus.ts
+      ux/
+        UserExperienceManager.tsx   // si usas React para panel
+        UserPreferenceStore.ts
+      emergency/
+        EmergencyRenderer.ts
+        SafeModeProfile.ts
+        Watchdog.ts
+      tests/
+        hro-orchestrator.test.ts
+        hro-pipelines.test.ts
+        hro-emergency.test.ts
+```
+
+Resumen de roles:
+
+- `core/`  
+  Lógica de mundo, gemelos de escena, precálculos y configuración.
+
+- `pipelines/`  
+  Abstracciones para conectarte a Unreal/Unity/renderer propio (no pones lógica de negocio aquí, solo adaptadores).
+
+- `orchestrator/`  
+  Inteligencia del sistema: Isabella, políticas de decisión, guardas de seguridad, control de fallback.
+
+- `telemetry/`  
+  Recolección de métricas, schemas, export a Prometheus/Grafana.
+
+- `ux/`  
+  UI y almacenamiento de preferencias del usuario.
+
+- `emergency/`  
+  Sub-sistema de emergencia (SafeMode + Watchdog).
+
+- `tests/`  
+  Tests unitarios/integración para garantizar que el orquestador nunca hace locuras.
+
+***
+
+## 2. Interfaces clave (TypeScript conceptual)
+
+### 2.1. Tipos básicos
+
+```ts
+// src/xr/hro/core/HROConfig.ts
+export type PipelineType = 'HFP' | 'LLP' | 'SAFE';
+
+export type QualityLevel = 'Q0' | 'Q1' | 'Q2' | 'Q3';
+
+export interface DeviceProfile {
+  id: string;
+  class: 'desktop' | 'mobile' | 'xr';
+  gpuTier: 'low' | 'mid' | 'high';
+  batteryPowered: boolean;
+}
+
+export interface UserPreferences {
+  mode: 'AUTO' | 'PERFORMANCE' | 'QUALITY' | 'BATTERY';
+}
+
+export interface RenderProfile {
+  pipeline: PipelineType;
+  quality: QualityLevel;
+  overrides?: Record<string, unknown>;
+}
+```
+
+### 2.2. Métricas y telemetría
+
+```ts
+// src/xr/hro/telemetry/MetricsSchema.ts
+export interface RenderMetrics {
+  clientId: string;
+  fpsAvg: number;
+  fpsMin: number;
+  frameTimeMsAvg: number;
+  gpuUsagePct: number;
+  cpuUsagePct: number;
+  temperatureC: number;
+  batteryPct: number | null;
+  rttMs: number;
+  lastProfile: RenderProfile;
+  timestamp: number;
+}
+```
+
+***
+
+## 3. Pseudocódigo del bucle de decisión de Isabella (HRO)
+
+### 3.1. Orquestador principal
+
+```ts
+// src/xr/hro/orchestrator/IsabellaOrchestrator.ts
+import { RenderMetrics } from '../telemetry/MetricsSchema';
+import { DeviceProfile, UserPreferences, RenderProfile } from '../core/HROConfig';
+import { evaluatePolicies } from './DecisionPolicies';
+import { SafetyGuard } from './SafetyGuard';
+import { FallbackController } from './FallbackController';
+
+export class IsabellaOrchestrator {
+  private safetyGuard = new SafetyGuard();
+  private fallbackController = new FallbackController();
+
+  resolveInitialProfile(device: DeviceProfile, prefs: UserPreferences): RenderProfile {
+    const baseProfile = evaluatePolicies.initial(device, prefs);
+    return this.safetyGuard.enforceInitial(baseProfile, device);
+  }
+
+  decideNextProfile(metrics: RenderMetrics): RenderProfile {
+    // 1. Checar si debemos entrar en modo emergencia
+    if (this.fallbackController.shouldTriggerEmergency(metrics)) {
+      return this.fallbackController.getEmergencyProfile();
+    }
+
+    // 2. Calcular perfil sugerido por políticas "normales"
+    const suggested = evaluatePolicies.dynamic(metrics);
+
+    // 3. Pasar por guardas de seguridad (no romper límites)
+    const safeProfile = this.safetyGuard.enforceDynamic(suggested, metrics);
+
+    return safeProfile;
+  }
+}
+```
+
+### 3.2. Políticas de decisión (reglas de negocio)
+
+```ts
+// src/xr/hro/orchestrator/DecisionPolicies.ts
+import { RenderMetrics } from '../telemetry/MetricsSchema';
+import { DeviceProfile, UserPreferences, RenderProfile } from '../core/HROConfig';
+
+export const evaluatePolicies = {
+  initial(device: DeviceProfile, prefs: UserPreferences): RenderProfile {
+    // Perfil inicial según clase de dispositivo + preferencia
+    if (device.class === 'xr') {
+      return { pipeline: 'HFP', quality: 'Q2' };
+    }
+    if (device.class === 'mobile') {
+      if (prefs.mode === 'QUALITY') return { pipeline: 'LLP', quality: 'Q2' };
+      if (prefs.mode === 'PERFORMANCE') return { pipeline: 'LLP', quality: 'Q0' };
+      if (prefs.mode === 'BATTERY') return { pipeline: 'LLP', quality: 'Q0' };
+      return { pipeline: 'LLP', quality: 'Q1' }; // AUTO
+    }
+    // desktop
+    if (prefs.mode === 'QUALITY') return { pipeline: 'HFP', quality: 'Q3' };
+    if (prefs.mode === 'PERFORMANCE') return { pipeline: 'LLP', quality: 'Q1' };
+    return { pipeline: 'HFP', quality: 'Q2' }; // AUTO
+  },
+
+  dynamic(metrics: RenderMetrics): RenderProfile {
+    const { fpsMin, temperatureC, batteryPct, lastProfile } = metrics;
+    let next: RenderProfile = { ...lastProfile };
+
+    // Regla 1: FPS por debajo del mínimo → bajamos calidad o pasamos a LLP
+    if (fpsMin < 40) {
+      if (lastProfile.pipeline === 'HFP') {
+        next.pipeline = 'LLP';
+      } else {
+        next.quality = downgradeQuality(lastProfile.quality);
+      }
+    }
+
+    // Regla 2: Temperatura alta o batería baja → favorecer ahorro
+    if ((batteryPct !== null && batteryPct < 20) || temperatureC > 70) {
+      next.pipeline = 'LLP';
+      next.quality = 'Q0';
+    }
+
+    // Regla 3: FPS muy buenos y temperatura sana → podemos subir un nivel
+    if (fpsMin > 70 && temperatureC < 65 && batteryPct !== null && batteryPct > 50) {
+      next.quality = upgradeQuality(lastProfile.quality);
+    }
+
+    return next;
+  }
+};
+
+function downgradeQuality(q: QualityLevel): QualityLevel {
+  if (q === 'Q3') return 'Q2';
+  if (q === 'Q2') return 'Q1';
+  if (q === 'Q1') return 'Q0';
+  return 'Q0';
+}
+
+function upgradeQuality(q: QualityLevel): QualityLevel {
+  if (q === 'Q0') return 'Q1';
+  if (q === 'Q1') return 'Q2';
+  if (q === 'Q2') return 'Q3';
+  return 'Q3';
+}
+```
+
+### 3.3. Guardas de seguridad
+
+```ts
+// src/xr/hro/orchestrator/SafetyGuard.ts
+import { RenderMetrics } from '../telemetry/MetricsSchema';
+import { DeviceProfile, RenderProfile } from '../core/HROConfig';
+
+export class SafetyGuard {
+  enforceInitial(profile: RenderProfile, device: DeviceProfile): RenderProfile {
+    // Nunca dar HFP-Q3 a un mobile low tier
+    if (device.class === 'mobile' && device.gpuTier === 'low') {
+      return { pipeline: 'LLP', quality: 'Q1' };
+    }
+    return profile;
+  }
+
+  enforceDynamic(profile: RenderProfile, metrics: RenderMetrics): RenderProfile {
+    const safe = { ...profile };
+
+    // Evitar cambios excesivamente frecuentes (jitter)
+    const maxChangesPerMinute = 4;
+    // Aquí tendrías un contador por cliente; omitido por brevedad
+    // if (tooManyRecentChanges(metrics.clientId)) return metrics.lastProfile;
+
+    // Nunca subir a HFP si la temp ya es alta
+    if (metrics.temperatureC > 75 && profile.pipeline === 'HFP') {
+      safe.pipeline = 'LLP';
+      safe.quality = 'Q0';
+    }
+
+    return safe;
+  }
+}
+```
+
+***
+
+## 4. Subsistema secundario de emergencia (fail‑safe)
+
+Objetivo: si el HRO falla (bug, loop loco, null metrics, crash), se dispara un **modo seguro** independiente.
+
+### 4.1. Componentes
+
+```ts
+// src/xr/hro/emergency/SafeModeProfile.ts
+import { RenderProfile } from '../core/HROConfig';
+
+export const SAFE_MODE_PROFILE: RenderProfile = {
+  pipeline: 'SAFE',    // pipeline ultra simple
+  quality: 'Q0',
+  overrides: {
+    shadows: 'off',
+    volumetrics: 'off',
+    postprocess: 'minimal',
+    dynamicResolution: 0.75
+  }
+};
+```
+
+```ts
+// src/xr/hro/emergency/EmergencyRenderer.ts
+import { SAFE_MODE_PROFILE } from './SafeModeProfile';
+import { RenderProfile } from '../core/HROConfig';
+
+export class EmergencyRenderer {
+  getSafeProfile(): RenderProfile {
+    return SAFE_MODE_PROFILE;
+  }
+
+  // Función a la que puede llamar cliente/engine cuando detecta fallo
+  enterSafeMode(clientId: string) {
+    // Log, métricas, notificación a usuario
+    console.warn(`[HRO] Entering SAFE MODE for client ${clientId}`);
+    return SAFE_MODE_PROFILE;
+  }
+}
+```
+
+```ts
+// src/xr/hro/emergency/Watchdog.ts
+import { RenderMetrics } from '../telemetry/MetricsSchema';
+import { EmergencyRenderer } from './EmergencyRenderer';
+
+export class Watchdog {
+  private emergencyRenderer = new EmergencyRenderer();
+
+  // Se ejecuta en intervalos globales
+  monitor(metricsBatch: RenderMetrics[]): void {
+    for (const m of metricsBatch) {
+      if (this.detectCriticalFailure(m)) {
+        this.emergencyRenderer.enterSafeMode(m.clientId);
+      }
+    }
+  }
+
+  private detectCriticalFailure(m: RenderMetrics): boolean {
+    // Ejemplos de condiciones de emergencia:
+    // - FPS < 10 durante más de N segundos
+    // - Temperatura > 85°C
+    // - Telemetría deja de recibirse (no mostrado aquí)
+    return m.fpsMin < 10 || m.temperatureC > 85;
+  }
+}
+```
+
+### 4.2. Integración con el Orquestador
+
+```ts
+// src/xr/hro/orchestrator/FallbackController.ts
+import { RenderMetrics } from '../telemetry/MetricsSchema';
+import { RenderProfile } from '../core/HROConfig';
+import { SAFE_MODE_PROFILE } from '../emergency/SafeModeProfile';
+
+export class FallbackController {
+  shouldTriggerEmergency(metrics: RenderMetrics): boolean {
+    if (metrics.fpsMin <= 5) return true;
+    if (metrics.temperatureC > 85) return true;
+    // Podrías agregar: sin métricas por > N segundos, etc.
+    return false;
+  }
+
+  getEmergencyProfile(): RenderProfile {
+    return SAFE_MODE_PROFILE;
+  }
+}
+```
+
+***
+
+## 5. Telemetría y respaldo federado
+
+- Cada cliente envía periódicamente `RenderMetrics` a `MetricsCollector`.  
+- `MetricsAdapterPrometheus` expone contadores y gauges para Grafana.  
+- `IsabellaOrchestrator` + `Watchdog` se alimentan de este stream.  
+- Todos los cambios de perfil se loguean (audit log) para post‑mortems.
+
+Ejemplos de métricas:
+
+- `citemesh_hro_fps_min{pipeline="HFP"}`  
+- `citemesh_hro_temperature_c{deviceClass="mobile"}`  
+- `citemesh_hro_profile_changes_total{clientId="..."}`  
+- `citemesh_hro_emergency_entries_total`
+
+***
+
+Con esta estructura:
+
+- Tienes **carpetas claras**, nombres alineados con tu semántica y capas bien separadas.  
+- El bucle de decisión de Isabella está definido y probado con guardas y fallback.  
+- El subsistema de emergencia es independiente y puede tomar control si algo sale mal.
+
+La mejor línea para TAMV/CITEMESH, por potencia, ecosistema y futuro XR/4D, es mapear este diseño a **Unreal Engine 5 como runtime 3D** + **backend TAMV (Node/TS)** como cerebro externo de orquestación y métricas. Unreal ya tiene el concepto de **Subsystems** ideal para un HRO distribuido. [dev.epicgames](https://dev.epicgames.com/documentation/en-us/unreal-engine/programming-subsystems-in-unreal-engine)
+
+Te lo doy en concreto:
+
+***
+
+## 1. Mapeo arquitectónico global
+
+- **Motor gráfico:** Unreal Engine 5 (Nanite + Lumen + soporte ray tracing). [foro3d](https://foro3d.com/en/2026/january/real-time-render-engine-comparison-unreal-unity-cryengine-and-godot.html)
+- **HRO lógico:** vive en tu backend TAMV (Node/TS) como servicio IA‑orquestador (Isabella), expuesto vía API.  
+- **Cliente TAMV‑XR (Unreal):** implementa Subsystems que:
+  - Recogen métricas.  
+  - Llaman a Isabella/HRO.  
+  - Aplican cambios de calidad/pipeline (HFP/LLP/SAFE) en tiempo real.
+
+Esto te mantiene:
+
+- Lógica civilizacional e IA en tu stack JS/TS (donde dominas).  
+- Unreal como “renderer federado” que obedece políticas que vienen de TAMV.
+
+***
+
+## 2. Estructura en el backend TAMV
+
+En tu repo (Node/TS), ubica el HRO aquí:
+
+```text
+src/
+  xr/
+    hro/
+      core/
+        WorldStateCore.ts
+        SceneTwinBuilder.ts        // nivel lógico, no UE-specific
+        PrecomputeEngine.ts
+        HROConfig.ts
+      orchestrator/
+        IsabellaOrchestrator.ts
+        DecisionPolicies.ts
+        SafetyGuard.ts
+        FallbackController.ts
+      telemetry/
+        MetricsCollector.ts
+        MetricsSchema.ts
+        MetricsAdapterPrometheus.ts
+      emergency/
+        EmergencyRenderer.ts
+        SafeModeProfile.ts
+        Watchdog.ts
+      api/
+        hro-controller.ts          // rutas HTTP/REST
+```
+
+### 2.1. Endpoints clave
+
+Ejemplo en Express/Fastify:
+
+```ts
+// POST /api/hro/resolve-initial
+// body: { deviceProfile, userPreferences }
+IsabellaOrchestrator.resolveInitialProfile(...)
+
+// POST /api/hro/decide
+// body: { metrics }
+IsabellaOrchestrator.decideNextProfile(...)
+
+// POST /api/hro/telemetry
+// body: { metrics }
+MetricsCollector.ingest(...)
+```
+
+Prometheus/Grafana: expón `/metrics` usando `MetricsAdapterPrometheus`. [grafana](https://grafana.com/docs/grafana-cloud/send-data/metrics/metrics-prometheus/prometheus-config-examples/integration-guide/)
+
+***
+
+## 3. Lado Unreal Engine 5: mapping concreto
+
+### 3.1. Crear un GameInstance Subsystem HRO
+
+En C++:
+
+```cpp
+// UHROGameInstanceSubsystem.h
+UCLASS()
+class UHROGameInstanceSubsystem : public UGameInstanceSubsystem {
+  GENERATED_BODY()
+
+public:
+  virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+  virtual void Deinitialize() override;
+
+  void InitForClient(const FDeviceProfile& Device, const FUserPreferences& Prefs);
+  void Tick(float DeltaTime);
+
+private:
+  FRenderProfile CurrentProfile;
+  float MetricsAccumTime = 0.f;
+  // almacenas métricas: FPS rolling, temp (si tienes), etc.
+};
+```
+
+Los **Subsystems** de Unreal se inicializan junto con el GameInstance y son el lugar ideal para lógica global como esta. [forums.unrealengine](https://forums.unrealengine.com/t/advantages-of-a-game-instance-subsystem-class-over-static-class-or-a-ublueprintfunctionlibrary/2260558)
+
+### 3.2. Recolección de métricas en Unreal
+
+Dentro de `UHROGameInstanceSubsystem::Tick`:
+
+- Calculas FPS, frame time: usando `DeltaTime` acumulado.  
+- GPU/CPU usage: Unreal no lo expone directo siempre; puedes:
+  - Usar estadísticas internas (RHI, stat commands).  
+  - O un módulo nativo/OS‑level según plataforma.  
+
+Estructuras un JSON equivalente a `RenderMetrics` y lo envías vía HTTP a `/api/hro/decide`.
+
+***
+
+## 4. Conectar decisiones de Isabella con calidad Unreal
+
+### 4.1. Pipeline HFP/LLP/SAFE en UE
+
+En Unreal usas:
+
+- `GameUserSettings` + `Scalability` API para cambiar calidad a runtime (shadows, post, effects, view distance).  
+- Configs tipo:
+  - HFP: Lumen ON, ray tracing ON, alta calidad sombras/post.  
+  - LLP: Lumen en modo reducido o desactivado en mobile, ray tracing OFF, efectos reducidos. [tomlooman](https://tomlooman.com/unreal-engine-5-7-performance-highlights/)
+  - SAFE: todo al mínimo (resolución dinámica baja, sin volumétricos, sin post caro).
+
+Pseudocódigo C++:
+
+```cpp
+void UHROGameInstanceSubsystem::ApplyRenderProfile(const FRenderProfile& Profile) {
+  UGameUserSettings* Settings = GEngine->GetGameUserSettings();
+  if (!Settings) return;
+
+  if (Profile.Pipeline == "SAFE") {
+    Settings->SetOverallScalabilityLevel(0); // Low
+    // desactivar RT/Lumen
+  } else if (Profile.Pipeline == "LLP") {
+    Settings->SetOverallScalabilityLevel(Profile.Quality == "Q0" ? 0 : 1);
+    // Lumen off / software, RT off
+  } else if (Profile.Pipeline == "HFP") {
+    Settings->SetOverallScalabilityLevel(Profile.Quality == "Q3" ? 3 : 2);
+    // Lumen on, RT según calidad
+  }
+  Settings->ApplySettings(false);
+}
+```
+
+Unreal 5.5+ ya da guías para usar Lumen en mobile y cómo degradarlo cuando no soporta ciertas features. [forums.unrealengine](https://forums.unrealengine.com/t/how-to-optimize-performance-with-nanite-and-lumen-in-unreal-engine-5-for-mobile-games/2508247)
+
+***
+
+## 5. Gemelos en paralelo en Unreal
+
+Aquí tienes dos opciones:
+
+1. **Gemelo lógico en backend**  
+   - `WorldStateCore` en TAMV decide qué entidades existen, su posición, etc.  
+   - Unreal solo renderiza “vista” de ese estado; el gemelo Efficient/HighDetail se resuelve mediante LODs y perfiles de escalabilidad.
+
+2. **Gemelos físicos en Unreal** (más caro, más control)  
+   - Dos Levels/World Partition layers:  
+     - `HighDetailLayer` con assets full.  
+     - `EfficientLayer` con versiones low‑poly.  
+   - El HRO Subsystem activa/desactiva layers según el perfil.
+
+Para empezar, la opción 1 (gemelo lógico + LOD + Scalability) es más simple y suficientemente potente. [foro3d](https://foro3d.com/en/2026/january/real-time-render-engine-comparison-unreal-unity-cryengine-and-godot.html)
+
+***
+
+## 6. Subsistema de emergencia en UE
+
+En Unreal:
+
+- Un **Watchdog** simple dentro del `UHROGameInstanceSubsystem`:
+  - Si `fpsMin < 10` o la comunicación con backend falla (time‑out en `/decide`), llama `EnterSafeMode()`.
+
+```cpp
+void UHROGameInstanceSubsystem::Tick(float DeltaTime) {
+  // ... acumulas métricas
+  if (bBackendTimeout || MinFpsLastNSeconds < 10.f) {
+    EnterSafeMode();
+  }
+}
+
+void UHROGameInstanceSubsystem::EnterSafeMode() {
+  // Aplica SAFE_MODE_PROFILE localmente sin depender de backend
+  FRenderProfile Safe;
+  Safe.Pipeline = "SAFE";
+  Safe.Quality = "Q0";
+  ApplyRenderProfile(Safe);
+}
+```
+
+Esto es el reflejo local de tu `EmergencyRenderer`/`SafeModeProfile` en TS.
+
+***
+
+## 7. Monitoreo integrado
+
+- Backend TAMV expone `/metrics` con:
+  - `citemesh_hro_fps_min`, `citemesh_hro_temperature_c`, `citemesh_hro_emergency_entries_total`, etc. [the-pi-guy](https://the-pi-guy.com/blog/grafana_and_prometheus_a_guide_to_integrating_metrics/)
+- Configuras Prometheus para scrapear TAMV y Grafana para visualizar rendimiento por:
+  - `pipeline`, `deviceClass`, `zoneId`, etc.
+
+Unreal solo envía JSON de métricas; todo el almacenamiento y visualización se hace en tu stack TS/DevOps, donde ya tienes cultura de observabilidad.
+
+***
+
+## 8. Resumen: por qué esta es la “mejor línea”
+
+- **Potencia visual:** Unreal 5 + Lumen/Nanite para experiencias flagship CITEMESH. [oreateai](https://www.oreateai.com/blog/lumen-vs-nanite-unpacking-unreal-engine-5s-revolutionary-graphics-technologies/c0e8ffe11214f0c66923eae24bba4036)
+- **Control civilizacional:** toda la lógica de política, ética, energía y perfiles se queda en TAMV backend (Isabella/HRO).  
+- **Escalabilidad:** clientes futuros (Unity, WebGPU, WebXR) pueden hablar con el mismo HRO vía HTTP, manteniendo comportamiento coherente.  
+- **Resiliencia:** si backend falla, UE tiene SafeMode local; si UE se colapsa, el backend sigue registrando y analizando el incidente.
+
+Con esto tienes un mapa claro para implementar el HRO/Isabella encima de Unreal y de tu backend TAMV, manteniendo la visión CITEMESH: un metaverso civilizacional que se adapta al humano, no al revés.
+/**
+ * TAMV User Management API
+ * Comprehensive user registration, permissions, and profile management
+ * 
+ * Security: Role-based access control with cryptographic verification
+ * Compliance: GDPR-compliant with privacy by design
+ * Architecture: RESTful API with OpenAPI 3.0 specification
+ */
+
+import express from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { z } from 'zod';
+import rateLimit from 'express-rate-limit';
+import { v4 as uuidv4 } from 'uuid';
+import { Pool } from 'pg';
+import Redis from 'ioredis';
+
+const router = express.Router();
+
+// Database and cache connections
+const db = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
+
+const redis = new Redis(process.env.REDIS_URL);
+
+// Rate limiting for security
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // 5 attempts per window
+    message: { error: 'Too many authentication attempts, please try again later' },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
+const registrationLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 3, // 3 registrations per hour per IP
+    message: { error: 'Registration limit exceeded, please try again later' }
+});
+
+// Validation schemas
+const UserRegistrationSchema = z.object({
+    email: z.string().email().max(255),
+    username: z.string().min(3).max(50).regex(/^[a-zA-Z0-9_-]+$/),
+    password: z.string().min(8).max(128),
+    firstName: z.string().min(1).max(100),
+    lastName: z.string().min(1).max(100),
+    dateOfBirth: z.string().datetime().o
+
+<?php
+
+namespace TelegramApiServer\MadelineProtoExtensions;
+
+use Amp\ByteStream\ReadableStream;
+use Amp\Http\Server\Request;
+use Amp\Http\Server\Response;
+use AssertionError;
+use danog\MadelineProto\API;
+use danog\MadelineProto\EventHandler\Message;
+use danog\MadelineProto\FileCallbackInterface;
+use danog\MadelineProto\StrTools;
+use InvalidArgumentException;
+use TelegramApiServer\Client;
+use TelegramApiServer\EventObservers\EventHandler;
+use TelegramApiServer\Exceptions\NoMediaException;
+use function Amp\delay;
+
+final class ApiExtensions
+{
+    public function getHistoryHtml(API $madelineProto, array|int|string|null $peer = null, int|null $offset_id = 0, int|null $offset_date = 0, int|null $add_offset = 0, int|null $limit = 0, int|null $max_id = 0, int|null $min_id = 0, array $hash = [], ?int $floodWaitLimit = null, ?string $queueId = null): array
+    {
+        $response = $madelineProto->messages->getHistory(
+            peer: $peer,
+            offset_id: $offset_id,
+            offset_date: $offset_date, add_offset: $add_offset,
+            limit: $limit,
+            max_id: $max_id,
+            min_id: $min_id,
+            hash: $hash,
+            floodWaitLimit: $floodWaitLimit,
+            queueId: $queueId,
+        );
+        if (!empty($response['messages'])) {
+            foreach ($response['messages'] as &$message) {
+                $message['message'] = StrTools::entitiesToHtml(
+                    $message['message'] ?? '',
+                    $message['entities'] ?? [],
+                    true
+                );
+            }
+            unset($message);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Проверяет есть ли подходящие медиа у сообщения.
+     */
+    private static function hasMedia(array $message = [], bool $allowWebPage = false): bool
+    {
+        $mediaType = $message['media']['_'] ?? null;
+        if ($mediaType === null) {
+            return false;
+        }
+        if (
+            $mediaType === 'messageMediaWebPage' &&
+            ($allowWebPage === false || empty($message['media']['webpage']['photo']))
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Пересылает сообщения без ссылки на оригинал.
+     */
+    public function copyMessages(API $madelineProto, string|int $from_peer, string|int $to_peer, array|int $id)
+    {
+        $response = $madelineProto->channels->getMessages(
+            channel: $from_peer,
+            id: (array)$id,
+        );
+        $result = [];
+        if (!$response || !\is_array($response) || !\array_key_exists('messages', $response)) {
+            return $result;
+        }
+
+        foreach ($response['messages'] as $key => $message) {
+            $messageData = [
+                'message' => $message['message'] ?? '',
+                'peer' => $to_peer,
+                'entities' => $message['entities'] ?? [],
+            ];
+            if (self::hasMedia($message, false)) {
+                $messageData['media'] = $message; //MadelineProto сама достанет все media из сообщения.
+                $result[] = $madelineProto->messages->sendMedia(...$messageData);
+            } else {
+                $result[] = $madelineProto->messages->sendMessage(...$messageData);
+            }
+            if ($key > 0) {
+                delay(\random_int(300, 2000) / 1000);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Загружает медиафайл из указанного сообщения в поток.
+     */
+    public function getMedia(API $madelineProto, Request $request, string|int $peer = '', array|int $id = 0, array $message = []): Response
+    {
+        $message = $message ?: ($this->getMessages($madelineProto, $peer, (array)$id))['messages'][0] ?? null;
+        if (!$message || $message['_'] === 'messageEmpty') {
+            throw new NoMediaException('Empty message');
+        }
+
+        if (!self::hasMedia($message, true)) {
+            throw new NoMediaException('Message has no media');
+        }
+
+        if ($message['media']['_'] !== 'messageMediaWebPage') {
+            $info = $madelineProto->getDownloadInfo($message);
+        } else {
+            $webpage = $message['media']['webpage'];
+            if (!empty($webpage['embed_url'])) {
+                return new Response(302, ['Location' => $webpage['embed_url']]);
+            } elseif (!empty($webpage['document'])) {
+                $info = $madelineProto->getDownloadInfo($webpage['document']);
+            } elseif (!empty($webpage['photo'])) {
+                $info = $madelineProto->getDownloadInfo($webpage['photo']);
+            } else {
+                return $this->getMediaPreview($madelineProto, $request, $peer, $id, $message);
+            }
+        }
+
+        return $madelineProto->downloadToResponse(messageMedia: $info, request: $request);
+    }
+
+    /**
+     * Загружает превью медиафайла из указанного сообщения в поток.
+     *
+     */
+    public function getMediaPreview(API $madelineProto, Request $request, string|int $peer = '', array|int $id = 0, array $message = []): Response
+    {
+        $message = $message ?: ($this->getMessages($madelineProto, $peer, (array)$id))['messages'][0] ?? null;
+        if (!$message || $message['_'] === 'messageEmpty') {
+            throw new NoMediaException('Empty message');
+        }
+
+        if (!self::hasMedia($message, true)) {
+            throw new NoMediaException('Message has no media');
+        }
+
+        $media = match ($message['media']['_']) {
+            'messageMediaPhoto' => $message['media']['photo'],
+            'messageMediaDocument' => $message['media']['document'],
+            'messageMediaWebPage' => $message['media']['webpage'],
+        };
+
+        $thumb = null;
+        switch (true) {
+            case isset($media['sizes']):
+                foreach ($media['sizes'] as $size) {
+                    if ($size['_'] === 'photoSize') {
+                        $thumb = $size;
+                    }
+                }
+                break;
+            case isset($media['thumb']['size']):
+                $thumb = $media['thumb'];
+                break;
+            case !empty($media['thumbs']):
+                foreach ($media['thumbs'] as $size) {
+                    if ($size['_'] === 'photoSize') {
+                        $thumb = $size;
+                    }
+                }
+                break;
+            case isset($media['photo']['sizes']):
+                foreach ($media['photo']['sizes'] as $size) {
+                    if ($size['_'] === 'photoSize') {
+                        $thumb = $size;
+                    }
+                }
+                break;
+            default:
+                throw new NoMediaException('Message has no preview');
+
+        }
+        if (null === $thumb) {
+            throw new NoMediaException('Empty preview');
+        }
+        $info = $madelineProto->getDownloadInfo($thumb);
+
+        if ($media['_'] === 'webPage') {
+            $media = $media['photo'];
+        }
+
+        //Фикс для LAYER 100+
+        //TODO: Удалить, когда снова станет доступна загрузка photoSize
+        if (isset($info['thumb_size'])) {
+            $infoFull = $madelineProto->getDownloadInfo($media);
+            $infoFull['InputFileLocation']['thumb_size'] = $info['thumb_size'];
+            $infoFull['size'] = $info['size'];
+            $infoFull['mime'] = $info['mime'] ?? 'image/jpeg';
+            $infoFull['name'] = 'thumb';
+            $infoFull['ext'] = '.jpeg';
+            $info = $infoFull;
+        }
+
+        return $madelineProto->downloadToResponse(messageMedia: $info, request: $request);
+    }
+
+    public function getMessages(API $madelineProto, string|int $peer, array|int $id): array
+    {
+        $peerInfo = $madelineProto->getInfo($peer);
+        if (\in_array($peerInfo['type'], ['channel', 'supergroup'])) {
+            $response = $madelineProto->channels->getMessages(
+                channel:$peer,
+                id: $id,
+            );
+        } else {
+            $response = $madelineProto->messages->getMessages(id: $id);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Адаптер для стандартного метода.
+     *
+     */
+    public function downloadToResponse(API $madelineProto, FileCallbackInterface|Message|array|string $messageMedia, Request $request, ?callable $cb = null, ?int $size = null, ?string $mime = null, ?string $name = null): Response
+    {
+        return $madelineProto->downloadToResponse(
+            messageMedia: $messageMedia,
+            request: $request,
+            cb: $cb,
+            size: $size,
+            mime: $mime,
+            name: $name,
+        );
+    }
+
+    /**
+     * Адаптер для стандартного метода.
+     *
+     */
+    public function downloadToBrowser(API $madelineProto, FileCallbackInterface|Message|array|string $messageMedia, Request $request, ?callable $cb = null, ?int $size = null, ?string $mime = null, ?string $name = null): Response
+    {
+        return $this->downloadToResponse(
+            madelineProto: $madelineProto,
+            messageMedia: $messageMedia,
+            request: $request,
+            cb: $cb,
+            size: $size,
+            mime: $mime,
+            name: $name,
+        );
+    }
+
+    /**
+     * Upload file from POST request.
+     * Response can be passed to 'media' field in messages.sendMedia.
+     *
+     * @throws NoMediaException
+     * @deprecated use SendDocument
+     */
+    public function uploadMediaForm(API $madelineProto, ReadableStream $file, string $mimeType, ?string $fileName): array
+    {
+        if ($fileName === null) {
+            throw new AssertionError("No file name was provided!");
+        }
+        $inputFile = $madelineProto->uploadFromStream(
+            stream: $file,
+            size: 0,
+            mime: $mimeType,
+            fileName:  $fileName ?? '',
+        );
+        $inputFile['id'] = \unpack('P', $inputFile['id'])['1'];
+        return [
+            'media' => [
+                '_' => 'inputMediaUploadedDocument',
+                'file' => $inputFile,
+                'attributes' => [
+                    ['_' => 'documentAttributeFilename', 'file_name' => $fileName]
+                ]
+            ]
+        ];
+    }
+
+    public function setEventHandler(API $madelineProto): void
+    {
+        Client::getWrapper($madelineProto)->getAPI()->setEventHandler(EventHandler::class);
+        Client::getWrapper($madelineProto)->serialize();
+    }
+
+    public function serialize(API $madelineProto): void
+    {
+        Client::getWrapper($madelineProto)->serialize();
+    }
+
+    public function getUpdates(API $madelineProto, array $params): array
+    {
+        foreach ($params as $key => $value) {
+            $params[$key] = match ($key) {
+                'offset', 'limit' => (int)$value,
+                'timeout' => (float)$value,
+                default => throw new InvalidArgumentException("Unknown parameter: {$key}"),
+            };
+        }
+
+        return $madelineProto->getUpdates($params);
+    }
+
+    public function unsubscribeFromUpdates(API $madelineProto, ?string $channel = null): array
+    {
+        $inputChannelId = null;
+        if ($channel) {
+            $id = (string)$madelineProto->getId($channel);
+
+            $inputChannelId = (int)\str_replace(['-100', '-'], '', $id);
+            if (!$inputChannelId) {
+                throw new InvalidArgumentException('Invalid id');
+            }
+        }
+        $counter = 0;
+        foreach (Client::getWrapper($madelineProto)->getAPI()->feeders as $channelId => $_) {
+            if ($channelId === 0) {
+                continue;
+            }
+            if ($inputChannelId && $inputChannelId !== $channelId) {
+                continue;
+            }
+            Client::getWrapper($madelineProto)->getAPI()->feeders[$channelId]->stop();
+            Client::getWrapper($madelineProto)->getAPI()->updaters[$channelId]->stop();
+            unset(
+                Client::getWrapper($madelineProto)->getAPI()->feeders[$channelId],
+                Client::getWrapper($madelineProto)->getAPI()->updaters[$channelId]
+            );
+            Client::getWrapper($madelineProto)->getAPI()->getChannelStates()->remove($channelId);
+            $counter++;
+        }
+
+        return [
+            'disabled_update_loops' => $counter,
+            'current_update_loops' => \count(Client::getWrapper($madelineProto)->getAPI()->feeders),
+        ];
+    }
+}
+<?php
+
+namespace TelegramApiServer\MadelineProtoExtensions;
+
+use danog\MadelineProto;
+use danog\MadelineProto\API;
+use InvalidArgumentException;
+use Revolt\EventLoop;
+use TelegramApiServer\Client;
+use TelegramApiServer\Files;
+use Throwable;
+
+use function Amp\async;
+use function Amp\File\deleteFile;
+use function Amp\Future\awaitAll;
+
+final class SystemApiExtensions
+{
+    private Client $client;
+
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
+
+    /**
+     * @return array<string, array>
+     */
+    public function healthcheck(): array
+    {
+        $results = [];
+        ['sessions' => $sessions] = $this->getSessionList();
+        foreach ($sessions as $sessionKey => $session) {
+            $instance = $this->client->instances[$sessionKey];
+            if ($instance->getAuthorization() === API::LOGGED_IN) {
+                $results[$sessionKey] = $instance->getSelf();
+            }
+        }
+        return $results;
+    }
+
+    public function addSession(string $session, array $settings = []): array
+    {
+        if (!empty($settings['app_info']['api_id'])) {
+            $settings['app_info']['api_id'] = (int) $settings['app_info']['api_id'];
+        }
+
+        $instance = $this->client->addSession($session, $settings);
+        /** @var null|MadelineProto\Settings $fullSettings */
+        $fullSettings = $instance->getSettings();
+        try {
+            if ($fullSettings !== null && $instance->getAuthorization() !== API::LOGGED_IN) {
+                $fullSettings->getAppInfo()->getApiId();
+                $fullSettings->getAppInfo()->getApiHash();
+            }
+        } catch (Throwable $e) {
+            unset($fullSettings, $instance);
+            $this->removeSession($session);
+            $this->unlinkSessionFile($session);
+            throw $e;
+        }
+
+        $this->client->startLoggedInSession($session);
+        return $this->getSessionList();
+    }
+
+    public function removeSession(string $session): array
+    {
+        $this->client->removeSession($session);
+        return $this->getSessionList();
+    }
+
+    public function getSessionList(): array
+    {
+        $sessions = [];
+        foreach ($this->client->instances as $session => $instance) {
+            $authorized = $instance->getAuthorization();
+            switch ($authorized) {
+                case API::NOT_LOGGED_IN:
+                    $status = 'NOT_LOGGED_IN';
+                    break;
+                case API::WAITING_CODE:
+                    $status = 'WAITING_CODE';
+                    break;
+                case API::WAITING_SIGNUP:
+                    $status = 'WAITING_SIGNUP';
+                    break;
+                case API::WAITING_PASSWORD:
+                    $status = 'WAITING_PASSWORD';
+                    break;
+                case API::LOGGED_IN:
+                    $status = 'LOGGED_IN';
+                    break;
+                case API::LOGGED_OUT:
+                    $status = 'LOGGED_OUT';
+                    break;
+                default:
+                    $status = $authorized;
+                    break;
+            }
+
+            $sessions[$session] = [
+                'session' => $session,
+                'file' => Files::getSessionFile($session),
+                'status' => $status,
+            ];
+        }
+
+        return [
+            'sessions' => $sessions,
+            'memory' => $this->bytesToHuman(\memory_get_usage(true)),
+        ];
+    }
+
+    public function unlinkSessionFile($session): string
+    {
+        $file = Files::getSessionFile($session);
+
+        if (\is_file($file)) {
+            $futures = [];
+            foreach (\glob("$file*") as $file) {
+                $futures[] = async(fn () => deleteFile($file));
+            }
+            awaitAll($futures);
+        } else {
+            throw new InvalidArgumentException('Session file not found');
+        }
+
+        $this->unlinkSessionSettings($session);
+
+        return 'ok';
+    }
+
+    public function saveSessionSettings(string $session, array $settings = [])
+    {
+        Files::saveSessionSettings($session, $settings);
+
+        return 'ok';
+    }
+
+    public function unlinkSessionSettings($session): string
+    {
+        $settings = Files::getSessionFile($session, Files::SETTINGS_EXTENSION);
+        if (\is_file($settings)) {
+            deleteFile($settings);
+        }
+
+        return 'ok';
+    }
+
+    public function exit(): string
+    {
+        EventLoop::defer(static fn () => exit());
+        return 'ok';
+    }
+
+    private function bytesToHuman($bytes): string
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        for ($i = 0; $bytes > 1024; $i++) {
+            $bytes /= 1024;
+        }
+        return \round($bytes, 2) . ' ' . $units[$i];
+    }
+}
